@@ -56,3 +56,12 @@ target/*
 
 # Hibernate configuration with password
 src/main/resources/application.yml
+
+debug.log
+.DS_Store
+.classpath
+.project
+.vscode/
+.vsls.json
+CSC_EclipseStylePreferences.xml
+debug.log
