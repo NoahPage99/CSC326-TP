@@ -6,7 +6,7 @@ Scenario Outline: No office Visits has been created
         Given A Patient exist in iTrust2
         When I log in as a patient
         When I navigate to the View Office Visits page
-        then <text> is displayed for Office Visits
+        Then <text> is displayed for Office Visits
         
 Examples:
         | text
