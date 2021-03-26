@@ -9,8 +9,8 @@ Scenario Outline: No office Visits has been created
         Then <text> is displayed for Office Visits
         
 Examples:
-        | text
-        | No Office Visits found.
+        | text |
+        | No Office Visits found.|
         
 Scenario Outline: Office Visits have been created
         Given A Patient exist in iTrust2
