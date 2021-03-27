@@ -1,6 +1,8 @@
 package edu.ncsu.csc.iTrust2.persistant;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -17,8 +19,13 @@ import javax.validation.constraints.Min;
  * @author scheerl
  *
  */
-@Embeddable
+@Entity
 public class SatisfactionSurvey {
+
+    /** id */
+    @Id
+    @GeneratedValue
+    private Long   id;
 
     /**
      * time waited in waiting room
@@ -242,6 +249,11 @@ public class SatisfactionSurvey {
         return true;
     }
 
+    /**
+     * toString
+     *
+     * @return string representation of survey
+     */
     @Override
     public String toString () {
         return "SatisfactionSurvey [timeWaitedWaitingRoom=" + timeWaitedWaitingRoom + ", timeWaitedExaminationRoom="
@@ -249,4 +261,22 @@ public class SatisfactionSurvey {
                 + satisfiedTreatment + ", notes=" + notes + "]";
     }
 
+    /**
+     * Get the ID of survey
+     *
+     * @return the ID
+     */
+    public Long getId () {
+        return id;
+    }
+
+    /**
+     * Set the ID of the survey (Used by Hibernate)
+     *
+     * @param id
+     *            the ID
+     */
+    public void setId ( final Long id ) {
+        this.id = id;
+    }
 }
