@@ -1,5 +1,6 @@
 package edu.ncsu.csc.iTrust2.persistant;
 
+import javax.persistence.Entity;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -16,6 +17,7 @@ import javax.validation.constraints.Min;
  * @author scheerl
  *
  */
+@Entity
 public class SatisfactionSurvey {
 
     /**
