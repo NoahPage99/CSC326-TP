@@ -24,6 +24,7 @@ import com.google.gson.annotations.JsonAdapter;
 import edu.ncsu.csc.iTrust2.adapters.ZonedDateTimeAdapter;
 import edu.ncsu.csc.iTrust2.adapters.ZonedDateTimeAttributeConverter;
 import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
+import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
 
 /**
  * This is the validated database-persisted office visit representation
@@ -113,6 +114,10 @@ public class OfficeVisit extends DomainObject {
     @OneToMany ( cascade = CascadeType.ALL )
     @JsonManagedReference
     private List<Prescription> prescriptions;
+
+    @OneToOne
+    // TODO do we need other @ tags?
+    private SatisfactionSurvey survey;
 
     /** For Hibernate/Thymeleaf _must_ be an empty constructor */
     public OfficeVisit () {
@@ -362,6 +367,25 @@ public class OfficeVisit extends DomainObject {
      */
     public List<Diagnosis> getDiagnoses () {
         return diagnoses;
+    }
+
+    /**
+     * get the satisfaction survey
+     *
+     * @return satisfaction survey
+     */
+    public SatisfactionSurvey getSurvey () {
+        return survey;
+    }
+
+    /**
+     * set satisfaction survey
+     *
+     * @param survey
+     *            to set
+     */
+    public void setSurvey ( final SatisfactionSurvey survey ) {
+        this.survey = survey;
     }
 
     /**

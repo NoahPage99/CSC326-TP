@@ -34,6 +34,7 @@ import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
 import edu.ncsu.csc.iTrust2.models.enums.HouseholdSmokingStatus;
 import edu.ncsu.csc.iTrust2.models.enums.Role;
+import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
 import edu.ncsu.csc.iTrust2.services.BasicHealthMetricsService;
 import edu.ncsu.csc.iTrust2.services.DrugService;
 import edu.ncsu.csc.iTrust2.services.HospitalService;
@@ -107,6 +108,7 @@ public class OfficeVisitTest {
         visit.setPatient( userService.findByName( "AliceThirteen" ) );
         visit.setHcp( userService.findByName( "AliceThirteen" ) );
         visit.setDate( ZonedDateTime.now() );
+        visit.setSurvey( new SatisfactionSurvey() );
         officeVisitService.save( visit );
 
         final List<Diagnosis> diagnoses = new Vector<Diagnosis>();
