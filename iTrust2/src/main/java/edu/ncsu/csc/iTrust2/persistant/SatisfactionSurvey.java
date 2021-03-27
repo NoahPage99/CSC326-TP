@@ -63,15 +63,9 @@ public class SatisfactionSurvey {
     private String  notes;
 
     /**
-     * if the survey is completed or not
-     */
-    private boolean completed;
-
-    /**
      * create a new default satisfaction survey
      */
     public SatisfactionSurvey () {
-        this.setCompleted( false );
         this.setNotes( "" );
         this.setSatisfiedOfficeVisit( 1 );
         this.setSatisfiedTreatment( 1 );
@@ -92,13 +86,9 @@ public class SatisfactionSurvey {
      *            satisfied treatment
      * @param notes
      *            on visit
-     * @param completed
-     *            if survey is completed or not
      */
     public SatisfactionSurvey ( final int timeWaitedWaitingRoom, final int timeWaitedExaminationRoom,
-            final int satisfiedOfficeVisit, final int satisfiedTreatment, final String notes,
-            final boolean completed ) {
-        this.setCompleted( completed );
+            final int satisfiedOfficeVisit, final int satisfiedTreatment, final String notes) {
         this.setNotes( notes );
         this.setSatisfiedOfficeVisit( satisfiedOfficeVisit );
         this.setSatisfiedTreatment( satisfiedTreatment );
@@ -207,32 +197,12 @@ public class SatisfactionSurvey {
     }
 
     /**
-     * check if survey is completed
-     *
-     * @return true if completed, false otherwise
-     */
-    public boolean isCompleted () {
-        return completed;
-    }
-
-    /**
-     * set if survey is completed or not
-     *
-     * @param completed
-     *            to set
-     */
-    public void setCompleted ( final boolean completed ) {
-        this.completed = completed;
-    }
-
-    /**
      * hashcode
      */
     @Override
     public int hashCode () {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ( completed ? 1231 : 1237 );
         result = prime * result + ( ( notes == null ) ? 0 : notes.hashCode() );
         result = prime * result + satisfiedOfficeVisit;
         result = prime * result + satisfiedTreatment;
@@ -258,9 +228,6 @@ public class SatisfactionSurvey {
             return false;
         }
         final SatisfactionSurvey other = (SatisfactionSurvey) obj;
-        if ( completed != other.completed ) {
-            return false;
-        }
         if ( notes == null ) {
             if ( other.notes != null ) {
                 return false;
@@ -288,7 +255,7 @@ public class SatisfactionSurvey {
     public String toString () {
         return "SatisfactionSurvey [timeWaitedWaitingRoom=" + timeWaitedWaitingRoom + ", timeWaitedExaminationRoom="
                 + timeWaitedExaminationRoom + ", satisfiedOfficeVisit=" + satisfiedOfficeVisit + ", satisfiedTreatment="
-                + satisfiedTreatment + ", notes=" + notes + ", completed=" + completed + "]";
+                + satisfiedTreatment + ", notes=" + notes + "]";
     }
 
 }
