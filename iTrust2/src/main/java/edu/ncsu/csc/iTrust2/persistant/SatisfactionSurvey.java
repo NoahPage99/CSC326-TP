@@ -1,8 +1,5 @@
 package edu.ncsu.csc.iTrust2.persistant;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -19,48 +16,40 @@ import javax.validation.constraints.Min;
  * @author scheerl
  *
  */
-@Entity
 public class SatisfactionSurvey {
-
-    /**
-     * survey id
-     */
-    @Id
-    @GeneratedValue
-    private Long    id;
 
     /**
      * time waited in waiting room
      */
     @Min ( 0 )
     @Max ( 120 )
-    private int     timeWaitedWaitingRoom;
+    private int    timeWaitedWaitingRoom;
 
     /**
      * time waited exam room
      */
     @Min ( 0 )
     @Max ( 120 )
-    private int     timeWaitedExaminationRoom;
+    private int    timeWaitedExaminationRoom;
 
     /**
      * satisfaction of office visit
      */
     @Min ( 1 )
     @Max ( 10 )
-    private int     satisfiedOfficeVisit;
+    private int    satisfiedOfficeVisit;
 
     /**
      * satisfaction of treatment
      */
     @Min ( 1 )
     @Max ( 10 )
-    private int     satisfiedTreatment;
+    private int    satisfiedTreatment;
 
     /**
      * notes on survey
      */
-    private String  notes;
+    private String notes;
 
     /**
      * create a new default satisfaction survey
@@ -88,7 +77,7 @@ public class SatisfactionSurvey {
      *            on visit
      */
     public SatisfactionSurvey ( final int timeWaitedWaitingRoom, final int timeWaitedExaminationRoom,
-            final int satisfiedOfficeVisit, final int satisfiedTreatment, final String notes) {
+            final int satisfiedOfficeVisit, final int satisfiedTreatment, final String notes ) {
         this.setNotes( notes );
         this.setSatisfiedOfficeVisit( satisfiedOfficeVisit );
         this.setSatisfiedTreatment( satisfiedTreatment );
