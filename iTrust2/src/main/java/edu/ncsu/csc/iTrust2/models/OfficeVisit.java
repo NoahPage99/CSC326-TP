@@ -115,8 +115,8 @@ public class OfficeVisit extends DomainObject {
     @JsonManagedReference
     private List<Prescription> prescriptions;
 
-    @OneToOne
-    // TODO do we need other @ tags?
+    @OneToOne ( cascade = CascadeType.ALL )
+    @JoinColumn ( name = "survey_id" )
     private SatisfactionSurvey survey;
 
     /** For Hibernate/Thymeleaf _must_ be an empty constructor */
