@@ -41,31 +41,31 @@ public class SatisfactionSurveyForm implements Serializable {
      */
     public SatisfactionSurveyForm ( final SatisfactionSurvey ss ) {
         setNotes( ss.getNotes() );
-        setId( ss.getId().toString() );
+        // setId( ss.getId().toString() );
         setSatisfiedOfficeVisit( ss.getSatisfiedOfficeVisit() );
         setSatisfiedTreatment( ss.getSatisfiedTreatment() );
         setTimeWaitedExaminationRoom( ss.getTimeWaitedExaminationRoom() );
         setTimeWaitedWaitingRoom( ss.getTimeWaitedWaitingRoom() );
     }
 
-    /**
-     * getter for id
-     *
-     * @return the id
-     */
-    public String getId () {
-        return id;
-    }
+    // /**
+    // * getter for id
+    // *
+    // * @return the id
+    // */
+    // public String getId () {
+    // return id;
+    // }
 
-    /**
-     * setter for id
-     *
-     * @param id
-     *            the id to set
-     */
-    public void setId ( final String id ) {
-        this.id = id;
-    }
+    // /**
+    // * setter for id
+    // *
+    // * @param id
+    // * the id to set
+    // */
+    // public void setId ( final String id ) {
+    // this.id = id;
+    // }
 
     /**
      * getter for timed waiting room

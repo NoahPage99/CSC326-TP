@@ -1,12 +1,12 @@
 package edu.ncsu.csc.iTrust2.services;
 
-import java.util.List;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
 import edu.ncsu.csc.iTrust2.forms.SatisfactionSurveyForm;
-import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
 import edu.ncsu.csc.iTrust2.repositories.SatisfactionSurveyRepository;
 
@@ -22,6 +22,8 @@ import edu.ncsu.csc.iTrust2.repositories.SatisfactionSurveyRepository;
  * @author scheerl
  *
  */
+@Component
+@Transactional
 public class SatisfactionSurveyService extends Service {
     @Autowired
     private SatisfactionSurveyRepository repository;
@@ -33,9 +35,9 @@ public class SatisfactionSurveyService extends Service {
 
     public SatisfactionSurvey build ( final SatisfactionSurveyForm ssf ) {
         final SatisfactionSurvey ss = new SatisfactionSurvey();
-        if ( ssf.getId() != null ) {
-            ss.setId( Long.parseLong( ssf.getId() ) );
-        }
+        // if ( ssf.getId() != null ) {
+        // ss.setId( Long.parseLong( ssf.getId() ) );
+        // }
         ss.setTimeWaitedWaitingRoom( ssf.getTimeWaitedWaitingRoom() );
         ss.setTimeWaitedExaminationRoom( ssf.getTimeWaitedExaminationRoom() );
         ss.setSatisfiedOfficeVisit( ssf.getSatisfiedOfficeVisit() );
@@ -47,16 +49,17 @@ public class SatisfactionSurveyService extends Service {
 
     }
 
-    public List<SatisfactionSurvey> findByHcp ( final User hcp ) {
-        return repository.findByHcp( hcp );
-    }
-
-    public List<SatisfactionSurvey> findByPatient ( final User patient ) {
-        return repository.findByPatient( patient );
-    }
-
-    public List<SatisfactionSurvey> findByHcpAndPatient ( final User hcp, final User patient ) {
-        return repository.findByHcpAndPatient( hcp, patient );
-    }
+    // public List<SatisfactionSurvey> findByHcp ( final User hcp ) {
+    // return repository.findByHcp( hcp );
+    // }
+    //
+    // public List<SatisfactionSurvey> findByPatient ( final User patient ) {
+    // return repository.findByPatient( patient );
+    // }
+    //
+    // public List<SatisfactionSurvey> findByHcpAndPatient ( final User hcp,
+    // final User patient ) {
+    // return repository.findByHcpAndPatient( hcp, patient );
+    // }
 
 }

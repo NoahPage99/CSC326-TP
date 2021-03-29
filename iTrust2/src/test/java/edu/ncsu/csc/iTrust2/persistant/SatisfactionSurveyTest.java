@@ -5,10 +5,22 @@ package edu.ncsu.csc.iTrust2.persistant;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import javax.transaction.Transactional;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import edu.ncsu.csc.iTrust2.TestConfig;
+import edu.ncsu.csc.iTrust2.forms.SatisfactionSurveyForm;
+import edu.ncsu.csc.iTrust2.services.SatisfactionSurveyService;
 
 /**
  * Test class for satisfaction surveys
@@ -21,34 +33,46 @@ import org.junit.Test;
  * @author scheerl
  *
  */
+@RunWith ( SpringRunner.class )
+@EnableAutoConfiguration
+@SpringBootTest ( classes = TestConfig.class )
 public class SatisfactionSurveyTest {
+    /**
+     * service for testing
+     */
+    @Autowired
+    private SatisfactionSurveyService service;
 
     /**
      * survey 1 for testing purposes
      */
-    private SatisfactionSurvey s1;
+    private SatisfactionSurvey        s1;
 
     /**
      * survey 2 for testing purposes
      */
-    private SatisfactionSurvey s2;
+    private SatisfactionSurvey        s2;
 
     /**
      * survey 3 for testing purposes
      */
-    private SatisfactionSurvey s3;
+    private SatisfactionSurvey        s3;
     /**
      * survey 4 for testing purposes
      */
-    private SatisfactionSurvey s4;
+    private SatisfactionSurvey        s4;
     /**
      * survey 5 for testing purposes
      */
-    private SatisfactionSurvey s5;
+    private SatisfactionSurvey        s5;
     /**
      * survey 6 for testing purposes
      */
-    private SatisfactionSurvey s6;
+    private SatisfactionSurvey        s6;
+    /**
+     * form for testing
+     */
+    private SatisfactionSurveyForm    ssf;
 
     /**
      * setup - not used yet
@@ -56,13 +80,15 @@ public class SatisfactionSurveyTest {
      * @throws java.lang.Exception
      */
     @Before
-    public void setUp () throws Exception {
+    public void setup () {
+        service.deleteAll();
     }
 
     /**
      * test creating, toString, and equals of satisfaction surveys
      */
     @Test
+    @Transactional
     public void test () {
         s1 = new SatisfactionSurvey();
         s2 = new SatisfactionSurvey();
@@ -70,7 +96,14 @@ public class SatisfactionSurveyTest {
         s4 = new SatisfactionSurvey( 5, 2, 5, 5, "yay" );
         s5 = new SatisfactionSurvey( 5, 5, 2, 5, "yay" );
         s6 = new SatisfactionSurvey( 2, 5, 5, 5, "yay" );
-
+        // final SatisfactionSurvey ss1 = new SatisfactionSurvey();
+        service.save( s3 );
+        ssf = new SatisfactionSurveyForm( s3 );
+        assertNotNull( ssf.getNotes() );
+        assertNotNull( ssf );
+        // TODO: fix this
+        final SatisfactionSurvey satisfactionSurvey = service.build( ssf );
+        assertNotNull( satisfactionSurvey );
         assertTrue( s1.equals( s2 ) );
         assertTrue( s2.equals( s1 ) );
         assertFalse( s1.equals( s3 ) );

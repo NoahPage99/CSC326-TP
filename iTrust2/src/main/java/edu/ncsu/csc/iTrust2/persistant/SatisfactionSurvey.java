@@ -6,6 +6,8 @@ import javax.persistence.Id;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import edu.ncsu.csc.iTrust2.models.DomainObject;
+
 /**
  * Satisfaction Survey class takes care of all attributes for satisfaction
  * surveys like time waited in waiting and examination room, and satisfied
@@ -20,7 +22,7 @@ import javax.validation.constraints.Min;
  *
  */
 @Entity
-public class SatisfactionSurvey {
+public class SatisfactionSurvey extends DomainObject {
 
     /** id */
     @Id
@@ -266,6 +268,7 @@ public class SatisfactionSurvey {
      *
      * @return the ID
      */
+    @Override
     public Long getId () {
         return id;
     }
