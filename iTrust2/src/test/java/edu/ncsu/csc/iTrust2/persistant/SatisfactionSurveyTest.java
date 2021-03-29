@@ -22,7 +22,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import edu.ncsu.csc.iTrust2.TestConfig;
 import edu.ncsu.csc.iTrust2.forms.SatisfactionSurveyForm;
+import edu.ncsu.csc.iTrust2.forms.UserForm;
+import edu.ncsu.csc.iTrust2.models.Patient;
+import edu.ncsu.csc.iTrust2.models.Personnel;
+import edu.ncsu.csc.iTrust2.models.User;
+import edu.ncsu.csc.iTrust2.models.enums.Role;
 import edu.ncsu.csc.iTrust2.services.SatisfactionSurveyService;
+import edu.ncsu.csc.iTrust2.services.UserService;
 
 /**
  * Test class for satisfaction surveys
@@ -44,7 +50,11 @@ public class SatisfactionSurveyTest {
      */
     @Autowired
     private SatisfactionSurveyService service;
-
+    /**
+     * user service for testing
+     */
+    @Autowired
+    private UserService               uservice;
     /**
      * survey 1 for testing purposes
      */
@@ -84,6 +94,11 @@ public class SatisfactionSurveyTest {
     @Before
     public void setup () {
         service.deleteAll();
+        final User hcp = new Personnel( new UserForm( "hcp", "123456", Role.ROLE_HCP, 1 ) );
+
+        final User alice = new Patient( new UserForm( "AliceThirteen", "123456", Role.ROLE_PATIENT, 1 ) );
+
+        uservice.saveAll( List.of( hcp, alice ) );
     }
 
     /**
@@ -94,11 +109,16 @@ public class SatisfactionSurveyTest {
     public void test () {
         s1 = new SatisfactionSurvey();
         s2 = new SatisfactionSurvey();
-        s3 = new SatisfactionSurvey( 5, 5, 5, 5, "yay" );
-        s4 = new SatisfactionSurvey( 5, 2, 5, 5, "yay" );
-        s5 = new SatisfactionSurvey( 5, 5, 2, 5, "yay" );
-        s6 = new SatisfactionSurvey( 2, 5, 5, 5, "yay" );
-
+        s3 = new SatisfactionSurvey( 5, 5, 5, 5, "yay", uservice.findByName( "hcp" ),
+                uservice.findByName( "AliceThirteen" ) );
+        s4 = new SatisfactionSurvey( 5, 2, 5, 5, "yay", uservice.findByName( "hcp" ),
+                uservice.findByName( "AliceThirteen" ) );
+        s5 = new SatisfactionSurvey( 5, 5, 2, 5, "yay", uservice.findByName( "hcp" ),
+                uservice.findByName( "AliceThirteen" ) );
+        s6 = new SatisfactionSurvey( 2, 5, 5, 5, "yay", uservice.findByName( "hcp" ),
+                uservice.findByName( "AliceThirteen" ) );
+        assertNotNull( s3.getHcp() );
+        assertNotNull( s3.getPatient() );
         // final SatisfactionSurvey ss1 = new SatisfactionSurvey();
         service.save( s3 );
         final List<SatisfactionSurvey> ssList = service.findAll();
