@@ -1,5 +1,7 @@
 package edu.ncsu.csc.iTrust2.services;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,11 @@ public class SatisfactionSurveyService extends Service {
 
     }
 
+    @SuppressWarnings ( "unchecked" )
+    @Override
+    public List<SatisfactionSurvey> findAll () {
+        return (List<SatisfactionSurvey>) super.findAll();
+    }
     // public List<SatisfactionSurvey> findByHcp ( final User hcp ) {
     // return repository.findByHcp( hcp );
     // }
