@@ -2,8 +2,13 @@ package edu.ncsu.csc.iTrust2.forms;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
+import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
 
 /**
@@ -32,6 +37,36 @@ public class SatisfactionSurveyForm implements Serializable {
     /** notes from survey */
     @NotEmpty
     private String            notes;
+
+    @NotNull
+    @ManyToOne ( cascade = CascadeType.ALL )
+    @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
+    private User              patient;
+
+    @NotNull
+    @ManyToOne ( cascade = CascadeType.ALL )
+    @JoinColumn ( name = "hcp_id", columnDefinition = "varchar(100)" )
+    private User              hcp;
+
+    public User getPatient () {
+        return patient;
+    }
+
+    public void setPatient ( final User patient ) {
+        this.patient = patient;
+    }
+
+    public User getHcp () {
+        return hcp;
+    }
+
+    public void setHcp ( final User hcp ) {
+        this.hcp = hcp;
+    }
+
+    public SatisfactionSurveyForm () {
+
+    }
 
     /**
      * Constructor for SS form

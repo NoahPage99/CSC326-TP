@@ -3,6 +3,7 @@ package edu.ncsu.csc.iTrust2.persistant;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -29,18 +30,22 @@ import edu.ncsu.csc.iTrust2.models.User;
 @Entity
 public class SatisfactionSurvey extends DomainObject {
 
-    /** id */
-    @Id
-    @GeneratedValue
-    private Long   id;
+    @NotNull
+    @ManyToOne ( cascade = CascadeType.ALL )
+    @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
+    private User   patient;
 
     @NotNull
     @ManyToOne ( cascade = CascadeType.ALL )
     @JoinColumn ( name = "hcp_id", columnDefinition = "varchar(100)" )
-    private User    hcp;
-    
+    private User   hcp;
 
-	/**
+    /** id */
+    @Id
+    @GeneratedValue ( strategy = GenerationType.AUTO )
+    private Long   id;
+
+    /**
      * time waited in waiting room
      */
     @Min ( 0 )
@@ -73,11 +78,6 @@ public class SatisfactionSurvey extends DomainObject {
      */
     private String notes;
 
-    @NotNull
-    @ManyToOne ( cascade = CascadeType.ALL )
-    @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
-    private User   patient;
-
     /**
      * create a new default satisfaction survey
      */
@@ -87,8 +87,8 @@ public class SatisfactionSurvey extends DomainObject {
         this.setSatisfiedTreatment( 1 );
         this.setTimeWaitedExaminationRoom( 0 );
         this.setTimeWaitedWaitingRoom( 0 );
-        this.setHcp(null);
-        this.setPatient(null);
+        this.setHcp( null );
+        this.setPatient( null );
     }
 
     /**
@@ -107,14 +107,14 @@ public class SatisfactionSurvey extends DomainObject {
      */
     public SatisfactionSurvey ( final int timeWaitedWaitingRoom, final int timeWaitedExaminationRoom,
             final int satisfiedOfficeVisit, final int satisfiedTreatment, final String notes, final User patient,
-            final User hcp) {
+            final User hcp ) {
         this.setNotes( notes );
         this.setSatisfiedOfficeVisit( satisfiedOfficeVisit );
         this.setSatisfiedTreatment( satisfiedTreatment );
         this.setTimeWaitedExaminationRoom( timeWaitedExaminationRoom );
         this.setTimeWaitedWaitingRoom( timeWaitedWaitingRoom );
-        this.setHcp(hcp);
-        this.setPatient(patient);
+        this.setHcp( hcp );
+        this.setPatient( patient );
     }
 
     /**
@@ -303,32 +303,34 @@ public class SatisfactionSurvey extends DomainObject {
     public void setId ( final Long id ) {
         this.id = id;
     }
-    
+
     /**
-	 * @return the hcp
-	 */
-	public User getHcp() {
-		return hcp;
-	}
+     * @return the hcp
+     */
+    public User getHcp () {
+        return hcp;
+    }
 
-	/**
-	 * @param hcp the hcp to set
-	 */
-	public void setHcp(User hcp) {
-		this.hcp = hcp;
-	}
+    /**
+     * @param hcp
+     *            the hcp to set
+     */
+    public void setHcp ( final User hcp ) {
+        this.hcp = hcp;
+    }
 
-	/**
-	 * @return the patient
-	 */
-	public User getPatient() {
-		return patient;
-	}
+    /**
+     * @return the patient
+     */
+    public User getPatient () {
+        return patient;
+    }
 
-	/**
-	 * @param patient the patient to set
-	 */
-	public void setPatient(User patient) {
-		this.patient = patient;
-	}
+    /**
+     * @param patient
+     *            the patient to set
+     */
+    public void setPatient ( final User patient ) {
+        this.patient = patient;
+    }
 }

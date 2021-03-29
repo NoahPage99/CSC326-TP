@@ -1,6 +1,8 @@
 package edu.ncsu.csc.iTrust2.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
@@ -8,18 +10,22 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import edu.ncsu.csc.iTrust2.common.TestUtils;
+import edu.ncsu.csc.iTrust2.forms.SatisfactionSurveyForm;
 import edu.ncsu.csc.iTrust2.forms.UserForm;
 import edu.ncsu.csc.iTrust2.models.Hospital;
 import edu.ncsu.csc.iTrust2.models.Patient;
@@ -53,6 +59,9 @@ class APISatisfactionSurveyTest {
     @Autowired
     private HospitalService           hospitalService;
 
+    private User                      patient;
+    private User                      hcp;
+
     /**
      * Sets up test
      */
@@ -62,9 +71,9 @@ class APISatisfactionSurveyTest {
 
         surveyService.deleteAll();
 
-        final User patient = new Patient( new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 ) );
+        patient = new Patient( new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 ) );
 
-        final User hcp = new Personnel( new UserForm( "hcp", "123456", Role.ROLE_HCP, 1 ) );
+        hcp = new Personnel( new UserForm( "hcp", "123456", Role.ROLE_HCP, 1 ) );
 
         final Patient antti = buildPatient();
 
@@ -110,6 +119,41 @@ class APISatisfactionSurveyTest {
     @Transactional
     @WithMockUser ( username = "hcp", roles = { "HCP" } )
     public void testGetNonExistentSurvey () throws Exception {
-        mvc.perform( get( "/api/v1/surveys/-1" ) ).andExpect( status().isNotFound() );
+        mvc.perform( get( "/api/v1/surveys/0" ) ).andExpect( status().isNotFound() );
+    }
+
+    /**
+     * Tests handling of errors when creating a visit for a pre-scheduled
+     * appointment.
+     *
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    @WithMockUser ( username = "patient", roles = { "PATIENT" } )
+    public void testCreateSurvey () throws Exception {
+
+        final SatisfactionSurveyForm surveyForm = new SatisfactionSurveyForm();
+
+        surveyForm.setSatisfiedOfficeVisit( 5 );
+        surveyForm.setSatisfiedTreatment( 5 );
+        surveyForm.setTimeWaitedExaminationRoom( 15 );
+        surveyForm.setTimeWaitedWaitingRoom( 20 );
+        surveyForm.setNotes( "Hello" );
+        surveyForm.setHcp( hcp );
+        assertEquals( hcp, surveyForm.getHcp() );
+        surveyForm.setPatient( patient );
+
+        surveyService.save( surveyService.build( surveyForm ) );
+
+        mvc.perform( post( "/api/v1/surveys" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( surveyForm ) ) ).andExpect( status().isOk() );
+
+        Assert.assertEquals( 1, surveyService.count() );
+
+        surveyService.deleteAll();
+
+        Assert.assertEquals( 0, surveyService.count() );
+
     }
 }

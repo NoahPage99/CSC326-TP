@@ -31,6 +31,9 @@ public class SatisfactionSurveyService extends Service {
     @Autowired
     private SatisfactionSurveyRepository repository;
 
+    @Autowired
+    private UserService                  userService;
+
     @Override
     protected JpaRepository getRepository () {
         return repository;
@@ -45,6 +48,8 @@ public class SatisfactionSurveyService extends Service {
         ss.setTimeWaitedExaminationRoom( ssf.getTimeWaitedExaminationRoom() );
         ss.setSatisfiedOfficeVisit( ssf.getSatisfiedOfficeVisit() );
         ss.setSatisfiedTreatment( ssf.getSatisfiedTreatment() );
+        ss.setHcp( userService.findByName( ssf.getHcp().getUsername() ) );
+        ss.setPatient( userService.findByName( ssf.getPatient().getUsername() ) );
         if ( ssf.getNotes() != null ) {
             ss.setNotes( ssf.getNotes() );
         }
