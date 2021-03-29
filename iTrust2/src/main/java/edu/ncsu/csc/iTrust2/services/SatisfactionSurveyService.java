@@ -61,14 +61,13 @@ public class SatisfactionSurveyService extends Service {
     public List<SatisfactionSurvey> findByHcp ( final User hcp ) {
         return repository.findByHcp( hcp );
     }
-    //
-    // public List<SatisfactionSurvey> findByPatient ( final User patient ) {
-    // return repository.findByPatient( patient );
-    // }
-    //
-    // public List<SatisfactionSurvey> findByHcpAndPatient ( final User hcp,
-    // final User patient ) {
-    // return repository.findByHcpAndPatient( hcp, patient );
-    // }
+
+    public List<SatisfactionSurvey> findByPatient ( final User patient ) {
+        return repository.findByPatient( patient );
+    }
+
+    public List<SatisfactionSurvey> findByHcpAndPatient ( final User hcp, final User patient ) {
+        return repository.findByHcpAndPatient( hcp, patient );
+    }
 
 }

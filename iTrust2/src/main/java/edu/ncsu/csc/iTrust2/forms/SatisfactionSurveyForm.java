@@ -48,14 +48,14 @@ public class SatisfactionSurveyForm implements Serializable {
         setTimeWaitedWaitingRoom( ss.getTimeWaitedWaitingRoom() );
     }
 
-    // /**
-    // * getter for id
-    // *
-    // * @return the id
-    // */
-    // public String getId () {
-    // return id;
-    // }
+    /**
+     * getter for id
+     *
+     * @return the id
+     */
+    public String getId () {
+        return id;
+    }
 
     // /**
     // * setter for id
