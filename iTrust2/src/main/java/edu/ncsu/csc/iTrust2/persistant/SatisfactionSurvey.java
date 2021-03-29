@@ -6,6 +6,8 @@ import javax.persistence.Id;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import edu.ncsu.csc.iTrust2.models.DomainObject;
+
 /**
  * Satisfaction Survey class takes care of all attributes for satisfaction
  * surveys like time waited in waiting and examination room, and satisfied
@@ -20,7 +22,7 @@ import javax.validation.constraints.Min;
  *
  */
 @Entity
-public class SatisfactionSurvey {
+public class SatisfactionSurvey extends DomainObject {
 
     /** id */
     @Id
@@ -194,20 +196,20 @@ public class SatisfactionSurvey {
         this.notes = notes;
     }
 
-    /**
-     * hashcode
-     */
-    @Override
-    public int hashCode () {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ( ( notes == null ) ? 0 : notes.hashCode() );
-        result = prime * result + satisfiedOfficeVisit;
-        result = prime * result + satisfiedTreatment;
-        result = prime * result + timeWaitedExaminationRoom;
-        result = prime * result + timeWaitedWaitingRoom;
-        return result;
-    }
+    // /**
+    // * hashcode
+    // */
+    // @Override
+    // public int hashCode () {
+    // final int prime = 31;
+    // int result = 1;
+    // result = prime * result + ( ( notes == null ) ? 0 : notes.hashCode() );
+    // result = prime * result + satisfiedOfficeVisit;
+    // result = prime * result + satisfiedTreatment;
+    // result = prime * result + timeWaitedExaminationRoom;
+    // result = prime * result + timeWaitedWaitingRoom;
+    // return result;
+    // }
 
     /**
      * equals
@@ -266,6 +268,7 @@ public class SatisfactionSurvey {
      *
      * @return the ID
      */
+    @Override
     public Long getId () {
         return id;
     }
