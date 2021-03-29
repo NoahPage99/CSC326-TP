@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import edu.ncsu.csc.iTrust2.forms.SatisfactionSurveyForm;
+import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
 import edu.ncsu.csc.iTrust2.repositories.SatisfactionSurveyRepository;
 
@@ -56,9 +57,10 @@ public class SatisfactionSurveyService extends Service {
     public List<SatisfactionSurvey> findAll () {
         return (List<SatisfactionSurvey>) super.findAll();
     }
-    // public List<SatisfactionSurvey> findByHcp ( final User hcp ) {
-    // return repository.findByHcp( hcp );
-    // }
+
+    public List<SatisfactionSurvey> findByHcp ( final User hcp ) {
+        return repository.findByHcp( hcp );
+    }
     //
     // public List<SatisfactionSurvey> findByPatient ( final User patient ) {
     // return repository.findByPatient( patient );

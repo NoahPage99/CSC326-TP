@@ -1,12 +1,17 @@
 package edu.ncsu.csc.iTrust2.persistant;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import edu.ncsu.csc.iTrust2.models.DomainObject;
+import edu.ncsu.csc.iTrust2.models.User;
 
 /**
  * Satisfaction Survey class takes care of all attributes for satisfaction
@@ -61,6 +66,11 @@ public class SatisfactionSurvey extends DomainObject {
      * notes on survey
      */
     private String notes;
+
+    @NotNull
+    @ManyToOne ( cascade = CascadeType.ALL )
+    @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
+    private User   patient;
 
     /**
      * create a new default satisfaction survey
