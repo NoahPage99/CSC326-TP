@@ -8,6 +8,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.junit.Before;
@@ -96,8 +98,13 @@ public class SatisfactionSurveyTest {
         s4 = new SatisfactionSurvey( 5, 2, 5, 5, "yay" );
         s5 = new SatisfactionSurvey( 5, 5, 2, 5, "yay" );
         s6 = new SatisfactionSurvey( 2, 5, 5, 5, "yay" );
+
         // final SatisfactionSurvey ss1 = new SatisfactionSurvey();
         service.save( s3 );
+        final List<SatisfactionSurvey> ssList = service.findAll();
+        assertEquals( 1, ssList.size() );
+        final SatisfactionSurvey survey = ssList.get( 0 );
+        assertNotNull( survey );
         ssf = new SatisfactionSurveyForm( s3 );
         assertNotNull( ssf.getNotes() );
         assertNotNull( ssf );

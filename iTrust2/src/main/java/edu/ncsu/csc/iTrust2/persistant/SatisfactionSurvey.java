@@ -196,20 +196,20 @@ public class SatisfactionSurvey extends DomainObject {
         this.notes = notes;
     }
 
-    // /**
-    // * hashcode
-    // */
-    // @Override
-    // public int hashCode () {
-    // final int prime = 31;
-    // int result = 1;
-    // result = prime * result + ( ( notes == null ) ? 0 : notes.hashCode() );
-    // result = prime * result + satisfiedOfficeVisit;
-    // result = prime * result + satisfiedTreatment;
-    // result = prime * result + timeWaitedExaminationRoom;
-    // result = prime * result + timeWaitedWaitingRoom;
-    // return result;
-    // }
+    /**
+     * hashcode
+     */
+    @Override
+    public int hashCode () {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ( ( notes == null ) ? 0 : notes.hashCode() );
+        result = prime * result + satisfiedOfficeVisit;
+        result = prime * result + satisfiedTreatment;
+        result = prime * result + timeWaitedExaminationRoom;
+        result = prime * result + timeWaitedWaitingRoom;
+        return result;
+    }
 
     /**
      * equals
