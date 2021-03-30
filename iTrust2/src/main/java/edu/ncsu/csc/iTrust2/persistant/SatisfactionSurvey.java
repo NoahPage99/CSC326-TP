@@ -1,6 +1,5 @@
 package edu.ncsu.csc.iTrust2.persistant;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,12 +30,12 @@ import edu.ncsu.csc.iTrust2.models.User;
 public class SatisfactionSurvey extends DomainObject {
 
     @NotNull
-    @ManyToOne ( cascade = CascadeType.ALL )
+    @ManyToOne // ( cascade = CascadeType.ALL )
     @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
     private User   patient;
 
     @NotNull
-    @ManyToOne ( cascade = CascadeType.ALL )
+    @ManyToOne // ( cascade = CascadeType.ALL )
     @JoinColumn ( name = "hcp_id", columnDefinition = "varchar(100)" )
     private User   hcp;
 

@@ -2,13 +2,8 @@ package edu.ncsu.csc.iTrust2.forms;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
-import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
 
 /**
@@ -38,29 +33,31 @@ public class SatisfactionSurveyForm implements Serializable {
     @NotEmpty
     private String            notes;
 
-    @NotNull
-    @ManyToOne ( cascade = CascadeType.ALL )
-    @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
-    private User              patient;
+    // @NotNull
+    // @ManyToOne ( cascade = CascadeType.ALL )
+    // @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
+    @NotEmpty
+    private String            patient;
 
-    @NotNull
-    @ManyToOne ( cascade = CascadeType.ALL )
-    @JoinColumn ( name = "hcp_id", columnDefinition = "varchar(100)" )
-    private User              hcp;
+    // @NotNull
+    // @ManyToOne ( cascade = CascadeType.ALL )
+    // @JoinColumn ( name = "hcp_id", columnDefinition = "varchar(100)" )
+    @NotEmpty
+    private String            hcp;
 
-    public User getPatient () {
+    public String getPatient () {
         return patient;
     }
 
-    public void setPatient ( final User patient ) {
+    public void setPatient ( final String patient ) {
         this.patient = patient;
     }
 
-    public User getHcp () {
+    public String getHcp () {
         return hcp;
     }
 
-    public void setHcp ( final User hcp ) {
+    public void setHcp ( final String hcp ) {
         this.hcp = hcp;
     }
 
@@ -75,8 +72,10 @@ public class SatisfactionSurveyForm implements Serializable {
      *            satisfaction survey
      */
     public SatisfactionSurveyForm ( final SatisfactionSurvey ss ) {
+        setPatient( ss.getPatient().getUsername() );
+        setHcp( ss.getHcp().getUsername() );
         setNotes( ss.getNotes() );
-        // setId( ss.getId().toString() );
+        setId( ss.getId().toString() );
         setSatisfiedOfficeVisit( ss.getSatisfiedOfficeVisit() );
         setSatisfiedTreatment( ss.getSatisfiedTreatment() );
         setTimeWaitedExaminationRoom( ss.getTimeWaitedExaminationRoom() );
@@ -92,15 +91,15 @@ public class SatisfactionSurveyForm implements Serializable {
         return id;
     }
 
-    // /**
-    // * setter for id
-    // *
-    // * @param id
-    // * the id to set
-    // */
-    // public void setId ( final String id ) {
-    // this.id = id;
-    // }
+    /**
+     * setter for id
+     *
+     * @param id
+     *            the id to set
+     */
+    public void setId ( final String id ) {
+        this.id = id;
+    }
 
     /**
      * getter for timed waiting room

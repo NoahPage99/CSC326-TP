@@ -1,6 +1,5 @@
 package edu.ncsu.csc.iTrust2.api;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -71,9 +70,9 @@ class APISatisfactionSurveyTest {
 
         surveyService.deleteAll();
 
-        patient = new Patient( new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 ) );
+        final User patient = new Patient( new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 ) );
 
-        hcp = new Personnel( new UserForm( "hcp", "123456", Role.ROLE_HCP, 1 ) );
+        final User hcp = new Personnel( new UserForm( "hcp", "123456", Role.ROLE_HCP, 1 ) );
 
         final Patient antti = buildPatient();
 
@@ -130,19 +129,26 @@ class APISatisfactionSurveyTest {
      */
     @Test
     @Transactional
-    @WithMockUser ( username = "patient", roles = { "PATIENT" } )
+    @WithMockUser ( username = "hcp", roles = { "HCP" } )
     public void testCreateSurvey () throws Exception {
 
-        final SatisfactionSurveyForm surveyForm = new SatisfactionSurveyForm();
+        final User patient = new Patient( new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 ) );
 
+        final User hcp = new Personnel( new UserForm( "hcp", "123456", Role.ROLE_HCP, 1 ) );
+
+        final Patient antti = buildPatient();
+
+        userService.saveAll( List.of( patient, hcp, antti ) );
+
+        final SatisfactionSurveyForm surveyForm = new SatisfactionSurveyForm();
+        surveyService.deleteAll();
         surveyForm.setSatisfiedOfficeVisit( 5 );
         surveyForm.setSatisfiedTreatment( 5 );
         surveyForm.setTimeWaitedExaminationRoom( 15 );
         surveyForm.setTimeWaitedWaitingRoom( 20 );
         surveyForm.setNotes( "Hello" );
-        surveyForm.setHcp( hcp );
-        assertEquals( hcp, surveyForm.getHcp() );
-        surveyForm.setPatient( patient );
+        surveyForm.setHcp( "hcp" );
+        surveyForm.setPatient( "patient" );
 
         surveyService.save( surveyService.build( surveyForm ) );
 
