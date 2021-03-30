@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.ncsu.csc.iTrust2.forms.SatisfactionSurveyForm;
+import edu.ncsu.csc.iTrust2.models.OfficeVisit;
+import edu.ncsu.csc.iTrust2.models.Prescription;
 import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
 import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
@@ -39,10 +41,15 @@ public class APISatisfactionSurveyController extends APIController {
      *
      * @return
      */
+    @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_OD', 'ROLE_OPH', 'ROLE_VIROLOGIST')" )
     @GetMapping ( BASE_PATH + "/surveys" )
     public List<SatisfactionSurvey> getSurveys () {
-        loggerUtil.log( TransactionType.VIEW_ALL_OFFICE_VISITS, LoggerUtil.currentUser() );
-        return surveyService.findAll();
+    	
+    	loggerUtil.log( TransactionType.SURVEY_VIEW, LoggerUtil.currentUser(),
+                "HCP viewed a list of all survey" );
+        return (List<SatisfactionSurvey>) surveyService.findAll();
+    
+       
     }
 
     /**
@@ -84,7 +91,7 @@ public class APISatisfactionSurveyController extends APIController {
     @PreAuthorize ( "hasRole('ROLE_HCP')" )
     public ResponseEntity getSurveys ( @PathVariable final Long id ) {
         final User self = userService.findByName( LoggerUtil.currentUser() );
-        loggerUtil.log( TransactionType.GENERAL_CHECKUP_HCP_VIEW, self );
+        loggerUtil.log( TransactionType.SURVEY_VIEW, self );
         if ( !surveyService.existsById( id ) ) {
             return new ResponseEntity( HttpStatus.NOT_FOUND );
         }
@@ -111,7 +118,7 @@ public class APISatisfactionSurveyController extends APIController {
                         HttpStatus.CONFLICT );
             }
             surveyService.save( survey );
-            loggerUtil.log( TransactionType.GENERAL_CHECKUP_CREATE, LoggerUtil.currentUser(),
+            loggerUtil.log( TransactionType.SURVEY_CREATE, LoggerUtil.currentUser(),
                     survey.getPatient().getUsername() );
             return new ResponseEntity( survey, HttpStatus.OK );
 
@@ -119,7 +126,7 @@ public class APISatisfactionSurveyController extends APIController {
         catch ( final Exception e ) {
             e.printStackTrace();
             return new ResponseEntity(
-                    errorResponse( "Could not validate or save the OfficeVisit provided due to " + e.getMessage() ),
+                    errorResponse( "Could not validate or save the Survey provided due to " + e.getMessage() ),
                     HttpStatus.BAD_REQUEST );
         }
     }

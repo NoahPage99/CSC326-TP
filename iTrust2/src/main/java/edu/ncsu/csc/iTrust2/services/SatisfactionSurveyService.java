@@ -48,8 +48,8 @@ public class SatisfactionSurveyService extends Service {
         ss.setTimeWaitedExaminationRoom( ssf.getTimeWaitedExaminationRoom() );
         ss.setSatisfiedOfficeVisit( ssf.getSatisfiedOfficeVisit() );
         ss.setSatisfiedTreatment( ssf.getSatisfiedTreatment() );
-        ss.setHcp( userService.findByName( ssf.getHcp() ) );
-        ss.setPatient( userService.findByName( ssf.getPatient() ) );
+        ss.setHcp( userService.findByName(ssf.getHcp()) );
+        ss.setPatient( userService.findByName(ssf.getPatient()) );
         if ( ssf.getNotes() != null ) {
             ss.setNotes( ssf.getNotes() );
         }

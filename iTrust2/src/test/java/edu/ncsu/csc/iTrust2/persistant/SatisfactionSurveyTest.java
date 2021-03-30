@@ -147,6 +147,8 @@ public class SatisfactionSurveyTest {
         assertFalse( s3.equals( s4 ) );
         assertFalse( s3.equals( s5 ) );
         assertFalse( s3.equals( s6 ) );
+        
+        
     }
 
 }

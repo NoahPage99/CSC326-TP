@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -42,7 +42,7 @@ import edu.ncsu.csc.iTrust2.services.UserService;
 @RunWith ( SpringRunner.class )
 @SpringBootTest
 @AutoConfigureMockMvc
-class APISatisfactionSurveyTest {
+public class APISatisfactionSurveyTest {
 
     private MockMvc                   mvc;
 
@@ -50,7 +50,7 @@ class APISatisfactionSurveyTest {
     private WebApplicationContext     context;
 
     @Autowired
-    private SatisfactionSurveyService surveyService;
+    private SatisfactionSurveyService        surveyService;
 
     @Autowired
     private UserService               userService;
@@ -58,8 +58,6 @@ class APISatisfactionSurveyTest {
     @Autowired
     private HospitalService           hospitalService;
 
-    private User                      patient;
-    private User                      hcp;
 
     /**
      * Sets up test
@@ -69,6 +67,7 @@ class APISatisfactionSurveyTest {
         mvc = MockMvcBuilders.webAppContextSetup( context ).build();
 
         surveyService.deleteAll();
+
 
         final User patient = new Patient( new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 ) );
 
@@ -117,8 +116,8 @@ class APISatisfactionSurveyTest {
     @Test
     @Transactional
     @WithMockUser ( username = "hcp", roles = { "HCP" } )
-    public void testGetNonExistentSurvey () throws Exception {
-        mvc.perform( get( "/api/v1/surveys/0" ) ).andExpect( status().isNotFound() );
+    public void testGetNonExistentSurveys () throws Exception {
+        mvc.perform( get( "/api/v1/surveys/-1" ) ).andExpect( status().isNotFound() );
     }
 
     /**
@@ -131,17 +130,19 @@ class APISatisfactionSurveyTest {
     @Transactional
     @WithMockUser ( username = "hcp", roles = { "HCP" } )
     public void testCreateSurvey () throws Exception {
-
-        final User patient = new Patient( new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 ) );
-
-        final User hcp = new Personnel( new UserForm( "hcp", "123456", Role.ROLE_HCP, 1 ) );
-
-        final Patient antti = buildPatient();
-
-        userService.saveAll( List.of( patient, hcp, antti ) );
+    	surveyService.deleteAll();
+    	
+    	Assert.assertEquals( 0, surveyService.count() );
+    	
+    	
+    	
+    	final User patient = userService.findByName( "patient" );
+    	Assert.assertEquals("patient", patient.getUsername());
+        final User hcp = userService.findByName( "hcp" );
+        Assert.assertEquals("hcp", hcp.getUsername());
 
         final SatisfactionSurveyForm surveyForm = new SatisfactionSurveyForm();
-        surveyService.deleteAll();
+       
         surveyForm.setSatisfiedOfficeVisit( 5 );
         surveyForm.setSatisfiedTreatment( 5 );
         surveyForm.setTimeWaitedExaminationRoom( 15 );
@@ -149,8 +150,8 @@ class APISatisfactionSurveyTest {
         surveyForm.setNotes( "Hello" );
         surveyForm.setHcp( "hcp" );
         surveyForm.setPatient( "patient" );
+        
 
-        surveyService.save( surveyService.build( surveyForm ) );
 
         mvc.perform( post( "/api/v1/surveys" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( surveyForm ) ) ).andExpect( status().isOk() );
@@ -160,6 +161,7 @@ class APISatisfactionSurveyTest {
         surveyService.deleteAll();
 
         Assert.assertEquals( 0, surveyService.count() );
-
+     
     }
+
 }
