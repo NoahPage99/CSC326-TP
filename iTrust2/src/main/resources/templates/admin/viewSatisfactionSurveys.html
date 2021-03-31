@@ -25,10 +25,40 @@
             });
 
 			app.controller('viewSatisfactionSurveysAdminCtrl', function ($scope, $http) {
-
+				$scope.surveys = [];
+				$scope.loadSurveys = function() {
+					$http.get("/iTrust2/api/v1/surveys").then(
+							function(response) {
+								$scope.surveys=response.data;
+								$scope.message = "";
+							}, function(rejection) {
+					              $scope.surveys = [];
+					              $scope.message = "Could not display surveys";
+							});
+				}
+				
 			});
 			/*]]>*/
 		</script>
+		<div ng-app="viewSatisfactionSurveysAdminApp" ng-controller="viewSatisfactionSurveysAdminCtrl">
+			<h3>Admin View Surveys</h3>
+			<table class="table table-bordered">
+				<caption>Existing Surveys:</caption>
+				<thead>
+					<tr>
+						<th>HCP</th>
+						<th>Patient</th>
+						<th>Time Waited Waiting Room</th>
+						<th>Time Waited Examination Room</th>
+						<th>Satisfied Treatment</th>
+						<th>Satisfied Office Visit</th>
+						<th>Notes</th>
+					</tr>
+				</thead>
+
+			</table>
+		</div>
+		
 </body>
 
 </html>
