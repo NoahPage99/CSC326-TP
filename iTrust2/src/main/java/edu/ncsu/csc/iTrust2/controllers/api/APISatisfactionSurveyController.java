@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.ncsu.csc.iTrust2.forms.SatisfactionSurveyForm;
-import edu.ncsu.csc.iTrust2.models.OfficeVisit;
-import edu.ncsu.csc.iTrust2.models.Prescription;
 import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
 import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
@@ -41,15 +39,13 @@ public class APISatisfactionSurveyController extends APIController {
      *
      * @return
      */
-    @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_OD', 'ROLE_OPH', 'ROLE_VIROLOGIST')" )
+    @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_OD', 'ROLE_OPH', 'ROLE_VIROLOGIST', 'ROLE_ADMIN')" )
     @GetMapping ( BASE_PATH + "/surveys" )
     public List<SatisfactionSurvey> getSurveys () {
-    	
-    	loggerUtil.log( TransactionType.SURVEY_VIEW, LoggerUtil.currentUser(),
-                "HCP viewed a list of all survey" );
-        return (List<SatisfactionSurvey>) surveyService.findAll();
-    
-       
+
+        loggerUtil.log( TransactionType.SURVEY_VIEW, LoggerUtil.currentUser(), "HCP viewed a list of all survey" );
+        return surveyService.findAll();
+
     }
 
     /**
@@ -58,7 +54,7 @@ public class APISatisfactionSurveyController extends APIController {
      * @return all of the office visits for the current HCP.
      */
     @GetMapping ( BASE_PATH + "/surveys/HCP" )
-    @PreAuthorize ( "hasRole('ROLE_HCP')" )
+    @PreAuthorize ( "hasRole('ROLE_HCP', 'ROLE_ADMIN')" )
     public List<SatisfactionSurvey> getSurveysForHCP () {
         final User self = userService.findByName( LoggerUtil.currentUser() );
         loggerUtil.log( TransactionType.VIEW_ALL_OFFICE_VISITS, self );
