@@ -67,14 +67,14 @@ public class SatisfactionSurvey extends DomainObject {
     /**
      * satisfaction of office visit
      */
-    @Min ( 1 )
+    @Min ( 0 )
     @Max ( 10 )
     private int    satisfiedOfficeVisit;
 
     /**
      * satisfaction of treatment
      */
-    @Min ( 1 )
+    @Min ( 0 )
     @Max ( 10 )
     private int    satisfiedTreatment;
 
@@ -93,13 +93,7 @@ public class SatisfactionSurvey extends DomainObject {
      * create a new default satisfaction survey
      */
     public SatisfactionSurvey () {
-        this.setNotes( "" );
-        this.setSatisfiedOfficeVisit( 1 );
-        this.setSatisfiedTreatment( 1 );
-        this.setTimeWaitedExaminationRoom( 0 );
-        this.setTimeWaitedWaitingRoom( 0 );
-        this.setHcp( null );
-        this.setPatient( null );
+        
     }
 
     /**

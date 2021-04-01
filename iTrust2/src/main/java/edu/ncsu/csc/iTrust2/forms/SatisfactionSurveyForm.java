@@ -3,6 +3,9 @@ package edu.ncsu.csc.iTrust2.forms;
 import java.io.Serializable;
 
 import javax.persistence.CascadeType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
@@ -25,6 +28,8 @@ public class SatisfactionSurveyForm implements Serializable {
      */
     private static final long serialVersionUID = 1L;
     /** id for survey form */
+    @Id
+    @GeneratedValue ( strategy = GenerationType.AUTO )
     private String            id;
     /** waiting room time */
     private int               timeWaitedWaitingRoom;
