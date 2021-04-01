@@ -45,22 +45,10 @@
 				
 				}
 				
-				//$scope.patient = [];
-				//$scope.patient = /*[[${#httpServletRequest.remoteUser}]]*/null;
-				//console.log($scope.patient);
-			/**	$scope.survey = {
-					patient_id: "",
-					notes: "",
-					hcp_id: "",
-					time_waited_examination_room: "",
-					time_waited_waiting_room: "",
-					satisfied_office_visit: "",
-					satisfied_treatment: ""
-				}; */
 				$scope.survey = {
-					patient_id: "",
+					patient: "",
 					notes: "",
-					hcp_id: "",
+					hcp: "",
 					timeWaitedExaminationRoom: "",
 					timeWaitedWaitingRoom: "",
 					satisfiedOfficeVisit: "",
@@ -72,9 +60,9 @@
 					$scope.success = false;
 					$scope.failure = false;
 					
-					$scope.survey.hcp_id = $scope.hcps[1].username;
+					$scope.survey.hcp = $scope.hcps[1].username;
 					$scope.survey.notes = $scope.notes;
-					$scope.survey.patient_id = $scope.patient.username;
+					$scope.survey.patient = $scope.patient.username;
 					$scope.survey.satisfiedOfficeVisit = $scope.satisfiedVisit;
 					$scope.survey.timeWaitedExaminationRoom = $scope.timeWaitedExam;
 					$scope.survey.timeWaitedWaitingRoom= $scope.timeWaitedRoom;
@@ -82,23 +70,6 @@
 					
 					console.log($scope.survey);
 					
-					/**$http.post("/iTrust2/api/v1/surveyform",
-							$scope.satisfiedVisit,
-							$scope.satisfiedTreat,
-							$scope.timeWaitedRoom,
-							$scope.timeWaitedExam,
-							$scope.hcps[1],
-							$scope.patient,
-							$scope.notes
-							).then(
-							function(response) {
-								$scope.survey = response.data;
-								console.log($scope.survey);
-							},
-							function(rejection) {
-								$scope.failure = true;
-								console.error("Error while adding Survey");
-						});*/
 					
 					$http.post("/iTrust2/api/v1/surveys", $scope.survey).then(
 						function(success) {
@@ -186,7 +157,7 @@
                 </thead>
                 <tbody>
                     <tr name="satsfactionSurveys"
-                        ng-repeat="s in surveys | orderBy: 'hcp_id'"
+                        ng-repeat="s in surveys | orderBy: 'hcp'"
                         ng-include="getTemplate(s)" surveyId={{s.id}}>
                     </tr>
                 </tbody>

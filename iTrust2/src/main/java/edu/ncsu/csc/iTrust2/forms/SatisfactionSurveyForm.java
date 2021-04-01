@@ -44,16 +44,16 @@ public class SatisfactionSurveyForm implements Serializable {
     @NotEmpty
     private String            notes;
 
-//     @NotNull
-//     @ManyToOne ( cascade = CascadeType.ALL )
-//     @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
-    @NotEmpty
+    @NotNull
+    @ManyToOne ( cascade = CascadeType.ALL )
+    // @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
+    // @NotEmpty
     private String            patient;
 
-//     @NotNull
-//     @ManyToOne ( cascade = CascadeType.ALL )
-//     @JoinColumn ( name = "hcp_id", columnDefinition = "varchar(100)" )
-    @NotEmpty
+    @NotNull
+    @ManyToOne ( cascade = CascadeType.ALL )
+    // @JoinColumn ( name = "hcp_id", columnDefinition = "varchar(100)" )
+    // @NotEmpty
     private String            hcp;
 
     public String getPatient () {
