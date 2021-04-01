@@ -24,7 +24,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import edu.ncsu.csc.iTrust2.common.TestUtils;
-import edu.ncsu.csc.iTrust2.forms.SatisfactionSurveyForm;
 import edu.ncsu.csc.iTrust2.forms.UserForm;
 import edu.ncsu.csc.iTrust2.models.Hospital;
 import edu.ncsu.csc.iTrust2.models.Patient;
@@ -35,6 +34,7 @@ import edu.ncsu.csc.iTrust2.models.enums.Ethnicity;
 import edu.ncsu.csc.iTrust2.models.enums.Gender;
 import edu.ncsu.csc.iTrust2.models.enums.Role;
 import edu.ncsu.csc.iTrust2.models.enums.State;
+import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
 import edu.ncsu.csc.iTrust2.services.HospitalService;
 import edu.ncsu.csc.iTrust2.services.SatisfactionSurveyService;
 import edu.ncsu.csc.iTrust2.services.UserService;
@@ -50,14 +50,13 @@ public class APISatisfactionSurveyTest {
     private WebApplicationContext     context;
 
     @Autowired
-    private SatisfactionSurveyService        surveyService;
+    private SatisfactionSurveyService surveyService;
 
     @Autowired
     private UserService               userService;
 
     @Autowired
     private HospitalService           hospitalService;
-
 
     /**
      * Sets up test
@@ -67,7 +66,6 @@ public class APISatisfactionSurveyTest {
         mvc = MockMvcBuilders.webAppContextSetup( context ).build();
 
         surveyService.deleteAll();
-
 
         final User patient = new Patient( new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 ) );
 
@@ -128,40 +126,36 @@ public class APISatisfactionSurveyTest {
      */
     @Test
     @Transactional
-    @WithMockUser ( username = "hcp", roles = { "HCP" } )
+    @WithMockUser ( username = "patient", roles = { "PATIENT" } )
     public void testCreateSurvey () throws Exception {
-    	surveyService.deleteAll();
-    	
-    	Assert.assertEquals( 0, surveyService.count() );
-    	
-    	
-    	
-    	final User patient = userService.findByName( "patient" );
-    	Assert.assertEquals("patient", patient.getUsername());
+        surveyService.deleteAll();
+
+        Assert.assertEquals( 0, surveyService.count() );
+
+        final User patient = userService.findByName( "patient" );
+        Assert.assertEquals( "patient", patient.getUsername() );
         final User hcp = userService.findByName( "hcp" );
-        Assert.assertEquals("hcp", hcp.getUsername());
+        Assert.assertEquals( "hcp", hcp.getUsername() );
 
-        final SatisfactionSurveyForm surveyForm = new SatisfactionSurveyForm();
-       
-        surveyForm.setSatisfiedOfficeVisit( 5 );
-        surveyForm.setSatisfiedTreatment( 5 );
-        surveyForm.setTimeWaitedExaminationRoom( 15 );
-        surveyForm.setTimeWaitedWaitingRoom( 20 );
-        surveyForm.setNotes( "Hello" );
-        surveyForm.setHcp( "hcp" );
-        surveyForm.setPatient( "patient" );
-        
+        final SatisfactionSurvey survey = new SatisfactionSurvey();
 
+        survey.setSatisfiedOfficeVisit( 5 );
+        survey.setSatisfiedTreatment( 5 );
+        survey.setTimeWaitedExaminationRoom( 15 );
+        survey.setTimeWaitedWaitingRoom( 20 );
+        survey.setNotes( "Hello" );
+        survey.setHcp( hcp );
+        survey.setPatient( patient );
 
         mvc.perform( post( "/api/v1/surveys" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( surveyForm ) ) ).andExpect( status().isOk() );
+                .content( TestUtils.asJsonString( survey ) ) ).andExpect( status().isOk() );
 
         Assert.assertEquals( 1, surveyService.count() );
 
         surveyService.deleteAll();
 
         Assert.assertEquals( 0, surveyService.count() );
-     
+
     }
 
 }

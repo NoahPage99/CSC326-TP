@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.ncsu.csc.iTrust2.forms.SatisfactionSurveyForm;
 import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
 import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
@@ -104,9 +103,9 @@ public class APISatisfactionSurveyController extends APIController {
      */
     @PostMapping ( BASE_PATH + "/surveys" )
     @PreAuthorize ( "hasRole('ROLE_PATIENT')" )
-    public ResponseEntity createSurvey ( @RequestBody final SatisfactionSurveyForm surveyForm ) {
+    public ResponseEntity createSurvey ( @RequestBody final SatisfactionSurvey surveyForm ) {
         try {
-            final SatisfactionSurvey survey = surveyService.build( surveyForm );
+            final SatisfactionSurvey survey = surveyForm;
 
             if ( null != surveyForm.getId() && surveyService.existsById( surveyForm.getId() ) ) {
                 return new ResponseEntity(

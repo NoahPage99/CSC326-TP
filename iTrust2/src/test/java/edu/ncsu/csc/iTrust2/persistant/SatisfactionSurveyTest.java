@@ -21,7 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import edu.ncsu.csc.iTrust2.TestConfig;
-import edu.ncsu.csc.iTrust2.forms.SatisfactionSurveyForm;
 import edu.ncsu.csc.iTrust2.forms.UserForm;
 import edu.ncsu.csc.iTrust2.models.Patient;
 import edu.ncsu.csc.iTrust2.models.Personnel;
@@ -81,10 +80,6 @@ public class SatisfactionSurveyTest {
      * survey 6 for testing purposes
      */
     private SatisfactionSurvey        s6;
-    /**
-     * form for testing
-     */
-    private SatisfactionSurveyForm    ssf;
 
     /**
      * setup - not used yet
@@ -125,11 +120,10 @@ public class SatisfactionSurveyTest {
         assertEquals( 1, ssList.size() );
         final SatisfactionSurvey survey = ssList.get( 0 );
         assertNotNull( survey );
-        ssf = new SatisfactionSurveyForm( s3 );
-        assertNotNull( ssf.getNotes() );
-        assertNotNull( ssf );
+        assertNotNull( s6.getNotes() );
+        assertNotNull( s6 );
         // TODO: fix this
-        final SatisfactionSurvey satisfactionSurvey = service.build( ssf );
+        final SatisfactionSurvey satisfactionSurvey = service.build( s6 );
         assertNotNull( satisfactionSurvey );
         assertTrue( s1.equals( s2 ) );
         assertTrue( s2.equals( s1 ) );
@@ -147,8 +141,7 @@ public class SatisfactionSurveyTest {
         assertFalse( s3.equals( s4 ) );
         assertFalse( s3.equals( s5 ) );
         assertFalse( s3.equals( s6 ) );
-        
-        
+
     }
 
 }

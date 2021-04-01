@@ -58,27 +58,27 @@
 					satisfied_treatment: ""
 				}; */
 				$scope.survey = {
-					patient_id: "",
+					patient: "",
 					notes: "",
-					hcp_id: "",
+					hcp: "",
 					timeWaitedExaminationRoom: "",
 					timeWaitedWaitingRoom: "",
 					satisfiedOfficeVisit: "",
 					satisfiedTreatment: ""
 				};
-				
+				//Submit function 
 				$scope.submit = function() {
 					
 					$scope.success = false;
 					$scope.failure = false;
 					
-					$scope.survey.hcp_id = $scope.hcps[1].username;
+					$scope.survey.hcp = $scope.hcps[1];
 					$scope.survey.notes = $scope.notes;
-					$scope.survey.patient_id = $scope.patient.username;
+					$scope.survey.patient = $scope.patient;
 					$scope.survey.satisfiedOfficeVisit = $scope.satisfiedVisit;
 					$scope.survey.timeWaitedExaminationRoom = $scope.timeWaitedExam;
-					$scope.survey.timeWaitedWaitingRoom= $scope.timeWaitedRoom;
-					$scope.survey.satisfiedTreatment= $scope.satisfiedTreat;
+					$scope.survey.timeWaitedWaitingRoom = $scope.timeWaitedRoom;
+					$scope.survey.satisfiedTreatment = $scope.satisfiedTreat;
 					
 					console.log($scope.survey);
 					
