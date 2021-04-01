@@ -31,7 +31,8 @@
 					timeWaitedExaminationRoom: 0,
 					timeWaitedWaitingRoom: 0,
 					satisfiedOfficeVisit: 0,
-					satisfiedTreatment: 0
+					satisfiedTreatment: 0,
+					notes : ""
 				};
 				$scope.hcpAvgs = [];
 				$scope.surveys = [];
@@ -90,9 +91,9 @@
 							}
 
 							for (var i = 0; i < $scope.surveyList.length; i++) {
-								console.log($scope.surveyList);
+								
 								$scope.username = $scope.surveyList[i].hcp.username;
-								console.log($scope.username);
+								
 								for (var j = 0; j < $scope.hcps.length; j++) {
 									if ($scope.hcps[j].username == $scope.username) {
 										$scope.hcpAvg.hcp = $scope.hcps[j].username;
@@ -100,11 +101,11 @@
 										$scope.hcpAvg.timeWaitedWaitingRoom += $scope.surveyList[i].timeWaitedWaitingRoom;
 										$scope.hcpAvg.satisfiedOfficeVisit += $scope.surveyList[i].satisfiedOfficeVisit;
 										$scope.hcpAvg.satisfiedTreatment += $scope.surveyList[i].satisfiedTreatment;
-										$scope.hcpAvgs.push($scope.hcpAvg);
+										$scope.hcpAvg.notes += $scope.surveyList[i].notes + "\n";
 									}
-									console.log($scope.hcpAvg);
 								}
 							}
+							$scope.hcpAvgs.push($scope.hcpAvg);
 
 							$scope.hcpAvg.timeWaitedExaminationRoom /= $scope.surveyList.length;
 							$scope.hcpAvg.timeWaitedWaitingRoom /= $scope.surveyList.length;
@@ -122,7 +123,7 @@
 
 
 				$scope.loadSurveys();
-				console.log($scope.surveyList);
+				// console.log($scope.surveyList);
 
 
 				// TODO: ITERATE THROUGH EACH HCPS RESPECTIVE LIST OF SURVEYS AND CALCULATE AN AVERAGE
@@ -143,20 +144,34 @@
 				<caption>HCP Survey Averages:</caption>
 				<thead>
 					<tr>
-						<th>Time Waited Waiting Room</th>
-						<th>Time Waited Examination Room</th>
-						<th>Satisfied Treatment</th>
-						<th>Satisfied Office Visit</th>
+						<th>HCP</th>
+						<th>Average Time Waited Waiting Room </th>
+						<th>Avereage Time Waited Examination Room</th>
+						<th>Avereage Satisfied Treatment</th>
+						<th>Avereage Satisfied Office Visit</th>
 						<th>Notes</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr name="satsfactionSurveys" ng-repeat="s in surveys | orderBy: 'hcp_id'"
-						ng-include="getTemplate(s)" surveyId={{s.id}}>
+					<tr name="HCP Survey" ng-repeat="h in hcpAvgs"
+						ng-include="getTemplate(h)" hcpId={{h.id}}>
 					</tr>
 				</tbody>
 			</table>
-			<table class="table table-bordered">
+			
+			<script type="text/ng-template" id="view">
+			
+			<td name="hcpCell">{{h.hcp}}</td>
+            <td name="timeWaitingRoom">{{h.timeWaitedWaitingRoom}}</td>
+            <td name="timeExamRoom">{{h.timeWaitedExaminationRoom}}</td>
+            <td name="satisfiedTreatment">{{h.satisfiedTreatment}}</td>
+            <td name="satisfiedOfficeVisit">{{h.satisfiedOfficeVisit}}</td>
+			<td name="satisfiedOfficeVisit">{{h.notes}}</td>
+			</script>
+			</div>
+			
+			<div class = "pleasework">
+				<table class="table table-bordered">
 				<caption>Existing Surveys:</caption>
 				<thead>
 					<tr>
@@ -175,9 +190,9 @@
 					</tr>
 				</tbody>
 			</table>
+			
 			<script type="text/ng-template" id="view">
-
-
+			
             <td name="hcpCell">{{s.hcp.username}}</td>
             <td name="patientCell">{{s.patient.username}}</td>
             <td name="timeWaitingRoom">{{s.timeWaitedWaitingRoom}}</td>
@@ -185,8 +200,7 @@
             <td name="satisfiedTreatment">{{s.satisfiedTreatment}}</td>
             <td name="satisfiedOfficeVisit">{{s.satisfiedOfficeVisit}}</td>
             <td name="notes">{{s.notes}}</td>
-			</script>
-
+			</script> 
 		</div>
 </body>
 
