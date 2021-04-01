@@ -1,5 +1,7 @@
 package edu.ncsu.csc.iTrust2.persistant;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,9 +13,12 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import edu.ncsu.csc.iTrust2.models.DomainObject;
 import edu.ncsu.csc.iTrust2.models.User;
 
+import edu.ncsu.csc.iTrust2.services.SatisfactionSurveyService;
 /**
  * Satisfaction Survey class takes care of all attributes for satisfaction
  * surveys like time waited in waiting and examination room, and satisfied
@@ -77,6 +82,12 @@ public class SatisfactionSurvey extends DomainObject {
      * notes on survey
      */
     private String notes;
+
+    /**
+     * service to get averages
+     */
+    @Autowired
+    private SatisfactionSurveyService service;
 
     /**
      * create a new default satisfaction survey
@@ -332,5 +343,41 @@ public class SatisfactionSurvey extends DomainObject {
      */
     public void setPatient ( final User patient ) {
         this.patient = patient;
+    }
+
+    public double getAverageTimeWaitedWaitingRoom(User hcp){
+        List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
+        double avg = 0;
+        for(SatisfactionSurvey s:surveys){
+            avg += s.getTimeWaitedWaitingRoom();
+        }
+        return avg/surveys.size();
+    }
+
+    public double getAverageTimeWaitedExaminationRoom(User hcp){
+        List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
+        double avg = 0;
+        for(SatisfactionSurvey s:surveys){
+            avg += s.getTimeWaitedExaminationRoom();
+        }
+        return avg/surveys.size();
+    }
+
+    public double getAverageSatisfiedOfficeVisit(User hcp){
+        List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
+        double avg = 0;
+        for(SatisfactionSurvey s:surveys){
+            avg += s.getSatisfiedOfficeVisit();
+        }
+        return avg/surveys.size();
+    }
+
+    public double getAverageSatisfiedTreatment(User hcp){
+        List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
+        double avg = 0;
+        for(SatisfactionSurvey s:surveys){
+            avg += s.getSatisfiedTreatment();
+        }
+        return avg/surveys.size();
     }
 }
