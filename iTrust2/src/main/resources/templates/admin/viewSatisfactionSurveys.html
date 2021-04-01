@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="layout :: head(title=~{::title},links=~{})">
-<title>Manage Satisfaction Surveys</title>
+	<title>Manage Satisfaction Surveys</title>
 </head>
 
 <body th:include="layout :: body" th:with="content=~{::content}">
@@ -12,27 +12,27 @@
 			/* Otherwise Thymeleaf tries to parse Javascript as XML and breaks itself sometimes.  Sigh */
 			/*<![CDATA[*/
 			var app = angular.module("viewSatisfactionSurveysAdminApp", []);
-			
+
 			/**
 			 * A filter to humanize the text to be more user friendly.
 			 */
-			 app.filter('humanize', function() {
-				return function(input) {
+			app.filter('humanize', function () {
+				return function (input) {
 					return !input ? input : input.toLowerCase().split('_')
 						.map((word) => word.charAt(0).toUpperCase() + word.substring(1))
 						.join(' ');
 				}
-            });
+			});
 
 			app.controller('viewSatisfactionSurveysAdminCtrl', function ($scope, $http) {
 				console.log("x");
 				$scope.hcpAvg = {
-						hcp: "",
-						timeWaitedExaminationRoom: "",
-						timeWaitedWaitingRoom: "",
-						satisfiedOfficeVisit: "",
-						satisfiedTreatment: ""
-					};
+					hcp: "",
+					timeWaitedExaminationRoom: 0,
+					timeWaitedWaitingRoom: 0,
+					satisfiedOfficeVisit: 0,
+					satisfiedTreatment: 0
+				};
 				$scope.hcpAvgs = [];
 				$scope.surveys = [];
 				$scope.surveyList = [];
@@ -42,104 +42,102 @@
 				$scope.avgWaitingRoom = [];
 				$scope.avgExamRoom = [];
 				$scope.avgSatisfiedOffice = [];
-				$scope.avgSatisfiedTreatment= [];
+				$scope.avgSatisfiedTreatment = [];
 				$scope.hcpSurvey = [];
 
-				
+
 				// Gets a list of HCPs from the list of personnel in the database
-				$scope.getHCPs = function() {
+				$scope.getHCPs = function () {
 					$http.get("/iTrust2/api/v1/personnel").then(
-							function(response) {
-								$scope.personnel = response.data;
-								
-								for (var i = 0; i < $scope.personnel.length; i++) {
-									$scope.roleList = [];
-									$scope.roleList.push($scope.personnel[i].roles);
-									for (var j = 0; j < $scope.roleList.length; j++) {
-										if ($scope.roleList[j] == "ROLE_HCP") {
-											$scope.hcps.push($scope.personnel[i]);
-										}
+						function (response) {
+							$scope.personnel = response.data;
+
+							for (var i = 0; i < $scope.personnel.length; i++) {
+								$scope.roleList = [];
+								$scope.roleList.push($scope.personnel[i].roles);
+								for (var j = 0; j < $scope.roleList.length; j++) {
+									if ($scope.roleList[j] == "ROLE_HCP") {
+										$scope.hcps.push($scope.personnel[i]);
 									}
 								}
-								
-								//console.log($scope.hcps);
-						
-								
-								$scope.message = "";
-							}, function(rejection) {
-					              //$scope.personnel= [];
-					              //$scope.message = "Could not display surveys";
-							});
-				}
-				
-				
-                $scope.getHCPs();
-                //console.log($scope.hcps);
-                
-				$scope.loadSurveys = function() {
-					$http.get("/iTrust2/api/v1/surveys").then(
-							function(response) {
-								$scope.surveys = response.data;
-								
-								for (var i = 0; i < $scope.surveys.length; i++) {
-									$scope.surveyList.push($scope.surveys[i]);
-									$scope.avgWaitingRoom.push($scope.surveys[i].timeWaitedWaitingRoom);
-									$scope.avgExamRoom.push($scope.surveys[i].timeWaitedExaminationRoom);
-									$scope.avgSatisfiedOffice.push($scope.surveys[i].satisfiedOfficeVisit);
-									$scope.avgSatisfiedTreatment.push($scope.surveys[i].satisfiedTreatment);
-								}
-								
-								$scope.message = "";
-							}, function(rejection) {
-					              //$scope.surveys = [];
-					              //$scope.message = "Could not display surveys";
-							});
-					
-				}
-                
-				
-                $scope.loadSurveys();
-                console.log($scope.surveyList);
+							}
 
-                
-                
-                // TODO: GET SURVEYS FOR EACH SPECIFIC HCP
-                // EVERY INDEX SHOULD HAVE 4 THINGS(?)
-                $scope.getHcpSurveys = function() {
-                	for (var i = 0; i < $scope.surveyList.length; i++) {
-                		$scope.username = $scope.surveyList[i].hcp.username;  
-                		console.log($scope.username);
-                		for (var j = 0; j < $scope.hcps.length; j++) {
-                			if ($scope.hcps[j].username == $scope.username) {
-                				$scope.hcpAvg.hcp = $scope.hcps[j].username;
-                				$scope.hcpAvg.timeWaitedExaminationRoom += $scope.surveyList[i].timeWaitedExaminationRoom;
-                				$scope.hcpAvg.timeWaitedWaitingRoom += $scope.surveyList[i].timeWaitedWaitingRoom;
-                				$scope.hcpAvg.satisfiedOfficeVisit += $scope.surveyList[i].satisfiedOfficeVisit;
-                				$scope.hcpAvg.satisfiedTreatment += $scope.surveyList[i].satisfiedTreatment;
-                				$scope.hcpAvgs.push($scope.hcpAvg);
-                			}
-                		}
-                	}
-                	console.log($scope.hcpAvgs);
-                }
-                
-                $scope.getHcpSurveys();
-                
-                
-                // TODO: ITERATE THROUGH EACH HCPS RESPECTIVE LIST OF SURVEYS AND CALCULATE AN AVERAGE
-                
-                
-                
+							//console.log($scope.hcps);
+
+
+							$scope.message = "";
+						}, function (rejection) {
+							//$scope.personnel= [];
+							//$scope.message = "Could not display surveys";
+						});
+				}
+
+
+				$scope.getHCPs();
+				//console.log($scope.hcps);
+
+				$scope.loadSurveys = function () {
+					$http.get("/iTrust2/api/v1/surveys").then(
+						function (response) {
+							$scope.surveys = response.data;
+
+							for (var i = 0; i < $scope.surveys.length; i++) {
+								$scope.surveyList.push($scope.surveys[i]);
+								$scope.avgWaitingRoom.push($scope.surveys[i].timeWaitedWaitingRoom);
+								$scope.avgExamRoom.push($scope.surveys[i].timeWaitedExaminationRoom);
+								$scope.avgSatisfiedOffice.push($scope.surveys[i].satisfiedOfficeVisit);
+								$scope.avgSatisfiedTreatment.push($scope.surveys[i].satisfiedTreatment);
+							}
+
+							for (var i = 0; i < $scope.surveyList.length; i++) {
+								console.log($scope.surveyList);
+								$scope.username = $scope.surveyList[i].hcp.username;
+								console.log($scope.username);
+								for (var j = 0; j < $scope.hcps.length; j++) {
+									if ($scope.hcps[j].username == $scope.username) {
+										$scope.hcpAvg.hcp = $scope.hcps[j].username;
+										$scope.hcpAvg.timeWaitedExaminationRoom += $scope.surveyList[i].timeWaitedExaminationRoom;
+										$scope.hcpAvg.timeWaitedWaitingRoom += $scope.surveyList[i].timeWaitedWaitingRoom;
+										$scope.hcpAvg.satisfiedOfficeVisit += $scope.surveyList[i].satisfiedOfficeVisit;
+										$scope.hcpAvg.satisfiedTreatment += $scope.surveyList[i].satisfiedTreatment;
+										$scope.hcpAvgs.push($scope.hcpAvg);
+									}
+									console.log($scope.hcpAvg);
+								}
+							}
+
+							$scope.hcpAvg.timeWaitedExaminationRoom /= $scope.surveyList.length;
+							$scope.hcpAvg.timeWaitedWaitingRoom /= $scope.surveyList.length;
+							$scope.hcpAvg.satisfiedOfficeVisit /= $scope.surveyList.length;
+							$scope.hcpAvg.satisfiedTreatment /= $scope.surveyList.length;
+							console.log($scope.hcpAvgs);
+
+							$scope.message = "";
+						}, function (rejection) {
+							$scope.surveys = [];
+							$scope.message = "Could not display surveys";
+						});
+
+				}
+
+
+				$scope.loadSurveys();
+				console.log($scope.surveyList);
+
+
+				// TODO: ITERATE THROUGH EACH HCPS RESPECTIVE LIST OF SURVEYS AND CALCULATE AN AVERAGE
+
+
+
 				$scope.getTemplate = function (survey) {
-                    return 'view';
-                };
+					return 'view';
+				};
 			});
 			/*]]>*/
 
 
 		</script>
-		<div ng-app="viewSatisfactionSurveysAdminApp"
-			ng-controller="viewSatisfactionSurveysAdminCtrl">
+		<div ng-app="viewSatisfactionSurveysAdminApp" ng-controller="viewSatisfactionSurveysAdminCtrl">
 			<h3>Admin View Surveys</h3>
 			<table class="table table-bordered">
 				<caption>HCP Survey Averages:</caption>
@@ -153,8 +151,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr name="satsfactionSurveys"
-						ng-repeat="s in surveys | orderBy: 'hcp_id'"
+					<tr name="satsfactionSurveys" ng-repeat="s in surveys | orderBy: 'hcp_id'"
 						ng-include="getTemplate(s)" surveyId={{s.id}}>
 					</tr>
 				</tbody>
@@ -173,8 +170,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr name="satsfactionSurveys"
-						ng-repeat="s in surveys | orderBy: 'hcp_id'"
+					<tr name="satsfactionSurveys" ng-repeat="s in surveys | orderBy: 'hcp_id'"
 						ng-include="getTemplate(s)" surveyId={{s.id}}>
 					</tr>
 				</tbody>
