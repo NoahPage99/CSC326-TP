@@ -70,17 +70,17 @@
 					</tr>
 				</tbody>
 			</table>
-			<script type="text/ng-template" id="view"></script>
+			<script type="text/ng-template" id="view">
 
-			<td name="hcpCell">{{s.satisfied_treatment}}</td>
-			<td name="patientCell">{{s.patient_id.username}}</td>
-			<td name="timeWaitingRoom">a</td>
-			<td name="timeExamRoom">a</td>
-			<td name="satisfiedTreatment">a</td>
-			<td name="satisfiedOfficeVisit">a</td>
-			<td name="notes"></td>
+				<td name="hcpCell">{{s.hcp.username}}</td>
+				<td name="patientCell">{{s.patient.username}}</td>
+				<td name="timeWaitingRoom">{{s.timeWaitedWaitingRoom}}</td>
+				<td name="timeExamRoom">{{s.timeWaitedExaminationRoom}}</td>
+				<td name="satisfiedTreatment">{{s.satisfiedTreatment}}</td>
+				<td name="satisfiedOfficeVisit">{{s.satisfiedOfficeVisit}}</td>
+				<td name="notes">{{s.notes}}</td>
 
-
+			</script>
 		</div>
 		
 </body>
