@@ -50,6 +50,7 @@
 					$http.post("/iTrust2/api/v1/surveys").then(
 							function(response) {
 								$scope.message = "";
+								console.log("success");
 							}, function(rejection) {
 								$scope.message= "Could not create survey";
 							});
