@@ -68,12 +68,13 @@ public class APISatisfactionSurveyController extends APIController {
      *
      * @return list of office visits
      */
-    @GetMapping ( BASE_PATH + "/surveys/mysurveys" )
+    @GetMapping ( BASE_PATH + "surveys/mysurveys" )
     @PreAuthorize ( "hasRole('ROLE_PATIENT')" )
     public List<SatisfactionSurvey> getMySurveys () {
         final User self = userService.findByName( LoggerUtil.currentUser() );
         loggerUtil.log( TransactionType.VIEW_ALL_OFFICE_VISITS, self );
-        return surveyService.findByPatient( self );
+        final List<SatisfactionSurvey> visits = surveyService.findByPatient( self );
+        return visits;
     }
 
     /**
@@ -126,34 +127,5 @@ public class APISatisfactionSurveyController extends APIController {
                     HttpStatus.BAD_REQUEST );
         }
     }
-    
-    
-    @PostMapping ( BASE_PATH + "/surveyform" )
-    @PreAuthorize ( "hasRole('ROLE_PATIENT')" )
-    public ResponseEntity createSurveyForm ( @RequestBody final int satOffice,
-    		@RequestBody final int satTreat, 
-    		@RequestBody final int timeWait,
-    		@RequestBody final int timeExam,
-    		@RequestBody final User hcp, 
-    		@RequestBody final User patient,
-    		@RequestBody final String notes) {
-        
-        final SatisfactionSurveyForm survey = new SatisfactionSurveyForm();
-        survey.setHcp(hcp.getUsername());
-        survey.setPatient(patient.getUsername());
-        survey.setNotes(notes);
-        survey.setSatisfiedOfficeVisit(satOffice);
-        survey.setSatisfiedTreatment(satTreat);
-        survey.setTimeWaitedExaminationRoom(timeExam);
-        survey.setTimeWaitedWaitingRoom(timeWait);
-        
-
-        
-        return new ResponseEntity( survey, HttpStatus.OK );
-
-        
-    }
-    
-    
 
 }
