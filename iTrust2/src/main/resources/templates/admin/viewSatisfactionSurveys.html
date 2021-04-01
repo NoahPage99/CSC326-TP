@@ -81,7 +81,7 @@
 					$http.get("/iTrust2/api/v1/surveys").then(
 						function (response) {
 							$scope.surveys = response.data;
-
+							
 							for (var i = 0; i < $scope.surveys.length; i++) {
 								$scope.surveyList.push($scope.surveys[i]);
 								$scope.avgWaitingRoom.push($scope.surveys[i].timeWaitedWaitingRoom);
@@ -91,9 +91,7 @@
 							}
 
 							for (var i = 0; i < $scope.surveyList.length; i++) {
-								
 								$scope.username = $scope.surveyList[i].hcp.username;
-								
 								for (var j = 0; j < $scope.hcps.length; j++) {
 									if ($scope.hcps[j].username == $scope.username) {
 										$scope.hcpAvg.hcp = $scope.hcps[j].username;
@@ -101,12 +99,26 @@
 										$scope.hcpAvg.timeWaitedWaitingRoom += $scope.surveyList[i].timeWaitedWaitingRoom;
 										$scope.hcpAvg.satisfiedOfficeVisit += $scope.surveyList[i].satisfiedOfficeVisit;
 										$scope.hcpAvg.satisfiedTreatment += $scope.surveyList[i].satisfiedTreatment;
-										$scope.hcpAvg.notes += $scope.surveyList[i].notes + "\n";
+										$scope.hcpAvg.notes += $scope.surveyList[i].notes + "\n";		
 									}
 								}
 							}
-							$scope.hcpAvgs.push($scope.hcpAvg);
-
+							
+							var bool = false;
+							
+							for (var i = 0; i < $scope.hcpAvgs.length; i++) {
+								if ($scope.hcpAvg.username == $scope.hcpAvgs[i]) {
+									$scope.hcpAvgs[i].timeWaitedExaminationRoom += $scope.hcpAvg.timeWaitedExaminationRoom;
+									$scope.hcpAvgs[i].timeWaitedWaitingRoom += $scope.hcpAvg.timeWaitedWaitingRoom;
+									$scope.hcpAvgs[i].satisfiedOfficeVisit += $scope.hcpAvg.satisfiedOfficeVisit;
+									$scope.hcpAvgs[i].satisfiedOfficeVisit += $scope.hcpAvg.satisfiedOfficeVisit;
+									bool = true;
+								}
+							}
+							if (!bool)
+								$scope.hcpAvgs.push($scope.hcpAvg);
+							
+							console.log($scope.hcpAvgs);
 							$scope.hcpAvg.timeWaitedExaminationRoom /= $scope.surveyList.length;
 							$scope.hcpAvg.timeWaitedWaitingRoom /= $scope.surveyList.length;
 							$scope.hcpAvg.satisfiedOfficeVisit /= $scope.surveyList.length;
@@ -146,9 +158,9 @@
 					<tr>
 						<th>HCP</th>
 						<th>Average Time Waited Waiting Room </th>
-						<th>Avereage Time Waited Examination Room</th>
-						<th>Avereage Satisfied Treatment</th>
-						<th>Avereage Satisfied Office Visit</th>
+						<th>Average Time Waited Examination Room</th>
+						<th>Average Satisfied Treatment</th>
+						<th>Average Satisfied Office Visit</th>
 						<th>Notes</th>
 					</tr>
 				</thead>
