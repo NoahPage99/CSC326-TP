@@ -103,7 +103,7 @@ public class APISatisfactionSurveyController extends APIController {
      * @return response
      */
     @PostMapping ( BASE_PATH + "/surveys" )
-    @PreAuthorize ( "hasRole('ROLE_HCP')" )
+    @PreAuthorize ( "hasRole('ROLE_PATIENT')" )
     public ResponseEntity createSurvey ( @RequestBody final SatisfactionSurveyForm surveyForm ) {
         try {
             final SatisfactionSurvey survey = surveyService.build( surveyForm );
