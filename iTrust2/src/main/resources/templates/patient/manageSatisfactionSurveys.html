@@ -25,10 +25,152 @@
             });
 
 			app.controller('manageSatisfactionSurveysPatientCtrl', function ($scope, $http) {
-
+				$scope.surveys = [];
+				$scope.survey = {
+					notes: "",
+					hcp_id: "",
+					patient_id: "",
+					time_waited_examination_room: "",
+					time_waited_waiting_room: "",
+					satisfied_office_visit: "",
+					satisfied_treatment: ""
+				};
+				$scope.loadSurveysForPatient = function() {
+					$http.get("/iTrust2/api/v1/surveys/mysurveys").then(
+							function(response) {
+								$scope.surveys=response.data;
+								$scope.message = "";
+							}, function(rejection) {
+					              $scope.surveys = [];
+					              $scope.message = "Could not display surveys";
+							});
+				}
+				
+				$scope.createSurvey = function() {
+					$http.post("/iTrust2/api/v1/surveys").then(
+							function(response) {
+								$scope.message = "";
+							}, function(rejection) {
+								$scope.message= "Could not create survey";
+							});
+				}
+				
+				$scope.getTemplate = function (survey) {
+                    return 'view';
+                };
+                
+                $scope.loadSurveysForPatient();
+                
+				
 			});
 			/*]]>*/
+
+
 		</script>
+		 <div ng-app="viewSatisfactionSurveysAdminApp" ng-controller="viewSatisfactionSurveysAdminCtrl">
+            <h3>Admin View Surveys</h3>
+            <table class="table table-bordered">
+                <caption>Existing Surveys:</caption>
+                <thead>
+                    <tr>
+                        <th>HCP</th>
+                        <th>Patient</th>
+                        <th>Time Waited Waiting Room</th>
+                        <th>Time Waited Examination Room</th>
+                        <th>Satisfied Treatment</th>
+                        <th>Satisfied Office Visit</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr name="satsfactionSurveys"
+                        ng-repeat="s in surveys | orderBy: 'hcp_id'"
+                        ng-include="getTemplate(s)" surveyId={{s.id}}>
+                    </tr>
+                </tbody>
+            </table>
+            <script type="text/ng-template" id="view">
+
+
+            <td name="hcpCell">{{s.hcp.username}}</td>
+            <td name="patientCell">{{s.patient.username}}</td>
+            <td name="timeWaitingRoom">{{s.timeWaitedWaitingRoom}}</td>
+            <td name="timeExamRoom">{{s.timeWaitedExaminationRoom}}</td>
+            <td name="satisfiedTreatment">{{s.satisfiedTreatment}}</td>
+            <td name="satisfiedOfficeVisit">{{s.satisfiedOfficeVisit}}</td>
+            <td name="notes">{{s.notes}}</td>
+			</script>
+
+        </div>
+		<div class="col-md-5">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Create Satisfaction Survey</h3>
+						</div>
+						<div class="panel-body">
+							<form>
+								<div class="form-group">
+									<label for="type">Patient:</label> <select
+										ng-model="appointment.type" name="type" class="form-control"
+										ng-change="">
+										<option ng-repeat="type in types" value="{{type}}">{{type
+											| humanize}}</option>
+									</select>
+								</div>
+
+								<div class="form-group">
+									<label for="hcp">HCP:
+										</td> <select ng-model="survey.hcp_id" name="hcp" id="hcp"
+										class="form-control" ng-disabled="!appointment.type">
+											<option ng-repeat="hcp in hcps">{{hcp.username}}</option>
+									</select>
+								</div>
+
+								<div class="form-group">
+									<label for="date">Time Waited In Waiting Room:</label> 
+									<textarea id="" class="form-control"
+										ng-model="survey.time_waited_waiting_room" name="tWait">
+									</textarea>
+								</div>
+
+								<div class="form-group">
+									<label for="time">Time Waited In Examination Room:</label>
+									<textarea id="" class="form-control"
+										ng-model="survey.time_waited_examination_room" name="tExam">
+									</textarea>
+								</div>
+								
+								<div class="form-group">
+									<label for="time">Satisfied Office Visit:</label> 
+									<textarea id="" class="form-control"
+										ng-model="survey.satisfied_office_visit" name="sOfficeVisit">
+									</textarea>
+								</div>
+								
+								<div class="form-group">
+									<label for="time">Satisfied Treatment:</label> 
+									<textarea id="" class="form-control"
+										ng-model="survey.satisfied_treatment" name="sTreatment">
+									</textarea>
+								</div>
+								
+								<div class="form-group">
+									<label for="notes">Notes:</label>
+									<textarea id="notes" class="form-control"
+										ng-model="survey.notes" name="notes">
+									</textarea>
+								</div>
+
+								<div class="form-group">
+									<button type="submit" class="btn btn-primary"
+										ng-click="createSurvey()" name="submitRequest">Submit
+										Survey</button>
+								</div>
+
+							</form>
+						</div>
+					</div>
+		</div>
 </body>
 
 </html>
