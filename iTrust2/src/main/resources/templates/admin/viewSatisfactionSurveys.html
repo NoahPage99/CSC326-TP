@@ -26,7 +26,16 @@
 
 			app.controller('viewSatisfactionSurveysAdminCtrl', function ($scope, $http) {
 				console.log("x");
+				$scope.hcpAvg = {
+						hcp: "",
+						timeWaitedExaminationRoom: "",
+						timeWaitedWaitingRoom: "",
+						satisfiedOfficeVisit: "",
+						satisfiedTreatment: ""
+					};
+				$scope.hcpAvgs = [];
 				$scope.surveys = [];
+				$scope.surveyList = [];
 				$scope.personnel = [];
 				$scope.hcps = [];
 				$scope.roleList = [];
@@ -34,23 +43,8 @@
 				$scope.avgExamRoom = [];
 				$scope.avgSatisfiedOffice = [];
 				$scope.avgSatisfiedTreatment= [];
-				$scope.loadSurveys = function() {
-					$http.get("/iTrust2/api/v1/surveys").then(
-							function(response) {
-								$scope.surveys=response.data;
-								for (var i = 0; i < $scope.surveys.length; i++) {
-									$scope.avgWaitingRoom.push($scope.surveys[i].timeWaitedWaitingRoom);
-									$scope.avgExamRoom.push($scope.surveys[i].timeWaitedExaminationRoom);
-									$scope.avgSatisfiedOffice.push($scope.surveys[i].satisfiedOfficeVisit);
-									$scope.avgSatisfiedTreatment.push($scope.surveys[i].satisfiedTreatment);
-								}
-								$scope.message = "";
-							}, function(rejection) {
-					              $scope.surveys = [];
-					              $scope.message = "Could not display surveys";
-							});
-				}
-				
+				$scope.hcpSurvey = [];
+
 				
 				// Gets a list of HCPs from the list of personnel in the database
 				$scope.getHCPs = function() {
@@ -68,77 +62,124 @@
 									}
 								}
 								
-								console.log($scope.hcps);
+								//console.log($scope.hcps);
 						
 								
 								$scope.message = "";
 							}, function(rejection) {
-					              $scope.surveys = [];
-					              $scope.message = "Could not display surveys";
+					              //$scope.personnel= [];
+					              //$scope.message = "Could not display surveys";
 							});
 				}
 				
 				
-				$scope.getTemplate = function (survey) {
-                    return 'view';
-                };
+                $scope.getHCPs();
+                //console.log($scope.hcps);
+                
+				$scope.loadSurveys = function() {
+					$http.get("/iTrust2/api/v1/surveys").then(
+							function(response) {
+								$scope.surveys = response.data;
+								
+								for (var i = 0; i < $scope.surveys.length; i++) {
+									$scope.surveyList.push($scope.surveys[i]);
+									$scope.avgWaitingRoom.push($scope.surveys[i].timeWaitedWaitingRoom);
+									$scope.avgExamRoom.push($scope.surveys[i].timeWaitedExaminationRoom);
+									$scope.avgSatisfiedOffice.push($scope.surveys[i].satisfiedOfficeVisit);
+									$scope.avgSatisfiedTreatment.push($scope.surveys[i].satisfiedTreatment);
+								}
+								
+								$scope.message = "";
+							}, function(rejection) {
+					              //$scope.surveys = [];
+					              //$scope.message = "Could not display surveys";
+							});
+					
+				}
+                
+				
+                $scope.loadSurveys();
+                console.log($scope.surveyList);
+
+                
                 
                 // TODO: GET SURVEYS FOR EACH SPECIFIC HCP
                 // EVERY INDEX SHOULD HAVE 4 THINGS(?)
+                $scope.getHcpSurveys = function() {
+                	for (var i = 0; i < $scope.surveyList.length; i++) {
+                		$scope.username = $scope.surveyList[i].hcp.username;  
+                		console.log($scope.username);
+                		for (var j = 0; j < $scope.hcps.length; j++) {
+                			if ($scope.hcps[j].username == $scope.username) {
+                				$scope.hcpAvg.hcp = $scope.hcps[j].username;
+                				$scope.hcpAvg.timeWaitedExaminationRoom += $scope.surveyList[i].timeWaitedExaminationRoom;
+                				$scope.hcpAvg.timeWaitedWaitingRoom += $scope.surveyList[i].timeWaitedWaitingRoom;
+                				$scope.hcpAvg.satisfiedOfficeVisit += $scope.surveyList[i].satisfiedOfficeVisit;
+                				$scope.hcpAvg.satisfiedTreatment += $scope.surveyList[i].satisfiedTreatment;
+                				$scope.hcpAvgs.push($scope.hcpAvg);
+                			}
+                		}
+                	}
+                	console.log($scope.hcpAvgs);
+                }
                 
+                $scope.getHcpSurveys();
                 
                 
                 // TODO: ITERATE THROUGH EACH HCPS RESPECTIVE LIST OF SURVEYS AND CALCULATE AN AVERAGE
                 
                 
-                $scope.loadSurveys();
-                $scope.getHCPs();
+                
+				$scope.getTemplate = function (survey) {
+                    return 'view';
+                };
 			});
 			/*]]>*/
 
 
 		</script>
-		 <div ng-app="viewSatisfactionSurveysAdminApp" ng-controller="viewSatisfactionSurveysAdminCtrl">
-            <h3>Admin View Surveys</h3>
-             <table class="table table-bordered">
-                <caption>HCP Survey Averages:</caption>
-                <thead>
-                    <tr>
-                        <th>Time Waited Waiting Room</th>
-                        <th>Time Waited Examination Room</th>
-                        <th>Satisfied Treatment</th>
-                        <th>Satisfied Office Visit</th>
-                        <th>Notes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr name="satsfactionSurveys"
-                        ng-repeat="s in surveys | orderBy: 'hcp_id'"
-                        ng-include="getTemplate(s)" surveyId={{s.id}}>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-bordered">
-                <caption>Existing Surveys:</caption>
-                <thead>
-                    <tr>
-                        <th>HCP</th>
-                        <th>Patient</th>
-                        <th>Time Waited Waiting Room</th>
-                        <th>Time Waited Examination Room</th>
-                        <th>Satisfied Treatment</th>
-                        <th>Satisfied Office Visit</th>
-                        <th>Notes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr name="satsfactionSurveys"
-                        ng-repeat="s in surveys | orderBy: 'hcp_id'"
-                        ng-include="getTemplate(s)" surveyId={{s.id}}>
-                    </tr>
-                </tbody>
-            </table>
-            <script type="text/ng-template" id="view">
+		<div ng-app="viewSatisfactionSurveysAdminApp"
+			ng-controller="viewSatisfactionSurveysAdminCtrl">
+			<h3>Admin View Surveys</h3>
+			<table class="table table-bordered">
+				<caption>HCP Survey Averages:</caption>
+				<thead>
+					<tr>
+						<th>Time Waited Waiting Room</th>
+						<th>Time Waited Examination Room</th>
+						<th>Satisfied Treatment</th>
+						<th>Satisfied Office Visit</th>
+						<th>Notes</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr name="satsfactionSurveys"
+						ng-repeat="s in surveys | orderBy: 'hcp_id'"
+						ng-include="getTemplate(s)" surveyId={{s.id}}>
+					</tr>
+				</tbody>
+			</table>
+			<table class="table table-bordered">
+				<caption>Existing Surveys:</caption>
+				<thead>
+					<tr>
+						<th>HCP</th>
+						<th>Patient</th>
+						<th>Time Waited Waiting Room</th>
+						<th>Time Waited Examination Room</th>
+						<th>Satisfied Treatment</th>
+						<th>Satisfied Office Visit</th>
+						<th>Notes</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr name="satsfactionSurveys"
+						ng-repeat="s in surveys | orderBy: 'hcp_id'"
+						ng-include="getTemplate(s)" surveyId={{s.id}}>
+					</tr>
+				</tbody>
+			</table>
+			<script type="text/ng-template" id="view">
 
 
             <td name="hcpCell">{{s.hcp.username}}</td>
@@ -150,8 +191,7 @@
             <td name="notes">{{s.notes}}</td>
 			</script>
 
-        </div>
-
+		</div>
 </body>
 
 </html>
