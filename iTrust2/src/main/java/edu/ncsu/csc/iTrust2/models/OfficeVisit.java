@@ -104,6 +104,9 @@ public class OfficeVisit extends DomainObject {
      */
     private String             notes;
 
+    // @OneToOne ( cascade = CascadeType.ALL )
+    private boolean            completed;
+
     /**
      * The appointment of this office visit
      */
@@ -121,6 +124,8 @@ public class OfficeVisit extends DomainObject {
 
     /** For Hibernate/Thymeleaf _must_ be an empty constructor */
     public OfficeVisit () {
+        // need to have completed started as false - added by noah
+        completed = false;
     }
 
     public void validateDiagnoses () {
@@ -405,6 +410,26 @@ public class OfficeVisit extends DomainObject {
      */
     public List<Prescription> getPrescriptions () {
         return prescriptions;
+    }
+
+    /**
+     * Returns if the satisfaction survey for the office visit is completed or
+     * not
+     *
+     * @return true is completed
+     */
+    public boolean isCompleted () {
+        return completed;
+    }
+
+    /**
+     * Sets if the satisfaction survey is completed or not
+     *
+     * @param completed
+     *            survey completed or not
+     */
+    public void setCompleted ( final boolean completed ) {
+        this.completed = completed;
     }
 
 }

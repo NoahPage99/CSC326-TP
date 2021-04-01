@@ -1,5 +1,8 @@
 package edu.ncsu.csc.iTrust2.unit;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZonedDateTime;
@@ -83,7 +86,7 @@ public class OfficeVisitTest {
     @Test
     @Transactional
     public void testOfficeVisit () {
-    	
+
         Assert.assertEquals( 0, officeVisitService.count() );
 
         final Hospital hosp = new Hospital( "Dr. Jenkins' Insane Asylum", "123 Main St", "12345", "NC" );
@@ -109,16 +112,15 @@ public class OfficeVisitTest {
         visit.setPatient( userService.findByName( "AliceThirteen" ) );
         visit.setHcp( userService.findByName( "AliceThirteen" ) );
         visit.setDate( ZonedDateTime.now() );
-        
-        
-        SatisfactionSurvey survey = new SatisfactionSurvey();
-        
+
+        final SatisfactionSurvey survey = new SatisfactionSurvey();
+
         final User patient = new Patient( new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 ) );
         final User hcp = userService.findByName( "hcp" );
-        
-        survey.setHcp(hcp);
-        survey.setPatient(patient);
-        
+
+        survey.setHcp( hcp );
+        survey.setPatient( patient );
+
         visit.setSurvey( survey );
         officeVisitService.save( visit );
 
@@ -207,5 +209,17 @@ public class OfficeVisitTest {
 
         Assert.assertEquals( 2, retrieved.getPrescriptions().size() );
 
+    }
+
+    @Test
+    @Transactional
+    public void testOfficeVisitCompleted () {
+        final OfficeVisit visit = new OfficeVisit();
+
+        assertFalse( visit.isCompleted() );
+
+        visit.setCompleted( true );
+
+        assertTrue( visit.isCompleted() );
     }
 }
