@@ -38,14 +38,25 @@
 				}
 				
 				$scope.getTemplate = function (survey) {
+<<<<<<< HEAD
                     return 'view';
                 };
                 
                 $scope.loadSurveys();
 				
+=======
+	          		return 'view';
+	        	};
+
+				$scope.loadSurveys();
+			
+>>>>>>> branch 'satisfaction-survey-frontend' of https://github.ncsu.edu/engr-csc326-spring2021/csc326-TP-212-1.git
 			});
 			/*]]>*/
+
+
 		</script>
+<<<<<<< HEAD
 		 <div ng-app="viewSatisfactionSurveysAdminApp" ng-controller="viewSatisfactionSurveysAdminCtrl">
             <h3>Admin View Surveys</h3>
             <table class="table table-bordered">
@@ -81,6 +92,42 @@
 			</script>
 
         </div>
+=======
+		<div ng-app="viewSatisfactionSurveysAdminApp" ng-controller="viewSatisfactionSurveysAdminCtrl">
+			<h3>Admin View Surveys</h3>
+			<table class="table table-bordered">
+				<caption>Existing Surveys:</caption>
+				<thead>
+					<tr>
+						<th>HCP</th>
+						<th>Patient</th>
+						<th>Time Waited Waiting Room</th>
+						<th>Time Waited Examination Room</th>
+						<th>Satisfied Treatment</th>
+						<th>Satisfied Office Visit</th>
+						<th>Notes</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr name="satsfactionSurveys"
+						ng-repeat="s in surveys | orderBy: 'hcp_id'"
+						ng-include="getTemplate(s)" surveyId={{s.id}}>
+					</tr>
+				</tbody>
+			</table>
+			<script type="text/ng-template" id="view"></script>
+
+			<td name="hcpCell">{{s.satisfied_treatment}}</td>
+			<td name="patientCell">{{s.patient_id.username}}</td>
+			<td name="timeWaitingRoom">a</td>
+			<td name="timeExamRoom">a</td>
+			<td name="satisfiedTreatment">a</td>
+			<td name="satisfiedOfficeVisit">a</td>
+			<td name="notes"></td>
+
+
+		</div>
+>>>>>>> branch 'satisfaction-survey-frontend' of https://github.ncsu.edu/engr-csc326-spring2021/csc326-TP-212-1.git
 		
 </body>
 
