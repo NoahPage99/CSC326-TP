@@ -59,31 +59,60 @@
 				$scope.submit = function () {
 
 					$scope.success = false;
-					$scope.failure = false;
+					$scope.failure = true;
 
-					$scope.survey.hcp = $scope.hcps[1].username;
+					$scope.survey.hcp = $scope.currentAppt.hcp.username;
 					$scope.survey.notes = $scope.notes;
 					$scope.survey.patient = $scope.patient.username;
 					$scope.survey.satisfiedOfficeVisit = $scope.satisfiedVisit;
 					$scope.survey.timeWaitedExaminationRoom = $scope.timeWaitedExam;
 					$scope.survey.timeWaitedWaitingRoom = $scope.timeWaitedRoom;
 					$scope.survey.satisfiedTreatment = $scope.satisfiedTreat;
-
 					console.log($scope.survey);
 
+					if ($scope.survey.satisfiedOfficeVisit == undefined || $scope.survey.satisfiedOfficeVisit < 1 || $scope.survey.satisfiedOfficeVisit > 10) {
+						$scope.failure = true;
+						$scope.success = false;
+						console.error("Error while adding Survey");
+						return;
+					}
 
+					else if ($scope.survey.satisfiedTreatment == undefined || $scope.survey.satisfiedTreatment < 1 || $scope.survey.satisfiedTreatment > 10) {
+						$scope.failure = true;
+						$scope.success = false;
+						console.error("Error while adding Survey");
+						return;
+					}
+
+					else if ($scope.survey.timeWaitedExaminationRoom == undefined || $scope.survey.timeWaitedExaminationRoom < 1 || $scope.survey.timeWaitedExaminationRoom > 120) {
+						$scope.failure = true;
+						$scope.success = false;
+						console.error("Error while adding Survey");
+						return;
+					}
+
+					else if ($scope.survey.timeWaitedWaitingRoom == undefined || $scope.survey.timeWaitedWaitingRoom < 1 || $scope.survey.timeWaitedWaitingRoom > 120) {
+						$scope.failure = true;
+						$scope.success = false;
+						console.error("Error while adding Survey");
+						return;
+					}
+
+					else {
+						$scope.addSurvey()
+					}
+				}
+
+				$scope.addSurvey = function () {
 					$http.post("/iTrust2/api/v1/surveys", $scope.survey).then(
-						function (success) {
+						function () {
 							$scope.success = true;
 							$scope.failure = false;
-						},
-						function (rejection) {
-							$scope.failure = true;
-							console.error("Error while adding Survey");
-						});
-
-
+						}
+					);
 				}
+
+
 				$scope.loadSurveysForPatient = function () {
 					$http.get("/iTrust2/api/v1/surveys/mysurveys").then(
 						function (response) {
@@ -172,7 +201,7 @@
 					</div>
 				</div>
 
-				<div class="col-md-5" ng-if="currentAppt != undefined">
+				<div class="col-md-5">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h3 class="panel-title">Create Satisfaction Survey</h3>
@@ -186,10 +215,6 @@
 
 								<div class="form-group">
 									<label for="hcp">HCP Name:</label>{{currentAppt.hcp.username}}
-									<!-- </td> <select ng-model="hcps.username" name="hcp" id="hcp" class="form-control">
-											<option ng-repeat="hcp in hcps">{{hcp.username}}</option>
-										</select> -->
-
 								</div>
 
 								<div class="form-group">
