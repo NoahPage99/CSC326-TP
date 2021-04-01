@@ -26,8 +26,11 @@
 
 			app.controller('manageSatisfactionSurveysPatientCtrl', function ($scope, $http) {
 				$scope.surveys = [];
-				$scope.hcps = [];
-				$scope.patient = [];
+				$scope.hcps = [];				
+				
+				//$scope.patient = [];
+				//$scope.patient = /*[[${#httpServletRequest.remoteUser}]]*/null;
+				//console.log($scope.patient);
 				$scope.survey = {
 					notes: "",
 					hcp_id: "",
@@ -38,21 +41,30 @@
 					satisfied_treatment: ""
 				};
 				
-				$scope.loadSurveysForPatient = function() {
+				/**$scope.loadSurveysForPatient = function() {
 					$http.get("/iTrust2/api/v1/surveys/mysurveys").then(
 							function(response) {
 								$scope.surveys=response.data;
+								
 								$scope.message = "";
 							}, function(rejection) {
 					              $scope.surveys = [];
 					              $scope.message = "Could not display surveys";
 							});
-				}
+				}*/
 				
 				$scope.loadHcp = function() {
 					$http.get("/iTrust2/api/v1/personnel/getbyroles/ROLE_HCP").then(
 							function(response) {
-								$scope.hcps=response.data;
+								//console.log(response.data);
+								for (var user of response.data) {
+									$scope.hcps.push(user);
+									console.log(user);
+									
+								}
+								console.log($scope.hcps);
+								
+								//console.log("test");
 								$scope.message = "";
 							}, function(rejection) {
 					              $scope.hcps= [];
@@ -60,24 +72,11 @@
 							});
 				}
 
-				/**$scope.loadHcp = function(roleObj) {
-					if (Array.isArray(roleObj)) {
-						for (var role of roleObj) {
-							$scope.getPersonnelByRole(role);
-						}
-					} else {
-						$http.get(`/iTrust2/api/v1/personnel/getbyroles/ROLE_${roleObj}`).then(
-							function(response) {
-								for (var user of response.data) {
-									$scope.hcps.push(user);
-								}
-							}, function(rejection) {
-								$scope.hcps = [];
-								$scope.message = "";
-								$scope.errorMsg += `${roleObj} not found\n`;
-							});
-					}
-				}*/
+				
+				$scope.loadPatient = function() {
+					
+				}
+
 				
 				$scope.createSurvey = function() {
 					$http.post("/iTrust2/api/v1/surveys").then(
@@ -93,8 +92,10 @@
                     return 'view';
                 };
                 
-                $scope.loadSurveysForPatient();
+                //$scope.loadSurveysForPatient();
                 $scope.loadPatient();
+                
+
                 $scope.loadHcp();
                 
                 
@@ -105,8 +106,10 @@
 
 		</script>
 		 <div ng-app="manageSatisfactionSurveysPatientApp" ng-controller="manageSatisfactionSurveysPatientCtrl">
-            <h3>Admin View Surveys</h3>
-            <table class="table table-bordered">
+
+            <h3>Patient Survey Form</h3>
+           <!--  <table class="table table-bordered">
+
                 <caption>Existing Surveys:</caption>
                 <thead>
                     <tr>
@@ -136,9 +139,9 @@
             <td name="satisfiedTreatment">{{s.satisfiedTreatment}}</td>
             <td name="satisfiedOfficeVisit">{{s.satisfiedOfficeVisit}}</td>
             <td name="notes">{{s.notes}}</td>
-			</script>
+			
 
-        </div>
+        </div> -->
 		<div class="col-md-5">
 					<div class="panel panel-default">
 						<div class="panel-heading">
@@ -147,48 +150,41 @@
 						<div class="panel-body">
 							<form>
 								<div class="form-group">
-									<label for="type">Patient:</label> <select
-										ng-model="appointment.type" name="type" class="form-control"
-										ng-change="">
-										<option ng-repeat="type in types" value="{{type}}">{{type
-											| humanize}}</option>
-									</select>
+									<label for="type">Patient Name:</label> 
+									<textarea id="" class="form-control"
+										ng-model="survey.name" name="name">
+									</textarea>
 								</div>
 
 								<div class="form-group">
 									<label for="hcp">HCP:
-										</td> <select ng-model="survey.hcp_id" name="hcp" id="hcp"
-										class="form-control" ng-disabled="!appointment.type">
+										</td> <select ng-model="hcps.username" name="hcp" id="hcp"
+										class="form-control" >
 											<option ng-repeat="hcp in hcps">{{hcp.username}}</option>
 									</select>
+									
+									
 								</div>
 
 								<div class="form-group">
-									<label for="date">Time Waited In Waiting Room:</label> 
-									<textarea id="" class="form-control"
-										ng-model="survey.time_waited_waiting_room" name="tWait">
-									</textarea>
+									<label for="time">Time Waited In Waiting Room: 
+									<input type="number" min="1" max="120" value="1">
+										
 								</div>
 
 								<div class="form-group">
 									<label for="time">Time Waited In Examination Room:</label>
-									<textarea id="" class="form-control"
-										ng-model="survey.time_waited_examination_room" name="tExam">
-									</textarea>
+									<input type="number" min="1" max="120" value="1">
 								</div>
 								
 								<div class="form-group">
 									<label for="time">Satisfied Office Visit:</label> 
-									<textarea id="" class="form-control"
-										ng-model="survey.satisfied_office_visit" name="sOfficeVisit">
-									</textarea>
+									<input type="number" min="1" max="10" value="1">
 								</div>
 								
 								<div class="form-group">
 									<label for="time">Satisfied Treatment:</label> 
-									<textarea id="" class="form-control"
-										ng-model="survey.satisfied_treatment" name="sTreatment">
-									</textarea>
+									<input type="number" min="1" max="10" value="1">
 								</div>
 								
 								<div class="form-group">
