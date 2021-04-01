@@ -28,6 +28,7 @@
 				$scope.surveys = [];
 				$scope.hcps = [];
 				$scope.patient = [];
+				$scope.check = false;
 				$scope.completedVisits = [];
 
 				$scope.getPatient = function () {
@@ -70,6 +71,7 @@
 					$scope.survey.satisfiedTreatment = $scope.satisfiedTreat;
 					console.log($scope.survey);
 
+					$scope.check = true;
 					if ($scope.survey.satisfiedOfficeVisit == undefined || $scope.survey.satisfiedOfficeVisit < 1 || $scope.survey.satisfiedOfficeVisit > 10) {
 						$scope.failure = true;
 						$scope.success = false;
@@ -148,16 +150,28 @@
 						function (response) {
 							$scope.completedVisits = response.data;
 							$scope.message = "";
+							console.log($scope.completedVisits[1].completed);
+							for(var i = 0; i < $scope.completedVisits.length; i++)	{
+								console.log($scope.completedVisits);
+								if(!$scope.completedVisits[i].completed){
+									
+									$scope.completedVisits.splice($scope.completedVisits[i], 1);
+								}
+							}
+							console.log($scope.completedVisits);
 						}, function (rejection) {
 							$scope.completedVisits = [];
 							$scope.message = "Could not display visits";
 						});
 				}
-
+				
+				
+				
 				$scope.getPatient();
 				$scope.loadHcp();
 				$scope.loadSurveysForPatient();
 				$scope.loadCompletedVisits();
+				
 
 				$scope.assignAppt = function (item) {
 					$scope.currentAppt = item;
@@ -191,7 +205,7 @@
 								</div>
 							</form> -->
 							<input type="radio" ng-model="appointmentrequest" required="true" name="appointmentrequest"
-								id="{{visit.date}}" value="{{visit.date}}" ng-click="assignAppt(visit)" />
+								id="{{visit.date}}" value="{{visit.date}}" ng-click="assignAppt(visit)" ng-disabled = "check"/>
 
 
 							<label for="{{appointmentrequest}}">{{visit.date}}</label>
