@@ -49,21 +49,17 @@
 							});
 				}
 				
-				
 				$scope.loadHcp = function() {
-					
 					$http.get("/iTrust2/api/v1/personnel/getbyroles/ROLE_HCP").then(
 							function(response) {
-								console.log(response.data);
 								$scope.hcps=response.data;
 								$scope.message = "";
 							}, function(rejection) {
-								console.log("test");
-					              $scope.hcps = [];
-					              $scope.message = "Could not display hcps";
+					              $scope.hcps= [];
+					              $scope.message = "Could not display surveys";
 							});
 				}
-				
+
 				/**$scope.loadHcp = function(roleObj) {
 					if (Array.isArray(roleObj)) {
 						for (var role of roleObj) {
@@ -98,8 +94,7 @@
                 };
                 
                 $scope.loadSurveysForPatient();
-                //$scope.loadPatient();
-                
+                $scope.loadPatient();
                 $scope.loadHcp();
                 
                 
@@ -109,7 +104,7 @@
 
 
 		</script>
-		 <div ng-app="viewSatisfactionSurveysAdminApp" ng-controller="viewSatisfactionSurveysAdminCtrl">
+		 <div ng-app="manageSatisfactionSurveysPatientApp" ng-controller="manageSatisfactionSurveysPatientCtrl">
             <h3>Admin View Surveys</h3>
             <table class="table table-bordered">
                 <caption>Existing Surveys:</caption>

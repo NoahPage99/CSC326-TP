@@ -25,6 +25,7 @@
             });
 
 			app.controller('viewSatisfactionSurveysAdminCtrl', function ($scope, $http) {
+				console.log("x");
 				$scope.surveys = [];
 				$scope.loadSurveys = function() {
 					$http.get("/iTrust2/api/v1/surveys").then(
