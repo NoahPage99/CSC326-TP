@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="layout :: head(title=~{::title},links=~{})">
-<title>View Satisfaction Surveys</title>
+	<title>View Satisfaction Surveys</title>
 </head>
 
 <body th:include="layout :: body" th:with="content=~{::content}">
@@ -12,23 +12,79 @@
 			/* Otherwise Thymeleaf tries to parse Javascript as XML and breaks itself sometimes.  Sigh */
 			/*<![CDATA[*/
 			var app = angular.module("viewSatisfactionSurveysHCPApp", []);
-			
+
 			/**
 			 * A filter to humanize the text to be more user friendly.
 			 */
-			 app.filter('humanize', function() {
-				return function(input) {
+			app.filter('humanize', function () {
+				return function (input) {
 					return !input ? input : input.toLowerCase().split('_')
 						.map((word) => word.charAt(0).toUpperCase() + word.substring(1))
 						.join(' ');
 				}
-            });
+			});
 
 			app.controller('viewSatisfactionSurveysHCPCtrl', function ($scope, $http) {
+				console.log("x");
+				$scope.surveys = [];
+				$scope.loadSurveys = function () {
+					$http.get("/iTrust2/api/v1/surveys/HCP").then(
+						function (response) {
+							$scope.surveys = response.data;
+							$scope.message = "";
+							console.log($scope.surveys);
+						}, function (rejection) {
+							$scope.surveys = [];
+							$scope.message = "Could not display surveys";
+						});
+				}
 
+				$scope.getTemplate = function (survey) {
+					return 'view';
+				};
+
+				$scope.loadSurveys();
 			});
+
+
 			/*]]>*/
 		</script>
+		 <div ng-app="viewSatisfactionSurveysHCPApp" ng-controller="viewSatisfactionSurveysHCPCtrl">
+            <h3>Patient View Surveys</h3>
+            <table class="table table-bordered">
+                <caption>Existing Completed Surveys:</caption>
+                <thead>
+                    <tr>
+                        <th>HCP</th>
+                        <th>Patient</th>
+                        <th>Time Waited Waiting Room</th>
+                        <th>Time Waited Examination Room</th>
+                        <th>Satisfied Treatment</th>
+                        <th>Satisfied Office Visit</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr name="satsfactionSurveys"
+                        ng-repeat="s in surveys | orderBy: 'hcp_id'"
+                        ng-include="getTemplate(s)" surveyId={{s.id}}>
+                    </tr>
+                </tbody>
+            </table>
+            <script type="text/ng-template" id="view">
+
+
+            <td name="hcpCell">{{s.hcp.username}}</td>
+            <td name="patientCell">{{s.patient.username}}</td>
+            <td name="timeWaitingRoom">{{s.timeWaitedWaitingRoom}}</td>
+            <td name="timeExamRoom">{{s.timeWaitedExaminationRoom}}</td>
+            <td name="satisfiedTreatment">{{s.satisfiedTreatment}}</td>
+            <td name="satisfiedOfficeVisit">{{s.satisfiedOfficeVisit}}</td>
+            <td name="notes">{{s.notes}}</td>
+			</script>
+
+        </div>
+
 </body>
 
 </html>
