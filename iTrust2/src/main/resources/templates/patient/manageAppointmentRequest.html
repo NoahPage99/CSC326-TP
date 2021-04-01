@@ -85,7 +85,7 @@
 				$scope.submit = function() {
 					$scope.errorMsg = "";
 					$scope.appointment.patient = /*[[${#httpServletRequest.remoteUser}]]*/null;
-
+					
 					// Validate request date
 					var date = new Date($scope.inputDate);
 					const now = new Date();
@@ -150,7 +150,7 @@
 					$http.get("/iTrust2/api/v1/appointmentrequest").then(
 						function(response) {
 							$scope.appointments = response.data;
-
+							
 							if ($scope.appointments && !$scope.appointments.length) {
 								$scope.errorMsg1 = "No appointment requests found."
 							}
