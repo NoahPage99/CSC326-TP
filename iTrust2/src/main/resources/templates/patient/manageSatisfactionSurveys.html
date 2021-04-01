@@ -26,6 +26,8 @@
 
 			app.controller('manageSatisfactionSurveysPatientCtrl', function ($scope, $http) {
 				$scope.surveys = [];
+				$scope.hcps = [];
+				$scope.patient = [];
 				$scope.survey = {
 					notes: "",
 					hcp_id: "",
@@ -35,6 +37,7 @@
 					satisfied_office_visit: "",
 					satisfied_treatment: ""
 				};
+				
 				$scope.loadSurveysForPatient = function() {
 					$http.get("/iTrust2/api/v1/surveys/mysurveys").then(
 							function(response) {
@@ -45,6 +48,40 @@
 					              $scope.message = "Could not display surveys";
 							});
 				}
+				
+				
+				$scope.loadHcp = function() {
+					
+					$http.get("/iTrust2/api/v1/personnel/getbyroles/ROLE_HCP").then(
+							function(response) {
+								console.log(response.data);
+								$scope.hcps=response.data;
+								$scope.message = "";
+							}, function(rejection) {
+								console.log("test");
+					              $scope.hcps = [];
+					              $scope.message = "Could not display hcps";
+							});
+				}
+				
+				/**$scope.loadHcp = function(roleObj) {
+					if (Array.isArray(roleObj)) {
+						for (var role of roleObj) {
+							$scope.getPersonnelByRole(role);
+						}
+					} else {
+						$http.get(`/iTrust2/api/v1/personnel/getbyroles/ROLE_${roleObj}`).then(
+							function(response) {
+								for (var user of response.data) {
+									$scope.hcps.push(user);
+								}
+							}, function(rejection) {
+								$scope.hcps = [];
+								$scope.message = "";
+								$scope.errorMsg += `${roleObj} not found\n`;
+							});
+					}
+				}*/
 				
 				$scope.createSurvey = function() {
 					$http.post("/iTrust2/api/v1/surveys").then(
@@ -61,6 +98,10 @@
                 };
                 
                 $scope.loadSurveysForPatient();
+                //$scope.loadPatient();
+                
+                $scope.loadHcp();
+                
                 
 				
 			});
