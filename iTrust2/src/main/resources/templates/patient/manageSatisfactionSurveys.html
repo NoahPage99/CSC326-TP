@@ -82,6 +82,24 @@
 					
 					console.log($scope.survey);
 					
+					/**$http.post("/iTrust2/api/v1/surveyform",
+							$scope.satisfiedVisit,
+							$scope.satisfiedTreat,
+							$scope.timeWaitedRoom,
+							$scope.timeWaitedExam,
+							$scope.hcps[1],
+							$scope.patient,
+							$scope.notes
+							).then(
+							function(response) {
+								$scope.survey = response.data;
+								console.log($scope.survey);
+							},
+							function(rejection) {
+								$scope.failure = true;
+								console.error("Error while adding Survey");
+						});*/
+					
 					$http.post("/iTrust2/api/v1/surveys", $scope.survey).then(
 						function(success) {
 							$scope.success = true;

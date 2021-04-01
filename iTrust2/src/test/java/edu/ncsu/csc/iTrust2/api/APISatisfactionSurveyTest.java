@@ -128,7 +128,7 @@ public class APISatisfactionSurveyTest {
      */
     @Test
     @Transactional
-    @WithMockUser ( username = "hcp", roles = { "HCP" } )
+    @WithMockUser ( username = "patient", roles = { "PATIENT" } )
     public void testCreateSurvey () throws Exception {
     	surveyService.deleteAll();
     	

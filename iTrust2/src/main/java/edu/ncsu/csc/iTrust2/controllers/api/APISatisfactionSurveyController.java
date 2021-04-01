@@ -126,5 +126,34 @@ public class APISatisfactionSurveyController extends APIController {
                     HttpStatus.BAD_REQUEST );
         }
     }
+    
+    
+    @PostMapping ( BASE_PATH + "/surveyform" )
+    @PreAuthorize ( "hasRole('ROLE_PATIENT')" )
+    public ResponseEntity createSurveyForm ( @RequestBody final int satOffice,
+    		@RequestBody final int satTreat, 
+    		@RequestBody final int timeWait,
+    		@RequestBody final int timeExam,
+    		@RequestBody final User hcp, 
+    		@RequestBody final User patient,
+    		@RequestBody final String notes) {
+        
+        final SatisfactionSurveyForm survey = new SatisfactionSurveyForm();
+        survey.setHcp(hcp.getUsername());
+        survey.setPatient(patient.getUsername());
+        survey.setNotes(notes);
+        survey.setSatisfiedOfficeVisit(satOffice);
+        survey.setSatisfiedTreatment(satTreat);
+        survey.setTimeWaitedExaminationRoom(timeExam);
+        survey.setTimeWaitedWaitingRoom(timeWait);
+        
+
+        
+        return new ResponseEntity( survey, HttpStatus.OK );
+
+        
+    }
+    
+    
 
 }
