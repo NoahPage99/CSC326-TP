@@ -26,7 +26,24 @@
 
 			app.controller('manageSatisfactionSurveysPatientCtrl', function ($scope, $http) {
 				$scope.surveys = [];
-				$scope.hcps = [];				
+				$scope.hcps = [];	
+				$scope.patient = [];
+				
+				$scope.getPatient = function(){
+					$http.get("/iTrust2/api/v1/patient").then(
+					function(response) {
+						
+						$scope.patient = response.data;
+						console.log($scope.patient);
+						
+						$scope.message = "";
+					}, function(rejection) {
+						console.log("test");
+			              $scope.patient = [];
+			              $scope.message = "Could not display hcps";
+					});
+				
+				}
 				
 				//$scope.patient = [];
 				//$scope.patient = /*[[${#httpServletRequest.remoteUser}]]*/null;
@@ -94,7 +111,7 @@
                 };
                 
                 //$scope.loadSurveysForPatient();
-                $scope.loadPatient();
+                $scope.getPatient();
                 
                 $scope.loadHcp();
                 
@@ -149,9 +166,7 @@
 							<form>
 								<div class="form-group">
 									<label for="type">Patient Name:</label> 
-									<textarea id="" class="form-control"
-										ng-model="survey.name" name="name">
-									</textarea>
+									{{patient.username}}
 								</div>
 
 								<div class="form-group">
@@ -187,7 +202,7 @@
 								
 								<div class="form-group">
 									<label for="notes">Notes:</label>
-									<textarea id="notes" class="form-control"
+									<textarea maxlength = "500" id="notes" class="form-control"
 										ng-model="survey.notes" name="notes">
 									</textarea>
 								</div>
