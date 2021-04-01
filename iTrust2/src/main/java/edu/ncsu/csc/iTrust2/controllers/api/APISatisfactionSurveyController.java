@@ -77,6 +77,21 @@ public class APISatisfactionSurveyController extends APIController {
         return visits;
     }
 
+        /**
+     * Retrieves a list of all OfficeVisits in the database for the current
+     * patient
+     *
+     * @return list of office visits
+     */
+    @GetMapping ( BASE_PATH + "surveys/hcp/mysurveys" )
+    @PreAuthorize ( "hasRole('ROLE_HCP')" )
+    public List<SatisfactionSurvey> getHCPSurveys () {
+        final User self = userService.findByName( LoggerUtil.currentUser() );
+        loggerUtil.log( TransactionType.VIEW_ALL_OFFICE_VISITS, self );
+        final List<SatisfactionSurvey> visits = surveyService.findByHcp( self );
+        return visits;
+    }
+
     /**
      * Retrieves a list of all OfficeVisits in the database
      *

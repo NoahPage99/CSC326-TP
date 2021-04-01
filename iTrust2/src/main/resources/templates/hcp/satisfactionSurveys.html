@@ -28,7 +28,7 @@
 				console.log("x");
 				$scope.surveys = [];
 				$scope.loadSurveys = function () {
-					$http.get("/iTrust2/api/v1/surveys/HCP").then(
+					$http.get("/iTrust2/api/v1/surveys/hcp/mysurveys").then(
 						function (response) {
 							$scope.surveys = response.data;
 							$scope.message = "";
