@@ -48,16 +48,52 @@
 				//$scope.patient = [];
 				//$scope.patient = /*[[${#httpServletRequest.remoteUser}]]*/null;
 				//console.log($scope.patient);
-				$scope.survey = {
+			/**	$scope.survey = {
+					patient_id: "",
 					notes: "",
 					hcp_id: "",
-					patient_id: "",
 					time_waited_examination_room: "",
 					time_waited_waiting_room: "",
 					satisfied_office_visit: "",
 					satisfied_treatment: ""
+				}; */
+				$scope.survey = {
+					patient_id: "",
+					notes: "",
+					hcp_id: "",
+					timeWaitedExaminationRoom: "",
+					timeWaitedWaitingRoom: "",
+					satisfiedOfficeVisit: "",
+					satisfiedTreatment: ""
 				};
 				
+				$scope.submit = function() {
+					
+					$scope.success = false;
+					$scope.failure = false;
+					
+					$scope.survey.hcp_id = $scope.hcps[1].username;
+					$scope.survey.notes = $scope.notes;
+					$scope.survey.patient_id = $scope.patient.username;
+					$scope.survey.satisfiedOfficeVisit = $scope.satisfiedVisit;
+					$scope.survey.timeWaitedExaminationRoom = $scope.timeWaitedExam;
+					$scope.survey.timeWaitedWaitingRoom= $scope.timeWaitedRoom;
+					$scope.survey.satisfiedTreatment= $scope.satisfiedTreat;
+					
+					console.log($scope.survey);
+					
+					$http.post("/iTrust2/api/v1/surveys", $scope.survey).then(
+						function(success) {
+							$scope.success = true;
+							$scope.failure = false;
+						},
+						function(rejection) {
+							$scope.failure = true;
+							console.error("Error while adding Survey");
+					});
+
+					
+				}
 				/**$scope.loadSurveysForPatient = function() {
 					$http.get("/iTrust2/api/v1/surveys/mysurveys").then(
 							function(response) {
@@ -96,16 +132,7 @@
 					
 				}
 				
-				$scope.createSurvey = function() {
-					$http.post("/iTrust2/api/v1/surveys").then(
-							function(response) {
-								$scope.message = "";
-								console.log("success");
-							}, function(rejection) {
-								$scope.message= "Could not create survey";
-							});
-				}
-				
+
 				$scope.getTemplate = function (survey) {
                     return 'view';
                 };
@@ -181,35 +208,35 @@
 
 								<div class="form-group">
 									<label for="time">Time Waited In Waiting Room: 
-									<input type="number" min="1" max="120" value="1">
+									<input type="number" min="1" max="120" value="1" ng-model = "timeWaitedRoom">
 										
 								</div>
 
 								<div class="form-group">
 									<label for="time">Time Waited In Examination Room:</label>
-									<input type="number" min="1" max="120" value="1">
+									<input type="number" min="1" max="120" value="1" ng-model = "timeWaitedExam">
 								</div>
 								
 								<div class="form-group">
 									<label for="time">Satisfied Office Visit:</label> 
-									<input type="number" min="1" max="10" value="1">
+									<input type="number" min="1" max="10" value="1" ng-model = "satisfiedVisit">
 								</div>
 								
 								<div class="form-group">
 									<label for="time">Satisfied Treatment:</label> 
-									<input type="number" min="1" max="10" value="1">
+									<input type="number" min="1" max="10" value="1" ng-model = "satisfiedTreat">
 								</div>
 								
 								<div class="form-group">
 									<label for="notes">Notes:</label>
 									<textarea maxlength = "500" id="notes" class="form-control"
-										ng-model="survey.notes" name="notes">
+										ng-model="notes" name="notes">
 									</textarea>
 								</div>
 
 								<div class="form-group">
 									<button type="submit" class="btn btn-primary"
-										ng-click="createSurvey()" name="submitRequest">Submit
+										ng-click="submit()" name="submitRequest">Submit
 										Survey</button>
 								</div>
 
