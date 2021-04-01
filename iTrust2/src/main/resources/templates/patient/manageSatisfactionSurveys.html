@@ -28,7 +28,8 @@
 				$scope.surveys = [];
 				$scope.hcps = [];
 				$scope.patient = [];
-				$scope.check = false;
+				$scope.completedSurveys = [];
+				
 				$scope.completedVisits = [];
 
 				$scope.getPatient = function () {
@@ -103,6 +104,7 @@
 					else {
 						$scope.addSurvey()
 					}
+					$scope.test();
 				}
 
 				$scope.addSurvey = function () {
@@ -157,12 +159,32 @@
 									
 									$scope.completedVisits.splice($scope.completedVisits[i], 1);
 								}
+								for(var j = 0; j < $scope.surveys.length; j++)	{
+									if($scope.completedVisits[i].id == $scope.surveys[j].id){
+										
+										$scope.completedVisits.splice($scope.completedVisits[i], 1);
+									}
+										
+								}
 							}
-							console.log($scope.completedVisits);
+							
+							//console.log($scope.surveys);
 						}, function (rejection) {
 							$scope.completedVisits = [];
 							$scope.message = "Could not display visits";
 						});
+				}
+				
+				$scope.test = function(){
+					for(var i = 0; i < $scope.completedVisits.length; i++)	{
+						for(var j = 0; j < $scope.surveys.length; j++)	{
+							if($scope.completedVisits[i].id == $scope.surveys[j].id){
+								
+								$scope.completedVisits.splice($scope.completedVisits[i], 1);
+							}
+								
+						}
+					}
 				}
 				
 				
@@ -171,7 +193,7 @@
 				$scope.loadHcp();
 				$scope.loadSurveysForPatient();
 				$scope.loadCompletedVisits();
-				
+				//console.log($scope.surveys);
 
 				$scope.assignAppt = function (item) {
 					$scope.currentAppt = item;
@@ -205,10 +227,10 @@
 								</div>
 							</form> -->
 							<input type="radio" ng-model="appointmentrequest" required="true" name="appointmentrequest"
-								id="{{visit.date}}" value="{{visit.date}}" ng-click="assignAppt(visit)" ng-disabled = "check"/>
+								id="{{visit.date}}" value="{{visit.date}}" ng-click="assignAppt(visit)" />
 
 
-							<label for="{{appointmentrequest}}">{{visit.date}}</label>
+							<label  for="{{appointmentrequest}}">{{visit.date}}</label>
 							<br />
 						</div>
 
