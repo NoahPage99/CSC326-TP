@@ -108,4 +108,17 @@ public class PatientController {
         return "/patient/manageSatisfactionSurveys";
     }
 
+    /**
+     * Create a page for the patient to view HCP averages
+     *
+     * @param model
+     *            data for front end
+     * @return The page for the patient to view their diagnoses
+     */
+    @GetMapping ( value = "patient/viewAverageSatisfactionSurveys" )
+    @PreAuthorize ( "hasRole('ROLE_PATIENT')" )
+    public String viewSatisfactionSurveys ( final Model model ) {
+        return "/patient/viewAverageSatisfactionSurveys";
+    }
+
 }

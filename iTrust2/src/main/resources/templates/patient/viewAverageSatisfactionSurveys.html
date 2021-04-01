@@ -16,19 +16,155 @@
 			/**
 			 * A filter to humanize the text to be more user friendly.
 			 */
-			 app.filter('humanize', function() {
-				return function(input) {
+			 app.filter('humanize', function () {
+				return function (input) {
 					return !input ? input : input.toLowerCase().split('_')
 						.map((word) => word.charAt(0).toUpperCase() + word.substring(1))
 						.join(' ');
 				}
-            });
+			});
 
 			app.controller('viewSatisfactionSurveysHCPCtrl', function ($scope, $http) {
+				console.log("x");
+				$scope.hcpAvg = {
+					hcp: "",
+					timeWaitedExaminationRoom: 0,
+					timeWaitedWaitingRoom: 0,
+					satisfiedOfficeVisit: 0,
+					satisfiedTreatment: 0,
+					notes : ""
+				};
+				$scope.hcpAvgs = [];
+				$scope.surveys = [];
+				$scope.surveyList = [];
+				$scope.personnel = [];
+				$scope.hcps = [];
+				$scope.roleList = [];
+				$scope.avgWaitingRoom = [];
+				$scope.avgExamRoom = [];
+				$scope.avgSatisfiedOffice = [];
+				$scope.avgSatisfiedTreatment = [];
+				$scope.hcpSurvey = [];
 
+
+				// Gets a list of HCPs from the list of personnel in the database
+				$scope.getHCPs = function () {
+					$http.get("/iTrust2/api/v1/personnel").then(
+						function (response) {
+							$scope.personnel = response.data;
+
+							for (var i = 0; i < $scope.personnel.length; i++) {
+								$scope.roleList = [];
+								$scope.roleList.push($scope.personnel[i].roles);
+								for (var j = 0; j < $scope.roleList.length; j++) {
+									if ($scope.roleList[j] == "ROLE_HCP") {
+										$scope.hcps.push($scope.personnel[i]);
+									}
+								}
+							}
+
+							//console.log($scope.hcps);
+
+
+							$scope.message = "";
+						}, function (rejection) {
+							//$scope.personnel= [];
+							//$scope.message = "Could not display surveys";
+						});
+				}
+
+
+				$scope.getHCPs();
+				//console.log($scope.hcps);
+
+				$scope.loadSurveys = function () {
+					$http.get("/iTrust2/api/v1/surveys").then(
+						function (response) {
+							$scope.surveys = response.data;
+
+							for (var i = 0; i < $scope.surveys.length; i++) {
+								$scope.surveyList.push($scope.surveys[i]);
+								$scope.avgWaitingRoom.push($scope.surveys[i].timeWaitedWaitingRoom);
+								$scope.avgExamRoom.push($scope.surveys[i].timeWaitedExaminationRoom);
+								$scope.avgSatisfiedOffice.push($scope.surveys[i].satisfiedOfficeVisit);
+								$scope.avgSatisfiedTreatment.push($scope.surveys[i].satisfiedTreatment);
+							}
+
+							for (var i = 0; i < $scope.surveyList.length; i++) {
+								
+								$scope.username = $scope.surveyList[i].hcp.username;
+								
+								for (var j = 0; j < $scope.hcps.length; j++) {
+									if ($scope.hcps[j].username == $scope.username) {
+										$scope.hcpAvg.hcp = $scope.hcps[j].username;
+										$scope.hcpAvg.timeWaitedExaminationRoom += $scope.surveyList[i].timeWaitedExaminationRoom;
+										$scope.hcpAvg.timeWaitedWaitingRoom += $scope.surveyList[i].timeWaitedWaitingRoom;
+										$scope.hcpAvg.satisfiedOfficeVisit += $scope.surveyList[i].satisfiedOfficeVisit;
+										$scope.hcpAvg.satisfiedTreatment += $scope.surveyList[i].satisfiedTreatment;
+										$scope.hcpAvg.notes += $scope.surveyList[i].notes + "\n";
+									}
+								}
+							}
+							$scope.hcpAvgs.push($scope.hcpAvg);
+
+							$scope.hcpAvg.timeWaitedExaminationRoom /= $scope.surveyList.length;
+							$scope.hcpAvg.timeWaitedWaitingRoom /= $scope.surveyList.length;
+							$scope.hcpAvg.satisfiedOfficeVisit /= $scope.surveyList.length;
+							$scope.hcpAvg.satisfiedTreatment /= $scope.surveyList.length;
+							console.log($scope.hcpAvgs);
+
+							$scope.message = "";
+						}, function (rejection) {
+							$scope.surveys = [];
+							$scope.message = "Could not display surveys";
+						});
+
+				}
+
+
+				$scope.loadSurveys();
+				// console.log($scope.surveyList);
+
+
+				// TODO: ITERATE THROUGH EACH HCPS RESPECTIVE LIST OF SURVEYS AND CALCULATE AN AVERAGE
+
+
+
+				$scope.getTemplate = function (survey) {
+					return 'view';
+				};
 			});
 			/*]]>*/
 		</script>
+		<div ng-app="viewSatisfactionSurveysHCPApp" ng-controller="viewSatisfactionSurveysHCPCtrl">
+			<h3>Admin View Surveys</h3>
+			<table class="table table-bordered">
+				<caption>HCP Survey Averages:</caption>
+				<thead>
+					<tr>
+						<th>HCP</th>
+						<th>Average Time Waited Waiting Room </th>
+						<th>Avereage Time Waited Examination Room</th>
+						<th>Avereage Satisfied Treatment</th>
+						<th>Avereage Satisfied Office Visit</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr name="HCP Survey" ng-repeat="h in hcpAvgs"
+						ng-include="getTemplate(h)" hcpId={{h.id}}>
+					</tr>
+				</tbody>
+			</table>
+			
+			<script type="text/ng-template" id="view">
+			
+			<td name="hcpCell">{{h.hcp}}</td>
+            <td name="timeWaitingRoom">{{h.timeWaitedWaitingRoom}}</td>
+            <td name="timeExamRoom">{{h.timeWaitedExaminationRoom}}</td>
+            <td name="satisfiedTreatment">{{h.satisfiedTreatment}}</td>
+            <td name="satisfiedOfficeVisit">{{h.satisfiedOfficeVisit}}</td>
+			</script>
+			</div>
 </body>
 
 </html>

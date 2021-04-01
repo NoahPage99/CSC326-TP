@@ -39,7 +39,7 @@ public class APISatisfactionSurveyController extends APIController {
      *
      * @return
      */
-    @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_OD', 'ROLE_OPH', 'ROLE_VIROLOGIST', 'ROLE_ADMIN')" )
+    @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_OD', 'ROLE_OPH', 'ROLE_VIROLOGIST', 'ROLE_ADMIN', 'ROLE_PATIENT')" )
     @GetMapping ( BASE_PATH + "/surveys" )
     public List<SatisfactionSurvey> getSurveys () {
 
@@ -77,7 +77,7 @@ public class APISatisfactionSurveyController extends APIController {
         return visits;
     }
 
-        /**
+    /**
      * Retrieves a list of all OfficeVisits in the database for the current
      * patient
      *
