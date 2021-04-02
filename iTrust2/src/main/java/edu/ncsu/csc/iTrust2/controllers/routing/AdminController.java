@@ -94,4 +94,17 @@ public class AdminController {
     public String addCode ( final Model model ) {
         return "/admin/manageICDCodes";
     }
+
+    /**
+     * View Exisitng Surveys
+     *
+     * @param model
+     *            data for front end
+     * @return the page to display
+     */
+    @RequestMapping ( value = "admin/viewAllExistingSurveys" )
+    @PreAuthorize ( "hasRole('ROLE_ADMIN')" )
+    public String viewExistingSatisfactionSurveys ( final Model model ) {
+        return "/admin/viewAllExistingSurveys";
+    }
 }
