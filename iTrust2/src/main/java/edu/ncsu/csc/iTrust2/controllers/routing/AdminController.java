@@ -70,6 +70,19 @@ public class AdminController {
     }
 
     /**
+     * Retrieves the form for the Drugs action
+     *
+     * @param model
+     *            Data for front end
+     * @return The page to display
+     */
+    @RequestMapping ( value = "admin/viewSatisfactionSurveys" )
+    @PreAuthorize ( "hasRole('ROLE_ADMIN')" )
+    public String satisfactionSurveys ( final Model model ) {
+        return "admin/viewSatisfactionSurveys";
+    }
+
+    /**
      * Add code
      *
      * @param model
@@ -80,5 +93,18 @@ public class AdminController {
     @PreAuthorize ( "hasRole('ROLE_ADMIN')" )
     public String addCode ( final Model model ) {
         return "/admin/manageICDCodes";
+    }
+
+    /**
+     * View Exisitng Surveys
+     *
+     * @param model
+     *            data for front end
+     * @return the page to display
+     */
+    @RequestMapping ( value = "admin/viewAllExistingSurveys" )
+    @PreAuthorize ( "hasRole('ROLE_ADMIN')" )
+    public String viewExistingSatisfactionSurveys ( final Model model ) {
+        return "/admin/viewAllExistingSurveys";
     }
 }

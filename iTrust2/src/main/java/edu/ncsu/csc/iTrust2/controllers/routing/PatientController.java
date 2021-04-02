@@ -95,4 +95,30 @@ public class PatientController {
         return "/patient/officeVisit/viewDiagnoses";
     }
 
+    /**
+     * Create a page for the patient to view all diagnoses
+     *
+     * @param model
+     *            data for front end
+     * @return The page for the patient to view their diagnoses
+     */
+    @GetMapping ( value = "patient/manageSatisfactionSurveys" )
+    @PreAuthorize ( "hasRole('ROLE_PATIENT')" )
+    public String manageSatisfactionSurveys ( final Model model ) {
+        return "/patient/manageSatisfactionSurveys";
+    }
+
+    /**
+     * Create a page for the patient to view HCP averages
+     *
+     * @param model
+     *            data for front end
+     * @return The page for the patient to view their diagnoses
+     */
+    @GetMapping ( value = "patient/viewAverageSatisfactionSurveys" )
+    @PreAuthorize ( "hasRole('ROLE_PATIENT')" )
+    public String viewSatisfactionSurveys ( final Model model ) {
+        return "/patient/viewAverageSatisfactionSurveys";
+    }
+
 }

@@ -42,7 +42,7 @@ public class APIPersonnelController extends APIController {
      * @return list of personnel
      */
     @GetMapping ( BASE_PATH + "/personnel" )
-    @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_ADMIN')" )
+    @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_ADMIN', 'ROLE_PATIENT')" )
     public List<Personnel> getPersonnel () {
         return (List<Personnel>) service.findAll();
     }

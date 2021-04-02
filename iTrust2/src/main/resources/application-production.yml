@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/iTrust2_test?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/iTrust2_production?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
     username: root
-    password: 
+    password: Lyx0316..
     hikari:
       idleTimeout: 500
       connectionTimeout: 15000 
@@ -14,6 +14,6 @@ spring:
     show-sql: true
 
 server:
-  port: 8080
+  port: 7719
   servlet:
     contextPath: /iTrust2
