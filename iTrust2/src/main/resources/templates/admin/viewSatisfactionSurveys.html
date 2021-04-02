@@ -32,7 +32,8 @@
 					timeWaitedWaitingRoom: 0,
 					satisfiedOfficeVisit: 0,
 					satisfiedTreatment: 0,
-					notes : ""
+					notes : "",
+					average: 0
 				};
 				$scope.hcpAvgs = [];
 				$scope.surveys = [];
@@ -45,6 +46,9 @@
 				$scope.avgSatisfiedOffice = [];
 				$scope.avgSatisfiedTreatment = [];
 				$scope.hcpSurvey = [];
+				$scope.appointments = [];
+				$scope.completedAppointments = [];
+				$scope.averages = [];
 
 
 				// Gets a list of HCPs from the list of personnel in the database
@@ -77,6 +81,8 @@
 				$scope.getHCPs();
 				//console.log($scope.hcps);
 
+				var average;
+				
 				$scope.loadSurveys = function () {
 					$http.get("/iTrust2/api/v1/surveys").then(
 						function (response) {
@@ -118,19 +124,45 @@
 							if (!bool)
 								$scope.hcpAvgs.push($scope.hcpAvg);
 							
-							console.log($scope.hcpAvgs);
+							//console.log($scope.hcpAvgs);
 							$scope.hcpAvg.timeWaitedExaminationRoom /= $scope.surveyList.length;
 							$scope.hcpAvg.timeWaitedWaitingRoom /= $scope.surveyList.length;
 							$scope.hcpAvg.satisfiedOfficeVisit /= $scope.surveyList.length;
 							$scope.hcpAvg.satisfiedTreatment /= $scope.surveyList.length;
-							console.log($scope.hcpAvgs);
+							//console.log($scope.hcpAvgs);
 
 							$scope.message = "";
 						}, function (rejection) {
 							$scope.surveys = [];
 							$scope.message = "Could not display surveys";
 						});
-
+					
+					
+					
+					$http.get("/iTrust2/api/v1/appointmentrequests").then(
+						function (response) {
+						//console.log($scope.surveyList);
+						$scope.appointments = response.data;
+						//console.log($scope.appointments);
+						for(var i = 0; i < $scope.appointments.length; i++){
+							if($scope.appointments[i].completed){
+								$scope.completedAppointments.push($scope.appointments[i]);
+							}
+						}
+						average = ($scope.surveyList.length / $scope.completedAppointments.length) * 100;
+						$scope.hcpAvg.average = average;
+						
+						$scope.hcpAvgs.push($scope.hcpAvg);
+						
+						//console.log($scope.hcpAvgs);
+						
+						
+						//console.log($scope.hcpAvgs.average);
+						//$scope.hcpAvgs.responseRate.push(average);
+						
+						//console.log($scope.surveyList);
+						
+					});
 				}
 
 
@@ -162,6 +194,7 @@
 						<th>Average Satisfied Treatment</th>
 						<th>Average Satisfied Office Visit</th>
 						<th>Notes</th>
+						<th>Response Rate</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -179,41 +212,11 @@
             <td name="satisfiedTreatment">{{h.satisfiedTreatment}}</td>
             <td name="satisfiedOfficeVisit">{{h.satisfiedOfficeVisit}}</td>
 			<td name="notes">{{h.notes}}</td>
+			<td name="ResponseRate">{{h.average}}</td>
 			</script>
 			</div>
 			
-			<div class = "pleasework">
-				<table class="table table-bordered">
-				<caption>Existing Surveys:</caption>
-				<thead>
-					<tr>
-						<th>HCP</th>
-						<th>Patient</th>
-						<th>Time Waited Waiting Room</th>
-						<th>Time Waited Examination Room</th>
-						<th>Satisfied Treatment</th>
-						<th>Satisfied Office Visit</th>
-						<th>Notes</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr name="satsfactionSurveys" ng-repeat="s in surveys | orderBy: 'hcp_id'"
-						ng-include="getTemplate(s)" surveyId={{s.id}}>
-					</tr>
-				</tbody>
-			</table>
 			
-			<script type="text/ng-template" id="view">
-			
-            <td name="hcpCell">{{s.hcp.username}}</td>
-            <td name="patientCell">{{s.patient.username}}</td>
-            <td name="timeWaitingRoom">{{s.timeWaitedWaitingRoom}}</td>
-            <td name="timeExamRoom">{{s.timeWaitedExaminationRoom}}</td>
-            <td name="satisfiedTreatment">{{s.satisfiedTreatment}}</td>
-            <td name="satisfiedOfficeVisit">{{s.satisfiedOfficeVisit}}</td>
-            <td name="notes">{{s.notes}}</td>
-			</script> 
-		</div>
 </body>
 
 </html>
