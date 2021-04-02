@@ -52,7 +52,7 @@ public class APIAppointmentRequestController extends APIController {
      * @return list of appointment requests
      */
     @GetMapping ( BASE_PATH + "/appointmentrequests" )
-    @PreAuthorize ( "hasAnyRole('ROLE_HCP')" )
+    @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_ADMIN')" )
     public List<AppointmentRequest> getAppointmentRequests () {
         final List<AppointmentRequest> requests = (List<AppointmentRequest>) service.findAll();
 
@@ -75,8 +75,9 @@ public class APIAppointmentRequestController extends APIController {
                 .collect( Collectors.toList() );
     }
 
-        /**
-     * Retrieves the approved AppointmentRequest specified by the username provided
+    /**
+     * Retrieves the approved AppointmentRequest specified by the username
+     * provided
      *
      * @return list of appointment requests for the logged in patient
      */
