@@ -17,10 +17,8 @@ Scenario Outline: Complete satisfaction survey
 	And An HCP exists in iTrust2
 	When I log in as patient
 	When I navigate to the Manage Appointment Requests page
-	And I choose to complete a survey for a medical appointment with timeWaitedWaitingRoom <timeWaitedWaitingRoom>, timeWaitedExaminationRoom <timeWaitedExaminationRoom>, 
-  satisfiedOfficeVisit <satisfiedOfficeVisit>, satisfiedTreatment <satisfiedTreatment>, and notes <notes>
-	Then The appointment request with timeWaitedWaitingRoom <timeWaitedWaitingRoom>, timeWaitedExaminationRoom <timeWaitedExaminationRoom>,
-  satisfiedOfficeVisit <satisfiedOfficeVisit>, satisfiedTreatment <satisfiedTreatment>, and notes <notes> is submitted successfully
+	And I choose to complete a survey for a medical appointment with timeWaitedWaitingRoom <timeWaitedWaitingRoom>, timeWaitedExaminationRoom <timeWaitedExaminationRoom>,  satisfiedOfficeVisit <satisfiedOfficeVisit>, satisfiedTreatment <satisfiedTreatment>, and notes <notes>
+	Then The appointment request with timeWaitedWaitingRoom <timeWaitedWaitingRoom>, timeWaitedExaminationRoom <timeWaitedExaminationRoom>, satisfiedOfficeVisit <satisfiedOfficeVisit>, satisfiedTreatment <satisfiedTreatment>, and notes <notes> is submitted successfully
 
 Examples:
 	| timeWaitedWaitingRoom							| timeWaitedExaminationRoom				| satisfiedOfficeVisit			| satisfiedTreatment 		| notes 						|
@@ -32,10 +30,8 @@ Scenario Outline: Complete satisfaction survey
 	And An HCP exists in iTrust2
 	When I log in as patient
 	When I navigate to the Manage Appointment Requests page
-	And I choose to complete a survey for a medical appointment with timeWaitedWaitingRoom <timeWaitedWaitingRoom>, timeWaitedExaminationRoom <timeWaitedExaminationRoom>, 
-  satisfiedOfficeVisit <satisfiedOfficeVisit>, satisfiedTreatment <satisfiedTreatment>, and notes <notes>
-	Then The appointment request with timeWaitedWaitingRoom <timeWaitedWaitingRoom>, timeWaitedExaminationRoom <timeWaitedExaminationRoom>,
-  satisfiedOfficeVisit <satisfiedOfficeVisit>, satisfiedTreatment <satisfiedTreatment>, and notes <notes> is not submitted and the form remains the same for editing.
+	And I choose to complete a survey for a medical appointment with timeWaitedWaitingRoom <timeWaitedWaitingRoom>, timeWaitedExaminationRoom <timeWaitedExaminationRoom>, satisfiedOfficeVisit <satisfiedOfficeVisit>, satisfiedTreatment <satisfiedTreatment>, and notes <notes>
+	Then The appointment request with timeWaitedWaitingRoom <timeWaitedWaitingRoom>, timeWaitedExaminationRoom <timeWaitedExaminationRoom>, satisfiedOfficeVisit <satisfiedOfficeVisit>, satisfiedTreatment <satisfiedTreatment>, and notes <notes> is not submitted and the form remains the same for editing.
 
 Examples:
 	| timeWaitedWaitingRoom							| timeWaitedExaminationRoom				| satisfiedOfficeVisit			| satisfiedTreatment 		| notes 						|
@@ -48,8 +44,7 @@ Scenario Outline: Patient Reviews satisfaction survey
   And The patient has been to a medical appointment
   And The patient has completed a satisfaction survey
 	When I navigate to the Manage Surveys page
-	Then The patient can review a survey with timeWaitedWaitingRoom <timeWaitedWaitingRoom>, timeWaitedExaminationRoom <timeWaitedExaminationRoom>, 
-  satisfiedOfficeVisit <satisfiedOfficeVisit>, satisfiedTreatment <satisfiedTreatment>, and notes <notes>
+	Then The patient can review a survey with timeWaitedWaitingRoom <timeWaitedWaitingRoom>, timeWaitedExaminationRoom <timeWaitedExaminationRoom>, satisfiedOfficeVisit <satisfiedOfficeVisit>, satisfiedTreatment <satisfiedTreatment>, and notes <notes>
 
 Examples:
 	| timeWaitedWaitingRoom							| timeWaitedExaminationRoom				| satisfiedOfficeVisit			| satisfiedTreatment 		| notes 						|
@@ -62,8 +57,7 @@ Scenario Outline: HCP Reviews satisfaction survey
   And The patient has been to a medical appointment
   And The patient has completed a satisfaction survey
 	When I navigate to the Manage Surveys page
-	Then The I can review a survey with timeWaitedWaitingRoom <timeWaitedWaitingRoom>, timeWaitedExaminationRoom <timeWaitedExaminationRoom>, 
-  satisfiedOfficeVisit <satisfiedOfficeVisit>, satisfiedTreatment <satisfiedTreatment>, and notes <notes>
+	Then The I can review a survey with timeWaitedWaitingRoom <timeWaitedWaitingRoom>, timeWaitedExaminationRoom <timeWaitedExaminationRoom>, satisfiedOfficeVisit <satisfiedOfficeVisit>, satisfiedTreatment <satisfiedTreatment>, and notes <notes>
 
 Examples:
 	| timeWaitedWaitingRoom							| timeWaitedExaminationRoom				| satisfiedOfficeVisit			| satisfiedTreatment 		| notes 						|

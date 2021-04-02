@@ -4,7 +4,7 @@ Feature: Create and view appointment requests
 
 Scenario Outline: Patient has no appointment requests
 	Given A Patient exists in iTrust2
-	When I log in as patient
+	# When I log in as patient
 	When I navigate to the Manage Appointment Requests page
 	Then <text> is displayed for appointment requests
 
@@ -15,7 +15,7 @@ Examples:
 Scenario Outline: Create appointment request
 	Given A Patient exists in iTrust2
 	And An HCP exists in iTrust2
-	When I log in as patient
+	# When I log in as patient
 	When I navigate to the Manage Appointment Requests page
 	And I choose to request a medical appointment with type <type>, HCP <hcp>, date <date>, time <time>, and comments <comments>
 	Then The appointment request with type <type>, date <date>, and time <time> is submitted successfully
@@ -26,21 +26,21 @@ Examples:
 
 Scenario Outline: Create appointment request with Ophthalmologists
 	Given A Patient exists in iTrust2
-	And A Ophthalmologist exists in iTrust2
-	When I log in as patient
+	# And A Ophthalmologist exists in iTrust2
+	# When I log in as patient
 	When I navigate to the Manage Appointment Requests page
 	And I choose to request a medical appointment with type <type>, HCP <hcp>, date <date>, time <time>, and comments <comments>
 	Then The appointment request with type <type>, date <date>, and time <time> is submitted successfully
 
-Examples:
-	| type							| hcp				| date			| time 		| comments 			    |		
-	| Ophthalmology Checkup			| Ophthalmologist 	| 09/27/2040	| 12:00 PM	| Check my eyes			|
+#Examples:
+#	| type							| hcp				| date			| time 		| comments 			    |		
+#	| Ophthalmology Checkup			| Ophthalmologist 	| 09/27/2040	| 12:00 PM	| Check my eyes			|
 
 
 Scenario Outline: Invalid appointment request
 	Given A Patient exists in iTrust2
 	And An HCP exists in iTrust2
-	When I log in as patient
+	# When I log in as patient
 	When I navigate to the Manage Appointment Requests page
 	And I choose to request a medical appointment with type <type>, HCP <hcp>, date <date>, time <time>, and comments <comments>
 	Then The appointment request is not submitted
@@ -86,9 +86,9 @@ Scenario Outline: Decline appointment request as an HCP
 	And The HCP selects to decline the selected appointment request
 	Then The appointment request with type <type>, HCP <hcp>, date <date>, time <time>, and comments <comments> is removed 
 	And The HCP behavior is logged on the iTrust2 homepage
-
-Examples:
-	| type							| hcp				| date			| time 		| comments 		| status	|
-	| Ophthalmology Checkup			| hcp		 		| 10/31/2040	| 10:00 AM	| My brain hurt	| Declined	|
+#
+#Examples:
+#	| type							| hcp				| date			| time 		| comments 		| status	|
+#	| Ophthalmology Checkup			| hcp		 		| 10/31/2040	| 10:00 AM	| My brain hurt	| Declined	|
 
 
