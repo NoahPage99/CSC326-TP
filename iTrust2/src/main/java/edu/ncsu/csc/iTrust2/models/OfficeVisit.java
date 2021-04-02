@@ -24,6 +24,7 @@ import com.google.gson.annotations.JsonAdapter;
 import edu.ncsu.csc.iTrust2.adapters.ZonedDateTimeAdapter;
 import edu.ncsu.csc.iTrust2.adapters.ZonedDateTimeAttributeConverter;
 import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
+import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
 
 /**
  * This is the validated database-persisted office visit representation
@@ -103,6 +104,9 @@ public class OfficeVisit extends DomainObject {
      */
     private String             notes;
 
+    // @OneToOne ( cascade = CascadeType.ALL )
+    private boolean            completed;
+
     /**
      * The appointment of this office visit
      */
@@ -114,8 +118,14 @@ public class OfficeVisit extends DomainObject {
     @JsonManagedReference
     private List<Prescription> prescriptions;
 
+    @OneToOne ( cascade = CascadeType.ALL )
+    @JoinColumn ( name = "survey_id" )
+    private SatisfactionSurvey survey;
+
     /** For Hibernate/Thymeleaf _must_ be an empty constructor */
     public OfficeVisit () {
+        // need to have completed started as false - added by noah
+        completed = false;
     }
 
     public void validateDiagnoses () {
@@ -365,6 +375,25 @@ public class OfficeVisit extends DomainObject {
     }
 
     /**
+     * get the satisfaction survey
+     *
+     * @return satisfaction survey
+     */
+    public SatisfactionSurvey getSurvey () {
+        return survey;
+    }
+
+    /**
+     * set satisfaction survey
+     *
+     * @param survey
+     *            to set
+     */
+    public void setSurvey ( final SatisfactionSurvey survey ) {
+        this.survey = survey;
+    }
+
+    /**
      * Sets the list of prescriptions associated with this visit
      *
      * @param prescriptions
@@ -381,6 +410,26 @@ public class OfficeVisit extends DomainObject {
      */
     public List<Prescription> getPrescriptions () {
         return prescriptions;
+    }
+
+    /**
+     * Returns if the satisfaction survey for the office visit is completed or
+     * not
+     *
+     * @return true is completed
+     */
+    public boolean isCompleted () {
+        return completed;
+    }
+
+    /**
+     * Sets if the satisfaction survey is completed or not
+     *
+     * @param completed
+     *            survey completed or not
+     */
+    public void setCompleted ( final boolean completed ) {
+        this.completed = completed;
     }
 
 }

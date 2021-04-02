@@ -128,7 +128,7 @@ public enum TransactionType {
      * AppointmentRequest otherwise updated
      */
     APPOINTMENT_REQUEST_UPDATED ( 652, "General checkup request was updated", true ),
-
+    SURVEY_CREATE ( 799, "Create Satisfaction Survey", true ),
     /**
      * Create basic health metrics
      */
@@ -220,7 +220,7 @@ public enum TransactionType {
      * Admin views all drugs in the system
      */
     DRUG_VIEW ( 903, "Admin views all drugs in the system", true ),
-
+  
     /**
      * HCP created a new prescription
      */
@@ -237,10 +237,17 @@ public enum TransactionType {
      * User viewed an existing prescription
      */
     PRESCRIPTION_VIEW ( 913, "User viewed an existing prescription", true ),
+    
     /**
      * Patient viewed their list of prescriptions
      */
     PATIENT_PRESCRIPTION_VIEW ( 914, "Patient viewed their list of prescriptions", true ),
+    /**
+     * User viewed an existing survey
+     */
+    SURVEY_VIEW ( 915, "User viewed an existing survey", true ),
+    
+    
     /**
      * Attempt to update password fails
      */

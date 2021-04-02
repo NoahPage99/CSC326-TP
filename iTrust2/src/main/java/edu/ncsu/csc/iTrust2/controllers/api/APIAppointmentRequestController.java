@@ -52,7 +52,7 @@ public class APIAppointmentRequestController extends APIController {
      * @return list of appointment requests
      */
     @GetMapping ( BASE_PATH + "/appointmentrequests" )
-    @PreAuthorize ( "hasAnyRole('ROLE_HCP')" )
+    @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_ADMIN')" )
     public List<AppointmentRequest> getAppointmentRequests () {
         final List<AppointmentRequest> requests = (List<AppointmentRequest>) service.findAll();
 
@@ -72,6 +72,20 @@ public class APIAppointmentRequestController extends APIController {
     public List<AppointmentRequest> getAppointmentRequestsForPatient () {
         final User patient = userService.findByName( LoggerUtil.currentUser() );
         return service.findByPatient( patient ).stream().filter( e -> e.getStatus().equals( Status.PENDING ) )
+                .collect( Collectors.toList() );
+    }
+
+    /**
+     * Retrieves the approved AppointmentRequest specified by the username
+     * provided
+     *
+     * @return list of appointment requests for the logged in patient
+     */
+    @GetMapping ( BASE_PATH + "/appointmentrequest/approvedRequests" )
+    @PreAuthorize ( "hasAnyRole('ROLE_PATIENT')" )
+    public List<AppointmentRequest> getApprovedAppointmentRequestsForPatient () {
+        final User patient = userService.findByName( LoggerUtil.currentUser() );
+        return service.findByPatient( patient ).stream().filter( e -> e.getStatus().equals( Status.APPROVED ) )
                 .collect( Collectors.toList() );
     }
 
