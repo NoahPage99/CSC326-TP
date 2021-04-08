@@ -5,27 +5,25 @@ Feature: View and complete satisfaction surveys
 Scenario Outline: Patient has no surveys to complete
 	Given A Patient exists in iTrust2
 	When I log in as patient
-	When I navigate to the Manage Manage Surveys page
-	Then <text> is displayed for satisfaction surveys
+	When I navigate to the Manage Surveys page
+	Then no appointments show up
 
-Examples:
-	| text 								|
-	| No surveys available to complete.	|
+
 
 Scenario Outline: Complete satisfaction survey
 	Given A Patient exists in iTrust2
 	And An HCP exists in iTrust2
 	When I log in as patient
 	When I navigate to the Manage Appointment Requests page
-	And I choose to complete a survey for a medical appointment with timeWaitedWaitingRoom <timeWaitedWaitingRoom>, timeWaitedExaminationRoom <timeWaitedExaminationRoom>,  satisfiedOfficeVisit <satisfiedOfficeVisit>, satisfiedTreatment <satisfiedTreatment>, and notes <notes>
-	Then The appointment request with timeWaitedWaitingRoom <timeWaitedWaitingRoom>, timeWaitedExaminationRoom <timeWaitedExaminationRoom>, satisfiedOfficeVisit <satisfiedOfficeVisit>, satisfiedTreatment <satisfiedTreatment>, and notes <notes> is submitted successfully
+	And I choose to complete a survey for a medical appointment 
+	Then The appointment request with updated
 
 Examples:
 	| timeWaitedWaitingRoom							| timeWaitedExaminationRoom				| satisfiedOfficeVisit			| satisfiedTreatment 		| notes 						|
 	| 0				| 0 		        | 6	| 6	| My brain still hurt					|
   
   
-Scenario Outline: Complete satisfaction survey
+Scenario Outline: failed satisfaction survey
 	Given A Patient exists in iTrust2
 	And An HCP exists in iTrust2
 	When I log in as patient
