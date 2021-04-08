@@ -1,5 +1,6 @@
 package edu.ncsu.csc.iTrust2.persistant;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -145,8 +146,7 @@ public class OphOfficeVisit extends DomainObject {
      */
     public OphOfficeVisit ( @NotNull final User patient, @NotNull final User hcp, final String notes, final String date,
             final String time, final int lEyeAcuity, final int rEyeAcuity, final int lEyeSphere, final int rEyeSphere,
-            final int lEyeCyl, final int rEyeCyl, final int lEyeAxis, final int rEyeAxis,
-            final Set<Disease> diseases ) {
+            final int lEyeCyl, final int rEyeCyl, final int lEyeAxis, final int rEyeAxis ) {
         this.setPatient( patient );
         this.setHcp( hcp );
         this.setNotes( notes );
@@ -160,7 +160,7 @@ public class OphOfficeVisit extends DomainObject {
         this.setrEyeCyl( rEyeCyl );
         this.setlEyeAxis( lEyeAxis );
         this.setrEyeAxis( rEyeAxis );
-        this.setDiseases( diseases );
+        this.diseases = new HashSet<Disease>();
     }
 
     /**
@@ -430,23 +430,11 @@ public class OphOfficeVisit extends DomainObject {
         this.rEyeAxis = rEyeAxis;
     }
 
-    /**
-     * get diseases
-     *
-     * @return the diseases
-     */
-    public Set<Disease> getDiseases () {
-        return diseases;
-    }
-
-    /**
-     * set diseases
-     *
-     * @param diseases
-     *            the diseases to set
-     */
-    public void setDiseases ( final Set<Disease> diseases ) {
-        this.diseases = diseases;
+    public void addDisease ( final Disease disease ) {
+        if ( null == this.diseases ) {
+            this.diseases = new HashSet<Disease>();
+        }
+        this.diseases.add( disease );
     }
 
 }
