@@ -1,5 +1,6 @@
 package edu.ncsu.csc.iTrust2.persistant;
 
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,10 +15,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import edu.ncsu.csc.iTrust2.models.DomainObject;
+import edu.ncsu.csc.iTrust2.models.Hospital;
+import edu.ncsu.csc.iTrust2.models.OfficeVisit;
 import edu.ncsu.csc.iTrust2.models.User;
+import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
 import edu.ncsu.csc.iTrust2.models.enums.Disease;
 
 /**
@@ -34,74 +39,96 @@ import edu.ncsu.csc.iTrust2.models.enums.Disease;
  *
  */
 @Entity
-public class OphOfficeVisit extends DomainObject {
+public class OphOfficeVisit extends OfficeVisit {
     @NotNull
     @ManyToOne ( cascade = CascadeType.ALL )
     @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
-    private User         patient;
+    private User            patient;
 
     @NotNull
     @ManyToOne ( cascade = CascadeType.ALL )
     @JoinColumn ( name = "hcp_id", columnDefinition = "varchar(100)" )
-    private User         hcp;
+    private User            hcp;
 
     /** id */
     @Id
     @GeneratedValue ( strategy = GenerationType.AUTO )
-    private Long         id;
+    private Long            id;
 
     /**
      * notes on visit
      */
-    private String       notes;
+    private String          notes;
 
     /**
      * date
      */
-    private String       date;
+    private String          date;
     /**
      * time
      */
-    private String       time;
+    private String          time;
+
     /**
      * left eye acuity
      */
-    private int          lEyeAcuity;
+    @Min ( 10 )
+    @Max ( 200 )
+    private int             lEyeAcuity;
     /**
      * right eye acuity
      */
-    private int          rEyeAcuity;
+    @Min ( 10 )
+    @Max ( 200 )
+    private int             rEyeAcuity;
     /**
      * left eye sphere
      */
-    private int          lEyeSphere;
+    private double          lEyeSphere;
     /**
      * right eye sphere
      */
-    private int          rEyeSphere;
+    private double          rEyeSphere;
     /**
      * left eye cylinder
      */
-    private int          lEyeCyl;
+    private double          lEyeCyl;
     /**
      * right eye cylinder
      */
-    private int          rEyeCyl;
+    private double          rEyeCyl;
     /**
      * left eye axis
      */
-    private int          lEyeAxis;
+    @Min ( 1 )
+    @Max ( 180 )
+    private int             lEyeAxis;
     /**
      * right eye axis
      */
-    private int          rEyeAxis;
+    @Min ( 1 )
+    @Max ( 180 )
+    private int             rEyeAxis;
+    /**
+     * The type of this office visit
+     */
+    @NotNull
+    @Enumerated ( EnumType.STRING )
+    private AppointmentType type;
+    /**
+     * The hospital of this office visit
+     */
+    @NotNull
+    @ManyToOne
+    @JoinColumn ( name = "hospital_id", columnDefinition = "varchar(100)" )
+    private Hospital        hospital;
 
     /**
      * The diseases that were diagnosed from the visit
      */
     @ElementCollection ( targetClass = Disease.class, fetch = FetchType.EAGER )
     @Enumerated ( EnumType.STRING )
-    private Set<Disease> diseases;
+    private Set<Disease>    diseases;
 
     /**
      * Default constructor for office visit
@@ -161,92 +188,6 @@ public class OphOfficeVisit extends DomainObject {
         this.setlEyeAxis( lEyeAxis );
         this.setrEyeAxis( rEyeAxis );
         this.diseases = new HashSet<Disease>();
-    }
-
-    /**
-     * Get the ID of visit
-     *
-     * @return the ID
-     */
-    @Override
-    public Long getId () {
-        return id;
-    }
-
-    /**
-     * Set the ID of the visit (Used by Hibernate)
-     *
-     * @param id
-     *            the ID
-     */
-    public void setId ( final Long id ) {
-        this.id = id;
-    }
-
-    /**
-     * get patient
-     *
-     * @return the patient
-     */
-    public User getPatient () {
-        return patient;
-    }
-
-    /**
-     * set patient
-     *
-     * @param patient
-     *            the patient to set
-     */
-    public void setPatient ( final User patient ) {
-        this.patient = patient;
-    }
-
-    /**
-     * get hcp
-     *
-     * @return the hcp
-     */
-    public User getHcp () {
-        return hcp;
-    }
-
-    /**
-     * set hcp
-     *
-     * @param hcp
-     *            the hcp to set
-     */
-    public void setHcp ( final User hcp ) {
-        this.hcp = hcp;
-    }
-
-    /**
-     * get notes
-     *
-     * @return the notes
-     */
-    public String getNotes () {
-        return notes;
-    }
-
-    /**
-     * set notes
-     *
-     * @param notes
-     *            the notes to set
-     */
-    public void setNotes ( final String notes ) {
-        this.notes = notes;
-    }
-
-    /**
-     * get date
-     *
-     * @return the date
-     */
-    public String getDate () {
-        return date;
     }
 
     /**
@@ -321,7 +262,7 @@ public class OphOfficeVisit extends DomainObject {
      *
      * @return the lEyeSphere
      */
-    public int getlEyeSphere () {
+    public double getlEyeSphere () {
         return lEyeSphere;
     }
 
@@ -331,7 +272,9 @@ public class OphOfficeVisit extends DomainObject {
      * @param lEyeSphere
      *            the lEyeSphere to set
      */
-    public void setlEyeSphere ( final int lEyeSphere ) {
+    public void setlEyeSphere ( double lEyeSphere ) {
+        final DecimalFormat numberFormat = new DecimalFormat( "0.0" );
+        lEyeSphere = Double.parseDouble( numberFormat.format( lEyeSphere ) );
         this.lEyeSphere = lEyeSphere;
     }
 
@@ -340,7 +283,7 @@ public class OphOfficeVisit extends DomainObject {
      *
      * @return the rEyeSphere
      */
-    public int getrEyeSphere () {
+    public double getrEyeSphere () {
         return rEyeSphere;
     }
 
@@ -350,7 +293,9 @@ public class OphOfficeVisit extends DomainObject {
      * @param rEyeSphere
      *            the rEyeSphere to set
      */
-    public void setrEyeSphere ( final int rEyeSphere ) {
+    public void setrEyeSphere ( double rEyeSphere ) {
+        final DecimalFormat numberFormat = new DecimalFormat( "0.0" );
+        rEyeSphere = Double.parseDouble( numberFormat.format( rEyeSphere ) );
         this.rEyeSphere = rEyeSphere;
     }
 
@@ -359,7 +304,7 @@ public class OphOfficeVisit extends DomainObject {
      *
      * @return the lEyeCyl
      */
-    public int getlEyeCyl () {
+    public double getlEyeCyl () {
         return lEyeCyl;
     }
 
@@ -369,7 +314,9 @@ public class OphOfficeVisit extends DomainObject {
      * @param lEyeCyl
      *            the lEyeCyl to set
      */
-    public void setlEyeCyl ( final int lEyeCyl ) {
+    public void setlEyeCyl ( double lEyeCyl ) {
+        final DecimalFormat numberFormat = new DecimalFormat( "0.0" );
+        lEyeCyl = Double.parseDouble( numberFormat.format( lEyeCyl ) );
         this.lEyeCyl = lEyeCyl;
     }
 
@@ -378,7 +325,7 @@ public class OphOfficeVisit extends DomainObject {
      *
      * @return the rEyeCyl
      */
-    public int getrEyeCyl () {
+    public double getrEyeCyl () {
         return rEyeCyl;
     }
 
@@ -388,7 +335,9 @@ public class OphOfficeVisit extends DomainObject {
      * @param rEyeCyl
      *            the rEyeCyl to set
      */
-    public void setrEyeCyl ( final int rEyeCyl ) {
+    public void setrEyeCyl ( double rEyeCyl ) {
+        final DecimalFormat numberFormat = new DecimalFormat( "0.0" );
+        rEyeCyl = Double.parseDouble( numberFormat.format( rEyeCyl ) );
         this.rEyeCyl = rEyeCyl;
     }
 

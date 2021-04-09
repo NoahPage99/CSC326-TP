@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.ncsu.csc.iTrust2.forms.OfficeVisitForm;
 import edu.ncsu.csc.iTrust2.models.OfficeVisit;
 import edu.ncsu.csc.iTrust2.models.User;
+import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
+import edu.ncsu.csc.iTrust2.models.enums.Role;
 import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
 import edu.ncsu.csc.iTrust2.services.OfficeVisitService;
 import edu.ncsu.csc.iTrust2.services.UserService;
@@ -57,7 +59,17 @@ public class APIOfficeVisitController extends APIController {
         final User self = userService.findByName( LoggerUtil.currentUser() );
         loggerUtil.log( TransactionType.VIEW_ALL_OFFICE_VISITS, self );
         final List<OfficeVisit> visits = officeVisitService.findByHcp( self );
-        return visits;
+        if ( self.getRoles().contains( Role.ROLE_OPH ) ) {
+            return visits;
+        }
+        else {
+            for ( final OfficeVisit v : visits ) {
+                if ( v.getType() == AppointmentType.GENERAL_OPHTHALMOLOGY ) {
+                    visits.remove( v );
+                }
+            }
+            return visits;
+        }
     }
 
     /**

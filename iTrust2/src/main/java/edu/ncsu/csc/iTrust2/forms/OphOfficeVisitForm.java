@@ -1,5 +1,6 @@
 package edu.ncsu.csc.iTrust2.forms;
 
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.sun.istack.NotNull;
 
 import edu.ncsu.csc.iTrust2.models.enums.Disease;
@@ -26,7 +29,7 @@ import edu.ncsu.csc.iTrust2.persistant.OphOfficeVisit;
  * @author laagamai
  *
  */
-public class OphOfficeVisitForm {
+public class OphOfficeVisitForm extends OfficeVisitForm {
     /**
      * Serial Version of the Form. For the Serializable
      */
@@ -38,7 +41,7 @@ public class OphOfficeVisitForm {
     private String            id;
 
     /** notes from survey */
-    @NotEmpty
+    @Length ( max = 255 )
     private String            notes;
 
     @NotNull
@@ -74,19 +77,19 @@ public class OphOfficeVisitForm {
     /**
      * left eye sphere
      */
-    private int               lEyeSphere;
+    private double            lEyeSphere;
     /**
      * right eye sphere
      */
-    private int               rEyeSphere;
+    private double            rEyeSphere;
     /**
      * left eye cylinder
      */
-    private int               lEyeCyl;
+    private double            lEyeCyl;
     /**
      * right eye cylinder
      */
-    private int               rEyeCyl;
+    private double            rEyeCyl;
     /**
      * left eye axis
      */
@@ -95,6 +98,16 @@ public class OphOfficeVisitForm {
      * right eye axis
      */
     private int               rEyeAxis;
+    /**
+     * The type of this office visit
+     */
+    @NotEmpty
+    private String            type;
+    /**
+     * The hospital of this office visit
+     */
+    @NotEmpty
+    private String            hospital;
 
     /**
      * The diseases that were diagnosed from the visit
@@ -102,6 +115,11 @@ public class OphOfficeVisitForm {
     @ElementCollection ( targetClass = Disease.class, fetch = FetchType.EAGER )
     @Enumerated ( EnumType.STRING )
     private Set<Disease>      diseases;
+
+    /**
+     * Whether the OfficeVisit was prescheduled or not
+     */
+    public String             preScheduled;
 
     public OphOfficeVisitForm () {
 
@@ -145,7 +163,7 @@ public class OphOfficeVisitForm {
         setPatient( oov.getPatient().getUsername() );
         setHcp( oov.getHcp().getUsername() );
         setNotes( oov.getNotes() );
-        setDate( oov.getDate() );
+        setDate( oov.getDate().toString() );
         setTime( oov.getTime() );
         setlEyeAcuity( oov.getlEyeAcuity() );
         setrEyeAcuity( oov.getrEyeAcuity() );
@@ -156,81 +174,6 @@ public class OphOfficeVisitForm {
         setlEyeAxis( oov.getlEyeAxis() );
         setrEyeAxis( oov.getrEyeAxis() );
         this.diseases = new HashSet<Disease>();
-    }
-
-    /**
-     * @return the id
-     */
-    public String getId () {
-        return id;
-    }
-
-    /**
-     * @param id
-     *            the id to set
-     */
-    public void setId ( final String id ) {
-        this.id = id;
-    }
-
-    /**
-     * @return the notes
-     */
-    public String getNotes () {
-        return notes;
-    }
-
-    /**
-     * @param notes
-     *            the notes to set
-     */
-    public void setNotes ( final String notes ) {
-        this.notes = notes;
-    }
-
-    /**
-     * @return the patient
-     */
-    public String getPatient () {
-        return patient;
-    }
-
-    /**
-     * @param patient
-     *            the patient to set
-     */
-    public void setPatient ( final String patient ) {
-        this.patient = patient;
-    }
-
-    /**
-     * @return the hcp
-     */
-    public String getHcp () {
-        return hcp;
-    }
-
-    /**
-     * @param hcp
-     *            the hcp to set
-     */
-    public void setHcp ( final String hcp ) {
-        this.hcp = hcp;
-    }
-
-    /**
-     * @return the date
-     */
-    public String getDate () {
-        return date;
-    }
-
-    /**
-     * @param date
-     *            the date to set
-     */
-    public void setDate ( final String date ) {
-        this.date = date;
     }
 
     /**
@@ -281,7 +224,7 @@ public class OphOfficeVisitForm {
     /**
      * @return the lEyeSphere
      */
-    public int getlEyeSphere () {
+    public double getlEyeSphere () {
         return lEyeSphere;
     }
 
@@ -289,14 +232,16 @@ public class OphOfficeVisitForm {
      * @param lEyeSphere
      *            the lEyeSphere to set
      */
-    public void setlEyeSphere ( final int lEyeSphere ) {
+    public void setlEyeSphere ( double lEyeSphere ) {
+        final DecimalFormat numberFormat = new DecimalFormat( "0.0" );
+        lEyeSphere = Double.parseDouble( numberFormat.format( lEyeSphere ) );
         this.lEyeSphere = lEyeSphere;
     }
 
     /**
      * @return the rEyeSphere
      */
-    public int getrEyeSphere () {
+    public double getrEyeSphere () {
         return rEyeSphere;
     }
 
@@ -304,14 +249,16 @@ public class OphOfficeVisitForm {
      * @param rEyeSphere
      *            the rEyeSphere to set
      */
-    public void setrEyeSphere ( final int rEyeSphere ) {
+    public void setrEyeSphere ( double rEyeSphere ) {
+        final DecimalFormat numberFormat = new DecimalFormat( "0.0" );
+        rEyeSphere = Double.parseDouble( numberFormat.format( rEyeSphere ) );
         this.rEyeSphere = rEyeSphere;
     }
 
     /**
      * @return the lEyeCyl
      */
-    public int getlEyeCyl () {
+    public double getlEyeCyl () {
         return lEyeCyl;
     }
 
@@ -319,14 +266,16 @@ public class OphOfficeVisitForm {
      * @param lEyeCyl
      *            the lEyeCyl to set
      */
-    public void setlEyeCyl ( final int lEyeCyl ) {
+    public void setlEyeCyl ( double lEyeCyl ) {
+        final DecimalFormat numberFormat = new DecimalFormat( "0.0" );
+        lEyeCyl = Double.parseDouble( numberFormat.format( lEyeCyl ) );
         this.lEyeCyl = lEyeCyl;
     }
 
     /**
      * @return the rEyeCyl
      */
-    public int getrEyeCyl () {
+    public double getrEyeCyl () {
         return rEyeCyl;
     }
 
@@ -334,7 +283,9 @@ public class OphOfficeVisitForm {
      * @param rEyeCyl
      *            the rEyeCyl to set
      */
-    public void setrEyeCyl ( final int rEyeCyl ) {
+    public void setrEyeCyl ( double rEyeCyl ) {
+        final DecimalFormat numberFormat = new DecimalFormat( "0.0" );
+        rEyeCyl = Double.parseDouble( numberFormat.format( rEyeCyl ) );
         this.rEyeCyl = rEyeCyl;
     }
 
@@ -366,6 +317,69 @@ public class OphOfficeVisitForm {
      */
     public void setrEyeAxis ( final int rEyeAxis ) {
         this.rEyeAxis = rEyeAxis;
+    }
+
+    /**
+     * Get the type of this office visit
+     *
+     * @return the type of this office visit
+     */
+    @Override
+    public String getType () {
+        return type;
+    }
+
+    /**
+     * Set the type of this office visit
+     *
+     * @param type
+     *            the type to set this office visit to
+     */
+    @Override
+    public void setType ( final String type ) {
+        this.type = type;
+    }
+
+    /**
+     * Get the hospital of this office visit
+     *
+     * @return the hospital of this office visit
+     */
+    @Override
+    public String getHospital () {
+        return hospital;
+    }
+
+    /**
+     * Set the hospital of this office visit
+     *
+     * @param hospital
+     *            the hospital to set this office visit to
+     */
+    @Override
+    public void setHospital ( final String hospital ) {
+        this.hospital = hospital;
+    }
+
+    /**
+     * Sets whether the visit was prescheduled
+     *
+     * @param prescheduled
+     *            Whether the Visit is prescheduled or not
+     */
+    @Override
+    public void setPreScheduled ( final String prescheduled ) {
+        this.preScheduled = prescheduled;
+    }
+
+    /**
+     * Gets whether the visit was prescheduled or not
+     *
+     * @return Whether the visit was prescheduled
+     */
+    @Override
+    public String getPreScheduled () {
+        return this.preScheduled;
     }
 
 }
