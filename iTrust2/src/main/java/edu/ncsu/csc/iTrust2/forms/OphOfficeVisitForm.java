@@ -17,6 +17,7 @@ import javax.validation.constraints.NotEmpty;
 import com.sun.istack.NotNull;
 
 import edu.ncsu.csc.iTrust2.models.enums.Disease;
+import edu.ncsu.csc.iTrust2.persistant.OphOfficeVisit;
 
 /**
  * Documents a Ophthalmology Office Visit in a form object and converts it to
@@ -140,22 +141,20 @@ public class OphOfficeVisitForm {
      * @param diseases
      *            diseases diagnosed of patient
      */
-    public OphOfficeVisitForm ( @NotNull final String patient, @NotNull final String hcp, final String notes,
-            final String date, final String time, final int lEyeAcuity, final int rEyeAcuity, final int lEyeSphere,
-            final int rEyeSphere, final int lEyeCyl, final int rEyeCyl, final int lEyeAxis, final int rEyeAxis ) {
-        this.setPatient( patient );
-        this.setHcp( hcp );
-        this.setNotes( notes );
-        this.setDate( date );
-        this.setTime( time );
-        this.setlEyeAcuity( lEyeAcuity );
-        this.setrEyeAcuity( rEyeAcuity );
-        this.setlEyeSphere( lEyeSphere );
-        this.setrEyeSphere( rEyeSphere );
-        this.setlEyeCyl( lEyeCyl );
-        this.setrEyeCyl( rEyeCyl );
-        this.setlEyeAxis( lEyeAxis );
-        this.setrEyeAxis( rEyeAxis );
+    public OphOfficeVisitForm ( final OphOfficeVisit oov ) {
+        setPatient( oov.getPatient().getUsername() );
+        setHcp( oov.getHcp().getUsername() );
+        setNotes( oov.getNotes() );
+        setDate( oov.getDate() );
+        setTime( oov.getTime() );
+        setlEyeAcuity( oov.getlEyeAcuity() );
+        setrEyeAcuity( oov.getrEyeAcuity() );
+        setlEyeSphere( oov.getlEyeSphere() );
+        setrEyeSphere( oov.getrEyeSphere() );
+        setlEyeCyl( oov.getlEyeCyl() );
+        setrEyeCyl( oov.getrEyeCyl() );
+        setlEyeAxis( oov.getlEyeAxis() );
+        setrEyeAxis( oov.getrEyeAxis() );
         this.diseases = new HashSet<Disease>();
     }
 
