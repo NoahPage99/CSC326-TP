@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
+import edu.ncsu.csc.iTrust2.forms.OphOfficeVisitForm;
 import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.persistant.OphOfficeVisit;
 import edu.ncsu.csc.iTrust2.repositories.OphOfficeVisitRepository;
@@ -35,6 +36,27 @@ public class OphOfficeVisitService extends Service {
     @Override
     protected JpaRepository getRepository () {
         return repository;
+    }
+
+    public OphOfficeVisit build ( final OphOfficeVisitForm oovf ) {
+        final OphOfficeVisit oov = new OphOfficeVisit();
+        if ( oovf.getDate() != null ) {
+            oov.setDate( oovf.getDate() );
+        }
+        if ( oovf.getTime() != null ) {
+            oov.setTime( oovf.getTime() );
+        }
+        oov.setHcp( userService.findByName( oovf.getHcp() ) );
+        oov.setPatient( userService.findByName( oovf.getPatient() ) );
+        oov.setlEyeAcuity( oovf.getlEyeAcuity() );
+        oov.setrEyeAcuity( oovf.getrEyeAcuity() );
+        oov.setlEyeAxis( oovf.getlEyeAxis() );
+        oov.setrEyeAxis( oovf.getrEyeAxis() );
+        oov.setlEyeCyl( oovf.getlEyeCyl() );
+        oov.setrEyeCyl( oovf.getrEyeCyl() );
+        oov.setlEyeSphere( oovf.getlEyeSphere() );
+        oov.setrEyeSphere( oovf.getrEyeSphere() );
+        return oov;
     }
 
     @SuppressWarnings ( "unchecked" )
