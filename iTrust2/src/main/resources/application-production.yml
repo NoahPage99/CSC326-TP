@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/iTrust2_production?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
     username: root
-    password: Lyx0316..
+    password: 
     hikari:
       idleTimeout: 500
       connectionTimeout: 15000 

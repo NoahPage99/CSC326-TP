@@ -136,7 +136,7 @@ public class SatisfactionSurveyTest {
         assertFalse( s1.equals( s3 ) );
 
         assertEquals( s1.toString(),
-                "SatisfactionSurvey [timeWaitedWaitingRoom=0, timeWaitedExaminationRoom=0, satisfiedOfficeVisit=1, satisfiedTreatment=1, notes=]" );
+                "SatisfactionSurvey [timeWaitedWaitingRoom=0, timeWaitedExaminationRoom=0, satisfiedOfficeVisit=0, satisfiedTreatment=0, notes=null]" );
         assertEquals( s3.toString(),
                 "SatisfactionSurvey [timeWaitedWaitingRoom=5, timeWaitedExaminationRoom=5, satisfiedOfficeVisit=5, satisfiedTreatment=5, notes=yay]" );
         assertEquals( "yay", s3.getNotes() );
@@ -147,8 +147,7 @@ public class SatisfactionSurveyTest {
         assertFalse( s3.equals( s4 ) );
         assertFalse( s3.equals( s5 ) );
         assertFalse( s3.equals( s6 ) );
-        
-        
+
     }
 
 }
