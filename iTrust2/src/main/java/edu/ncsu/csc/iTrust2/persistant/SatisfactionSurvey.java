@@ -1,7 +1,5 @@
 package edu.ncsu.csc.iTrust2.persistant;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,12 +11,12 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-//import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.ncsu.csc.iTrust2.models.DomainObject;
 import edu.ncsu.csc.iTrust2.models.User;
 
-//import edu.ncsu.csc.iTrust2.services.SatisfactionSurveyService;
+// import edu.ncsu.csc.iTrust2.services.SatisfactionSurveyService;
 /**
  * Satisfaction Survey class takes care of all attributes for satisfaction
  * surveys like time waited in waiting and examination room, and satisfied
@@ -84,8 +82,8 @@ public class SatisfactionSurvey extends DomainObject {
     private String notes;
 
     // /**
-    //  * service to get averages
-    //  */
+    // * service to get averages
+    // */
     // @Autowired
     // private SatisfactionSurveyService service;
 
@@ -93,12 +91,16 @@ public class SatisfactionSurvey extends DomainObject {
      * create a new default satisfaction survey
      */
     public SatisfactionSurvey () {
-        
+
     }
 
     /**
      * create a new satisfaction surveys with all information
      *
+     * @param hcp
+     *            the HCP for survey
+     * @param patient
+     *            the patient for survey
      * @param timeWaitedWaitingRoom
      *            time waited in waiting room
      * @param timeWaitedExaminationRoom
@@ -310,6 +312,8 @@ public class SatisfactionSurvey extends DomainObject {
     }
 
     /**
+     * Gets HCP for the survey
+     *
      * @return the hcp
      */
     public User getHcp () {
@@ -317,6 +321,8 @@ public class SatisfactionSurvey extends DomainObject {
     }
 
     /**
+     * Sets HCP for survey
+     *
      * @param hcp
      *            the hcp to set
      */
@@ -325,6 +331,8 @@ public class SatisfactionSurvey extends DomainObject {
     }
 
     /**
+     * Gets patient
+     *
      * @return the patient
      */
     public User getPatient () {
@@ -332,6 +340,8 @@ public class SatisfactionSurvey extends DomainObject {
     }
 
     /**
+     * Sets patient
+     *
      * @param patient
      *            the patient to set
      */
@@ -340,38 +350,38 @@ public class SatisfactionSurvey extends DomainObject {
     }
 
     // public double getAverageTimeWaitedWaitingRoom(User hcp){
-    //     List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
-    //     double avg = 0;
-    //     for(SatisfactionSurvey s:surveys){
-    //         avg += s.getTimeWaitedWaitingRoom();
-    //     }
-    //     return avg/surveys.size();
+    // List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
+    // double avg = 0;
+    // for(SatisfactionSurvey s:surveys){
+    // avg += s.getTimeWaitedWaitingRoom();
+    // }
+    // return avg/surveys.size();
     // }
 
     // public double getAverageTimeWaitedExaminationRoom(User hcp){
-    //     List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
-    //     double avg = 0;
-    //     for(SatisfactionSurvey s:surveys){
-    //         avg += s.getTimeWaitedExaminationRoom();
-    //     }
-    //     return avg/surveys.size();
+    // List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
+    // double avg = 0;
+    // for(SatisfactionSurvey s:surveys){
+    // avg += s.getTimeWaitedExaminationRoom();
+    // }
+    // return avg/surveys.size();
     // }
 
     // public double getAverageSatisfiedOfficeVisit(User hcp){
-    //     List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
-    //     double avg = 0;
-    //     for(SatisfactionSurvey s:surveys){
-    //         avg += s.getSatisfiedOfficeVisit();
-    //     }
-    //     return avg/surveys.size();
+    // List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
+    // double avg = 0;
+    // for(SatisfactionSurvey s:surveys){
+    // avg += s.getSatisfiedOfficeVisit();
+    // }
+    // return avg/surveys.size();
     // }
 
     // public double getAverageSatisfiedTreatment(User hcp){
-    //     List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
-    //     double avg = 0;
-    //     for(SatisfactionSurvey s:surveys){
-    //         avg += s.getSatisfiedTreatment();
-    //     }
-    //     return avg/surveys.size();
+    // List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
+    // double avg = 0;
+    // for(SatisfactionSurvey s:surveys){
+    // avg += s.getSatisfiedTreatment();
+    // }
+    // return avg/surveys.size();
     // }
 }
