@@ -6,13 +6,11 @@ import javax.persistence.CascadeType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 
 import com.sun.istack.NotNull;
 
-import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
 
 /**
