@@ -232,16 +232,16 @@ public class AppointmentRequest extends DomainObject {
     }
 
     public void setCompleted ( final ZonedDateTime date ) {
-        boolean completed;
+        // boolean completed;
         if ( ZonedDateTime.now().isAfter( date ) ) {
-            completed = true;
+            this.completed = true;
 
         }
         else {
-            completed = false;
+            this.completed = false;
 
         }
-        this.completed = completed;
+        // this.completed = completed;
     }
 
 }
