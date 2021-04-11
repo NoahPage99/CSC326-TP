@@ -50,7 +50,13 @@ public class OfficeVisitForm implements Serializable {
      * Date at which the OfficeVisit occurred
      */
     @NotEmpty
-    private String                 date;
+    public String                  date;
+
+    /**
+     * time
+     */
+    @NotEmpty
+    public String                  time;
 
     /**
      * ID of the OfficeVisit
@@ -61,13 +67,13 @@ public class OfficeVisitForm implements Serializable {
      * Type of the OfficeVisit.
      */
     @NotEmpty
-    private String                 type;
+    public String                  type;
 
     /**
      * Hospital where the OfficeVisit occurred
      */
     @NotEmpty
-    private String                 hospital;
+    public String                  hospital;
 
     /**
      * Doctor's Notes on the OfficeVisit

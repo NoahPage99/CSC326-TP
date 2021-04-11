@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import edu.ncsu.csc.iTrust2.forms.OfficeVisitForm;
+import edu.ncsu.csc.iTrust2.forms.OphOfficeVisitForm;
 import edu.ncsu.csc.iTrust2.models.BasicHealthMetrics;
 import edu.ncsu.csc.iTrust2.repositories.BasicHealthMetricsRepository;
 
@@ -39,6 +40,25 @@ public class BasicHealthMetricsService extends Service {
         bhm.setSystolic( ovf.getSystolic() );
         bhm.setTri( ovf.getTri() );
         bhm.setWeight( ovf.getWeight() );
+
+        return bhm;
+    }
+
+    public BasicHealthMetrics build ( final OphOfficeVisitForm ophOPVF ) {
+        final BasicHealthMetrics bhm = new BasicHealthMetrics();
+        bhm.setPatient( userService.findByName( ophOPVF.getPatient() ) );
+        bhm.setHcp( userService.findByName( ophOPVF.getHcp() ) );
+
+        bhm.setDiastolic( ophOPVF.getDiastolic() );
+        bhm.setHdl( ophOPVF.getHdl() );
+        bhm.setHeight( ophOPVF.getHeight() );
+        bhm.setHouseSmokingStatus( ophOPVF.getHouseSmokingStatus() );
+        bhm.setHeadCircumference( ophOPVF.getHeadCircumference() );
+        bhm.setLdl( ophOPVF.getLdl() );
+        bhm.setPatientSmokingStatus( ophOPVF.getPatientSmokingStatus() );
+        bhm.setSystolic( ophOPVF.getSystolic() );
+        bhm.setTri( ophOPVF.getTri() );
+        bhm.setWeight( ophOPVF.getWeight() );
 
         return bhm;
     }

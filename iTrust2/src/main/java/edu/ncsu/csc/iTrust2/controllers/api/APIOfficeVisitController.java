@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.ncsu.csc.iTrust2.forms.OfficeVisitForm;
+import edu.ncsu.csc.iTrust2.forms.OphOfficeVisitForm;
 import edu.ncsu.csc.iTrust2.models.OfficeVisit;
 import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
+import edu.ncsu.csc.iTrust2.persistant.OphOfficeVisit;
 import edu.ncsu.csc.iTrust2.services.OfficeVisitService;
+import edu.ncsu.csc.iTrust2.services.OphOfficeVisitService;
 import edu.ncsu.csc.iTrust2.services.UserService;
 import edu.ncsu.csc.iTrust2.utils.LoggerUtil;
 
@@ -26,28 +29,45 @@ import edu.ncsu.csc.iTrust2.utils.LoggerUtil;
 public class APIOfficeVisitController extends APIController {
 
     @Autowired
-    private OfficeVisitService officeVisitService;
+    private OfficeVisitService    officeVisitService;
 
     @Autowired
-    private UserService        userService;
+    private OphOfficeVisitService ophOfficeVisitService;
 
     @Autowired
-    private LoggerUtil         loggerUtil;
+    private UserService           userService;
+
+    @Autowired
+    private LoggerUtil            loggerUtil;
 
     /**
      * Retrieves a list of all OfficeVisits in the database
      *
      * @return list of office visits
      */
-    @GetMapping ( BASE_PATH + "/officevisits" )
+    @GetMapping ( BASE_PATH + "/officevisits/general" )
     @PreAuthorize ( "hasRole('ROLE_HCP')" )
     public List<OfficeVisit> getOfficeVisits () {
-        loggerUtil.log( TransactionType.VIEW_ALL_OFFICE_VISITS, LoggerUtil.currentUser() );
+        loggerUtil.log( TransactionType.GENERAL_CHECKUP_HCP_VIEW, LoggerUtil.currentUser() );
         return (List<OfficeVisit>) officeVisitService.findAll();
     }
 
     /**
-     * Retrieves all of the office visits for the current HCP.
+     * Retrieves a list of all OfficeVisits in the database
+     *
+     * @return list of office visits
+     */
+    @GetMapping ( BASE_PATH + "/officevisits/oph" )
+    @PreAuthorize ( "hasRole('ROLE_OPH')" )
+    public List<OphOfficeVisit> getOphOfficeVisits () {
+        loggerUtil.log( TransactionType.GENERAL_OPHTHALMOLOGY_HCP_VIEW, LoggerUtil.currentUser() );
+        return ophOfficeVisitService.findAll();
+    }
+
+    /**
+     *
+     * TODO: Edit this to accept oph stuff Retrieves all of the office visits
+     * for the current HCP.
      *
      * @return all of the office visits for the current HCP.
      */
@@ -81,9 +101,9 @@ public class APIOfficeVisitController extends APIController {
      *            ID of the office visit to retrieve
      * @return list of office visits
      */
-    @GetMapping ( BASE_PATH + "/officevisits/{id}" )
+    @GetMapping ( BASE_PATH + "/officevisits/general/{id}" )
     @PreAuthorize ( "hasRole('ROLE_HCP')" )
-    public ResponseEntity getOfficeVisit ( @PathVariable final Long id ) {
+    public ResponseEntity getGeneralOfficeVisit ( @PathVariable final Long id ) {
         final User self = userService.findByName( LoggerUtil.currentUser() );
         loggerUtil.log( TransactionType.GENERAL_CHECKUP_HCP_VIEW, self );
         if ( !officeVisitService.existsById( id ) ) {
@@ -94,15 +114,34 @@ public class APIOfficeVisitController extends APIController {
     }
 
     /**
+     * Retrieves a list of all OfficeVisits in the database
+     *
+     * @param id
+     *            ID of the office visit to retrieve
+     * @return list of office visits
+     */
+    @GetMapping ( BASE_PATH + "/officevisits/oph/{id}" )
+    @PreAuthorize ( "hasRole('ROLE_OPH')" )
+    public ResponseEntity getOphOfficeVisit ( @PathVariable final Long id ) {
+        final User self = userService.findByName( LoggerUtil.currentUser() );
+        loggerUtil.log( TransactionType.GENERAL_OPHTHALMOLOGY_HCP_VIEW, self );
+        if ( !ophOfficeVisitService.existsById( id ) ) {
+            return new ResponseEntity( HttpStatus.NOT_FOUND );
+        }
+
+        return new ResponseEntity( ophOfficeVisitService.findById( id ), HttpStatus.OK );
+    }
+
+    /**
      * Creates and saves a new OfficeVisit from the RequestBody provided.
      *
      * @param visitForm
      *            The office visit to be validated and saved
      * @return response
      */
-    @PostMapping ( BASE_PATH + "/officevisits" )
+    @PostMapping ( BASE_PATH + "/officevisits/general" )
     @PreAuthorize ( "hasRole('ROLE_HCP')" )
-    public ResponseEntity createOfficeVisit ( @RequestBody final OfficeVisitForm visitForm ) {
+    public ResponseEntity createGeneralOfficeVisit ( @RequestBody final OfficeVisitForm visitForm ) {
         try {
             final OfficeVisit visit = officeVisitService.build( visitForm );
 
@@ -126,6 +165,38 @@ public class APIOfficeVisitController extends APIController {
     }
 
     /**
+     * Creates and saves a new OfficeVisit from the RequestBody provided.
+     *
+     * @param visitForm
+     *            The office visit to be validated and saved
+     * @return response
+     */
+    @PostMapping ( BASE_PATH + "/officevisits/oph" )
+    @PreAuthorize ( "hasRole('ROLE_OPH')" )
+    public ResponseEntity createOphOfficeVisit ( @RequestBody final OphOfficeVisitForm visitForm ) {
+        try {
+            final OphOfficeVisit visit = ophOfficeVisitService.build( visitForm );
+
+            if ( null != visit.getId() && ophOfficeVisitService.existsById( visit.getId() ) ) {
+                return new ResponseEntity(
+                        errorResponse( "Office visit with the id " + visit.getId() + " already exists" ),
+                        HttpStatus.CONFLICT );
+            }
+            ophOfficeVisitService.save( visit );
+            loggerUtil.log( TransactionType.GENERAL_OPHTHALMOLOGY_CREATE, LoggerUtil.currentUser(),
+                    visit.getPatient().getUsername() );
+            return new ResponseEntity( visit, HttpStatus.OK );
+
+        }
+        catch ( final Exception e ) {
+            e.printStackTrace();
+            return new ResponseEntity(
+                    errorResponse( "Could not validate or save the OfficeVisit provided due to " + e.getMessage() ),
+                    HttpStatus.BAD_REQUEST );
+        }
+    }
+
+    /**
      * Creates and saves a new Office Visit from the RequestBody provided.
      *
      * @param id
@@ -134,9 +205,9 @@ public class APIOfficeVisitController extends APIController {
      *            The office visit to be validated and saved
      * @return response
      */
-    @PutMapping ( BASE_PATH + "/officevisits/{id}" )
+    @PutMapping ( BASE_PATH + "/officevisits/general/{id}" )
     @PreAuthorize ( "hasRole('ROLE_HCP')" )
-    public ResponseEntity updateOfficeVisit ( @PathVariable final Long id,
+    public ResponseEntity updateGeneralOfficeVisit ( @PathVariable final Long id,
             @RequestBody final OfficeVisitForm visitForm ) {
         try {
             final OfficeVisit visit = officeVisitService.build( visitForm );
@@ -148,6 +219,41 @@ public class APIOfficeVisitController extends APIController {
             }
             officeVisitService.save( visit );
             loggerUtil.log( TransactionType.GENERAL_CHECKUP_EDIT, LoggerUtil.currentUser(),
+                    visit.getPatient().getUsername() );
+            return new ResponseEntity( visit, HttpStatus.OK );
+
+        }
+        catch ( final Exception e ) {
+            e.printStackTrace();
+            return new ResponseEntity(
+                    errorResponse( "Could not validate or save the OfficeVisit provided due to " + e.getMessage() ),
+                    HttpStatus.BAD_REQUEST );
+        }
+    }
+
+    /**
+     * Creates and saves a new Office Visit from the RequestBody provided.
+     *
+     * @param id
+     *            ID of the office visit to update
+     * @param visitForm
+     *            The office visit to be validated and saved
+     * @return response
+     */
+    @PutMapping ( BASE_PATH + "/officevisits/oph/{id}" )
+    @PreAuthorize ( "hasRole('ROLE_OPH')" )
+    public ResponseEntity updateOphOfficeVisit ( @PathVariable final Long id,
+            @RequestBody final OphOfficeVisitForm visitForm ) {
+        try {
+            final OphOfficeVisit visit = ophOfficeVisitService.build( visitForm );
+
+            if ( null == visit.getId() || !ophOfficeVisitService.existsById( visit.getId() ) ) {
+                return new ResponseEntity(
+                        errorResponse( "Office visit with the id " + visit.getId() + " doesn't exist" ),
+                        HttpStatus.NOT_FOUND );
+            }
+            ophOfficeVisitService.save( visit );
+            loggerUtil.log( TransactionType.GENERAL_OPHTHALMOLOGY_EDIT, LoggerUtil.currentUser(),
                     visit.getPatient().getUsername() );
             return new ResponseEntity( visit, HttpStatus.OK );
 
