@@ -37,7 +37,7 @@ public class APISatisfactionSurveyController extends APIController {
      * REST API method to provide GET access to all satisfaction surveys in the
      * system
      *
-     * @return
+     * @return list of surveys
      */
     @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_OD', 'ROLE_OPH', 'ROLE_VIROLOGIST', 'ROLE_ADMIN', 'ROLE_PATIENT')" )
     @GetMapping ( BASE_PATH + "/surveys" )
@@ -114,7 +114,7 @@ public class APISatisfactionSurveyController extends APIController {
     /**
      * Creates and saves a new OfficeVisit from the RequestBody provided.
      *
-     * @param visitForm
+     * @param surveyForm
      *            The office visit to be validated and saved
      * @return response
      */
