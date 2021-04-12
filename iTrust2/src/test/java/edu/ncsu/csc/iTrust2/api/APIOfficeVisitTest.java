@@ -34,6 +34,7 @@ import edu.ncsu.csc.iTrust2.forms.AppointmentRequestForm;
 import edu.ncsu.csc.iTrust2.forms.OfficeVisitForm;
 import edu.ncsu.csc.iTrust2.forms.OphOfficeVisitForm;
 import edu.ncsu.csc.iTrust2.forms.UserForm;
+import edu.ncsu.csc.iTrust2.models.AppointmentRequest;
 import edu.ncsu.csc.iTrust2.models.BasicHealthMetrics;
 import edu.ncsu.csc.iTrust2.models.Hospital;
 import edu.ncsu.csc.iTrust2.models.OfficeVisit;
@@ -452,6 +453,8 @@ public class APIOfficeVisitTest {
     @WithMockUser ( username = "hcp", roles = { "OPH" } )
     public void testPreScheduledOphOfficeVisit () throws Exception {
 
+        officeVisitService.deleteAll();
+
         final AppointmentRequestForm appointmentForm = new AppointmentRequestForm();
 
         // 2030-11-19 4:50 AM EST
@@ -462,8 +465,8 @@ public class APIOfficeVisitTest {
         appointmentForm.setHcp( "hcp" );
         appointmentForm.setPatient( "patient" );
         appointmentForm.setComments( "Test appointment please ignore" );
-
-        appointmentRequestService.save( appointmentRequestService.build( appointmentForm ) );
+        final AppointmentRequest app = appointmentRequestService.build( appointmentForm );
+        appointmentRequestService.save( app );
 
         final OphOfficeVisitForm visit = new OphOfficeVisitForm();
         visit.setPreScheduled( "yes" );
@@ -471,8 +474,13 @@ public class APIOfficeVisitTest {
         visit.setHcp( "hcp" );
         visit.setPatient( "patient" );
         visit.setNotes( "Test office visit" );
-        visit.setType( AppointmentType.GENERAL_OPHTHALMOLOGY.toString() );
-        visit.setHospital( "iTrust Test Hospital 2" );
+        visit.setType( AppointmentType.GENERAL_OPHTHALMOLOGY );
+        visit.setHospital( hospitalService.findByName( "iTrust Test Hospital 2" ) );
+        visit.setlEyeAcuity( 11 );
+        visit.setrEyeAcuity( 11 );
+        visit.setlEyeAxis( 11 );
+        visit.setrEyeAxis( 11 );
+        visit.setAppointmentId( app.getId() );
 
         mvc.perform( post( "/api/v1/officevisits/oph" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( visit ) ) ).andExpect( status().isOk() );
@@ -501,16 +509,41 @@ public class APIOfficeVisitTest {
     @WithMockUser ( username = "hcp", roles = { "OPH" } )
     public void testOphOfficeVisitAPI () throws Exception {
 
+        officeVisitService.deleteAll();
+
+        appointmentRequestService.deleteAll();
+
         Assert.assertEquals( 0, ophOfficeVisitService.count() );
 
+        // final AppointmentRequestForm appointmentForm = new
+        // AppointmentRequestForm();
+        //
+        // // 2030-11-19 4:50 AM EST
+        // appointmentForm.setDate( "2030-11-19T04:50:00.000-05:00" );
+        //
+        // appointmentForm.setType(
+        // AppointmentType.GENERAL_OPHTHALMOLOGY.toString() );
+        // appointmentForm.setStatus( Status.APPROVED.toString() );
+        // appointmentForm.setHcp( "hcp" );
+        // appointmentForm.setPatient( "patient" );
+        // appointmentForm.setComments( "Test appointment please ignore" );
+        // final AppointmentRequest app = appointmentRequestService.build(
+        // appointmentForm );
+        // appointmentRequestService.save( app );
+
         final OphOfficeVisitForm visit = new OphOfficeVisitForm();
+        visit.setPreScheduled( "yes" );
         visit.setDate( "2030-11-19T04:50:00.000-05:00" );
         visit.setHcp( "hcp" );
         visit.setPatient( "patient" );
         visit.setNotes( "Test office visit" );
-        visit.setType( AppointmentType.GENERAL_OPHTHALMOLOGY.toString() );
-        visit.setHospital( "iTrust Test Hospital 2" );
-
+        visit.setType( AppointmentType.GENERAL_OPHTHALMOLOGY );
+        visit.setHospital( hospitalService.findByName( "iTrust Test Hospital 2" ) );
+        visit.setlEyeAcuity( 11 );
+        visit.setrEyeAcuity( 11 );
+        visit.setlEyeAxis( 11 );
+        visit.setrEyeAxis( 11 );
+        // visit.setAppointmentId( app.getId() );
         /* Create the Office Visit */
         mvc.perform( post( "/api/v1/officevisits/oph" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( visit ) ) ).andExpect( status().isOk() );
@@ -701,11 +734,26 @@ public class APIOfficeVisitTest {
          */
         final Long id = ophOfficeVisitService.findByPatient( userService.findByName( "patient" ) ).get( 0 ).getId();
 
-        visit.setId( id.toString() );
+        final OphOfficeVisitForm visit1 = new OphOfficeVisitForm();
+        visit1.setId( id );
+        visit1.setPreScheduled( "yes" );
+        visit1.setDate( "2030-11-19T04:50:00.000-05:00" );
+        visit1.setHcp( "hcp" );
+        visit1.setPatient( "patient" );
+        visit1.setNotes( "Test office visit" );
+        visit1.setType( AppointmentType.GENERAL_OPHTHALMOLOGY );
+        visit1.setHospital( hospitalService.findByName( "iTrust Test Hospital 2" ) );
+        visit1.setlEyeAcuity( 11 );
+        visit1.setrEyeAcuity( 11 );
+        visit1.setlEyeAxis( 11 );
+        visit1.setrEyeAxis( 11 );
+
+        assertEquals( 1, ophOfficeVisitService.count() );
+        assertEquals( ophOfficeVisitService.findAll().get( 0 ).getId().intValue(), visit1.getId().intValue() );
 
         // Second post should fail with a conflict since it already exists
         mvc.perform( post( "/api/v1/officevisits/oph" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( visit ) ) ).andExpect( status().isConflict() );
+                .content( TestUtils.asJsonString( visit1 ) ) ).andExpect( status().isConflict() );
 
         mvc.perform( get( "/api/v1/officevisits/oph/" + id ) ).andExpect( status().isOk() )
                 .andExpect( content().contentType( MediaType.APPLICATION_JSON_VALUE ) );
@@ -718,7 +766,7 @@ public class APIOfficeVisitTest {
 
         // PUT with ID not in database should fail
         final long tempId = 101;
-        visit.setId( "101" );
+        visit.setId( Long.valueOf( "101" ) );
         mvc.perform( put( "/api/v1/officevisits/oph/" + tempId ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( visit ) ) ).andExpect( status().isNotFound() );
 

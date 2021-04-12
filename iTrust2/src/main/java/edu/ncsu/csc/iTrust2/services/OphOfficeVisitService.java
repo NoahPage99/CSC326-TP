@@ -1,5 +1,6 @@
 package edu.ncsu.csc.iTrust2.services;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import edu.ncsu.csc.iTrust2.forms.OphOfficeVisitForm;
+import edu.ncsu.csc.iTrust2.models.AppointmentRequest;
 import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.persistant.OphOfficeVisit;
 import edu.ncsu.csc.iTrust2.repositories.OphOfficeVisitRepository;
@@ -28,10 +30,13 @@ import edu.ncsu.csc.iTrust2.repositories.OphOfficeVisitRepository;
 @Transactional
 public class OphOfficeVisitService extends Service {
     @Autowired
-    private OphOfficeVisitRepository repository;
+    private OphOfficeVisitRepository  repository;
 
     @Autowired
-    private UserService              userService;
+    private UserService               userService;
+
+    @Autowired
+    private AppointmentRequestService appointmentRequestService;
 
     @Override
     protected JpaRepository getRepository () {
@@ -41,11 +46,14 @@ public class OphOfficeVisitService extends Service {
     public OphOfficeVisit build ( final OphOfficeVisitForm oovf ) {
         final OphOfficeVisit oov = new OphOfficeVisit();
         if ( oovf.getDate() != null ) {
-            oov.setDate( oovf.getDate() );
+            oov.setDate( ZonedDateTime.parse( oovf.getDate() ) );
         }
         if ( oovf.getTime() != null ) {
             oov.setTime( oovf.getTime() );
         }
+        oov.setType( oovf.getType() );
+        oov.setHospital( oovf.getHospital() );
+        oov.setId( oovf.getId() );
         oov.setHcp( userService.findByName( oovf.getHcp() ) );
         oov.setPatient( userService.findByName( oovf.getPatient() ) );
         oov.setlEyeAcuity( oovf.getlEyeAcuity() );
@@ -56,6 +64,7 @@ public class OphOfficeVisitService extends Service {
         oov.setrEyeCyl( oovf.getrEyeCyl() );
         oov.setlEyeSphere( oovf.getlEyeSphere() );
         oov.setrEyeSphere( oovf.getrEyeSphere() );
+        oov.setAppointment( (AppointmentRequest) appointmentRequestService.findById( oovf.getAppointmentId() ) );
         return oov;
     }
 

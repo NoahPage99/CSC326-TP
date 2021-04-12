@@ -177,11 +177,22 @@ public class APIOfficeVisitController extends APIController {
         try {
             final OphOfficeVisit visit = ophOfficeVisitService.build( visitForm );
 
-            if ( null != visit.getId() && ophOfficeVisitService.existsById( visit.getId() ) ) {
+            if ( null != visit.getId() && null != ophOfficeVisitService.findById( visit.getId() ) ) {
                 return new ResponseEntity(
                         errorResponse( "Office visit with the id " + visit.getId() + " already exists" ),
                         HttpStatus.CONFLICT );
             }
+            if ( null != visit.getAppointment() ) {
+                System.out.println( "!!!: " + visit.getAppointment().getDate().toString() );
+                System.out.println( "!!!: " + visit.getDate().toString() );
+
+                if ( !visit.getAppointment().getDate().toString().equals( visit.getDate().toString() ) ) {
+                    return new ResponseEntity(
+                            errorResponse( "Office visit with the id " + visit.getId() + " already exists" ),
+                            HttpStatus.BAD_REQUEST );
+                }
+            }
+
             ophOfficeVisitService.save( visit );
             loggerUtil.log( TransactionType.GENERAL_OPHTHALMOLOGY_CREATE, LoggerUtil.currentUser(),
                     visit.getPatient().getUsername() );
@@ -245,13 +256,14 @@ public class APIOfficeVisitController extends APIController {
     public ResponseEntity updateOphOfficeVisit ( @PathVariable final Long id,
             @RequestBody final OphOfficeVisitForm visitForm ) {
         try {
-            final OphOfficeVisit visit = ophOfficeVisitService.build( visitForm );
 
-            if ( null == visit.getId() || !ophOfficeVisitService.existsById( visit.getId() ) ) {
-                return new ResponseEntity(
-                        errorResponse( "Office visit with the id " + visit.getId() + " doesn't exist" ),
+            if ( null == id || null == ophOfficeVisitService.findById( id ) ) {
+                return new ResponseEntity( errorResponse( "Office visit with the id " + id + " doesn't exist" ),
                         HttpStatus.NOT_FOUND );
             }
+
+            final OphOfficeVisit visit = ophOfficeVisitService.build( visitForm );
+
             ophOfficeVisitService.save( visit );
             loggerUtil.log( TransactionType.GENERAL_OPHTHALMOLOGY_EDIT, LoggerUtil.currentUser(),
                     visit.getPatient().getUsername() );

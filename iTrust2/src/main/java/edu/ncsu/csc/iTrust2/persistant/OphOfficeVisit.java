@@ -4,25 +4,17 @@ import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import edu.ncsu.csc.iTrust2.models.Hospital;
 import edu.ncsu.csc.iTrust2.models.OfficeVisit;
 import edu.ncsu.csc.iTrust2.models.User;
-import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
 import edu.ncsu.csc.iTrust2.models.enums.Disease;
 
 /**
@@ -40,95 +32,59 @@ import edu.ncsu.csc.iTrust2.models.enums.Disease;
  */
 @Entity
 public class OphOfficeVisit extends OfficeVisit {
-    @NotNull
-    @ManyToOne ( cascade = CascadeType.ALL )
-    @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
-    private User            patient;
 
-    @NotNull
-    @ManyToOne ( cascade = CascadeType.ALL )
-    @JoinColumn ( name = "hcp_id", columnDefinition = "varchar(100)" )
-    private User            hcp;
-
-    /** id */
-    @Id
-    @GeneratedValue ( strategy = GenerationType.AUTO )
-    private Long            id;
-
-    /**
-     * notes on visit
-     */
-    private String          notes;
-
-    /**
-     * date
-     */
-    private String          date;
     /**
      * time
      */
-    private String          time;
+    private String       time;
 
     /**
      * left eye acuity
      */
     @Min ( 10 )
     @Max ( 200 )
-    private int             lEyeAcuity;
+    private int          lEyeAcuity;
     /**
      * right eye acuity
      */
     @Min ( 10 )
     @Max ( 200 )
-    private int             rEyeAcuity;
+    private int          rEyeAcuity;
     /**
      * left eye sphere
      */
-    private double          lEyeSphere;
+    private double       lEyeSphere;
     /**
      * right eye sphere
      */
-    private double          rEyeSphere;
+    private double       rEyeSphere;
     /**
      * left eye cylinder
      */
-    private double          lEyeCyl;
+    private double       lEyeCyl;
     /**
      * right eye cylinder
      */
-    private double          rEyeCyl;
+    private double       rEyeCyl;
     /**
      * left eye axis
      */
     @Min ( 1 )
     @Max ( 180 )
-    private int             lEyeAxis;
+    private int          lEyeAxis;
     /**
      * right eye axis
      */
     @Min ( 1 )
     @Max ( 180 )
-    private int             rEyeAxis;
-    /**
-     * The type of this office visit
-     */
-    @NotNull
-    @Enumerated ( EnumType.STRING )
-    private AppointmentType type;
-    /**
-     * The hospital of this office visit
-     */
-    @NotNull
-    @ManyToOne
-    @JoinColumn ( name = "hospital_id", columnDefinition = "varchar(100)" )
-    private Hospital        hospital;
+    private int          rEyeAxis;
 
     /**
      * The diseases that were diagnosed from the visit
      */
     @ElementCollection ( targetClass = Disease.class, fetch = FetchType.EAGER )
     @Enumerated ( EnumType.STRING )
-    private Set<Disease>    diseases;
+    private Set<Disease> diseases;
 
     /**
      * Default constructor for office visit
@@ -177,7 +133,7 @@ public class OphOfficeVisit extends OfficeVisit {
         this.setPatient( patient );
         this.setHcp( hcp );
         this.setNotes( notes );
-        this.setDate( date );
+
         this.setTime( time );
         this.setlEyeAcuity( lEyeAcuity );
         this.setrEyeAcuity( rEyeAcuity );
@@ -188,16 +144,6 @@ public class OphOfficeVisit extends OfficeVisit {
         this.setlEyeAxis( lEyeAxis );
         this.setrEyeAxis( rEyeAxis );
         this.diseases = new HashSet<Disease>();
-    }
-
-    /**
-     * set date
-     *
-     * @param date
-     *            the date to set
-     */
-    public void setDate ( final String date ) {
-        this.date = date;
     }
 
     /**

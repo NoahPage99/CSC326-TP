@@ -14,6 +14,8 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 
+import edu.ncsu.csc.iTrust2.models.Hospital;
+import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
 import edu.ncsu.csc.iTrust2.models.enums.Disease;
 import edu.ncsu.csc.iTrust2.models.enums.HouseholdSmokingStatus;
 import edu.ncsu.csc.iTrust2.models.enums.PatientSmokingStatus;
@@ -30,7 +32,6 @@ public class OphOfficeVisitForm implements Serializable {
     /**
      * Serial Version of the Form. For the Serializable
      */
-    @SuppressWarnings ( "unused" )
     private static final long      serialVersionUID = 1L;
 
     /**
@@ -60,19 +61,19 @@ public class OphOfficeVisitForm implements Serializable {
     /**
      * ID of the OfficeVisit
      */
-    private String                 id;
+    private Long                   id;
 
     /**
      * Type of the OfficeVisit.
      */
     @NotEmpty
-    public String                  type;
+    public AppointmentType         type;
 
     /**
      * Hospital where the OfficeVisit occurred
      */
     @NotEmpty
-    public String                  hospital;
+    public Hospital                hospital;
 
     /**
      * Doctor's Notes on the OfficeVisit
@@ -178,12 +179,29 @@ public class OphOfficeVisitForm implements Serializable {
      */
     private int                    rEyeAxis;
 
+    private Long                   appointmentId;
+
+    /**
+     * @return the appointmentId
+     */
+    public Long getAppointmentId () {
+        return appointmentId;
+    }
+
+    /**
+     * @param appointmentId
+     *            the appointmentId to set
+     */
+    public void setAppointmentId ( Long appointmentId ) {
+        this.appointmentId = appointmentId;
+    }
+
     /**
      * The diseases that were diagnosed from the visit
      */
     @ElementCollection ( targetClass = Disease.class, fetch = FetchType.EAGER )
     @Enumerated ( EnumType.STRING )
-    private Set<Disease>           diseases;
+    private Set<Disease> diseases;
 
     public OphOfficeVisitForm () {
 
@@ -245,7 +263,7 @@ public class OphOfficeVisitForm implements Serializable {
      *
      * @return ID of the Visit
      */
-    public String getId () {
+    public Long getId () {
         return this.id;
     }
 
@@ -255,7 +273,7 @@ public class OphOfficeVisitForm implements Serializable {
      * @param id
      *            The ID of the OfficeVisit
      */
-    public void setId ( final String id ) {
+    public void setId ( final Long id ) {
         this.id = id;
     }
 
@@ -483,7 +501,7 @@ public class OphOfficeVisitForm implements Serializable {
      *
      * @return the type of this office visit
      */
-    public String getType () {
+    public AppointmentType getType () {
         return type;
     }
 
@@ -493,7 +511,7 @@ public class OphOfficeVisitForm implements Serializable {
      * @param type
      *            the type to set this office visit to
      */
-    public void setType ( final String type ) {
+    public void setType ( final AppointmentType type ) {
         this.type = type;
     }
 
@@ -502,7 +520,7 @@ public class OphOfficeVisitForm implements Serializable {
      *
      * @return the hospital of this office visit
      */
-    public String getHospital () {
+    public Hospital getHospital () {
         return hospital;
     }
 
@@ -512,7 +530,7 @@ public class OphOfficeVisitForm implements Serializable {
      * @param hospital
      *            the hospital to set this office visit to
      */
-    public void setHospital ( final String hospital ) {
+    public void setHospital ( final Hospital hospital ) {
         this.hospital = hospital;
     }
 
