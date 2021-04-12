@@ -1,0 +1,42 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="layout :: head(title=~{::title},links=~{})">
+	<title>View Office Visits</title>
+</head>
+
+<body th:include="layout :: body" th:with="content=~{::content}">
+
+	<div th:fragment="content">
+
+		<script th:inline="javascript">
+			/* Otherwise Thymeleaf tries to parse Javascript as XML and breaks itself sometimes.  Sigh */
+			/*<![CDATA[*/
+			var app = angular.module("viewOfficeVisitsPatientApp", []);
+
+			/**
+			 * A filter to humanize the text to be more user friendly.
+			 */
+			app.filter('humanize', function () {
+				return function (input) {
+					return !input ? input : input.toLowerCase().split('_')
+						.map((word) => word.charAt(0).toUpperCase() + word.substring(1))
+						.join(' ');
+				}
+			});
+
+			app.controller('viewOfficeVisitsPatientCtrl', function ($scope, $http) {
+				console.log("x");
+			});
+
+
+			/*]]>*/
+		</script>
+		 <div ng-app="viewOfficeVisitsPatientApp" ng-controller="viewOfficeVisitsPatientCtrl">
+            <h3>View Office Visits</h3>
+
+
+        </div>
+
+</body>
+
+</html>
