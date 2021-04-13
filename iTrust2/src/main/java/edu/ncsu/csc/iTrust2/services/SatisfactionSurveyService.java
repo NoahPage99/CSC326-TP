@@ -1,8 +1,11 @@
 package edu.ncsu.csc.iTrust2.services;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
+
+import com.google.gson.Gson;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,51 +31,67 @@ import edu.ncsu.csc.iTrust2.repositories.SatisfactionSurveyRepository;
 @Component
 @Transactional
 public class SatisfactionSurveyService extends Service {
+    private static Gson gson = new Gson();
+
     @Autowired
     private SatisfactionSurveyRepository repository;
 
     @Autowired
-    private UserService                  userService;
+    private UserService userService;
 
     @Override
-    protected JpaRepository getRepository () {
+    protected JpaRepository getRepository() {
         return repository;
     }
 
-    public SatisfactionSurvey build ( final SatisfactionSurveyForm ssf ) {
+    public SatisfactionSurvey build(final SatisfactionSurveyForm ssf) {
         final SatisfactionSurvey ss = new SatisfactionSurvey();
         // if ( ssf.getId() != null ) {
         // ss.setId( Long.parseLong( ssf.getId() ) );
         // }
-        ss.setTimeWaitedWaitingRoom( ssf.getTimeWaitedWaitingRoom() );
-        ss.setTimeWaitedExaminationRoom( ssf.getTimeWaitedExaminationRoom() );
-        ss.setSatisfiedOfficeVisit( ssf.getSatisfiedOfficeVisit() );
-        ss.setSatisfiedTreatment( ssf.getSatisfiedTreatment() );
-        ss.setHcp( userService.findByName(ssf.getHcp()) );
-        ss.setPatient( userService.findByName(ssf.getPatient()) );
-        if ( ssf.getNotes() != null ) {
-            ss.setNotes( ssf.getNotes() );
+        ss.setTimeWaitedWaitingRoom(ssf.getTimeWaitedWaitingRoom());
+        ss.setTimeWaitedExaminationRoom(ssf.getTimeWaitedExaminationRoom());
+        ss.setSatisfiedOfficeVisit(ssf.getSatisfiedOfficeVisit());
+        ss.setSatisfiedTreatment(ssf.getSatisfiedTreatment());
+        ss.setHcp(userService.findByName(ssf.getHcp()));
+        ss.setPatient(userService.findByName(ssf.getPatient()));
+        if (ssf.getNotes() != null) {
+            ss.setNotes(ssf.getNotes());
         }
         return ss;
 
     }
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings("unchecked")
     @Override
-    public List<SatisfactionSurvey> findAll () {
+    public List<SatisfactionSurvey> findAll() {
         return (List<SatisfactionSurvey>) super.findAll();
     }
 
-    public List<SatisfactionSurvey> findByHcp ( final User hcp ) {
-        return repository.findByHcp( hcp );
+    public List<SatisfactionSurvey> findByHcp(final User hcp) {
+        return repository.findByHcp(hcp);
     }
 
-    public List<SatisfactionSurvey> findByPatient ( final User patient ) {
-        return repository.findByPatient( patient );
+    public List<SatisfactionSurvey> findByPatient(final User patient) {
+        return repository.findByPatient(patient);
     }
 
-    public List<SatisfactionSurvey> findByHcpAndPatient ( final User hcp, final User patient ) {
-        return repository.findByHcpAndPatient( hcp, patient );
+    public List<SatisfactionSurvey> findByHcpAndPatient(final User hcp, final User patient) {
+        return repository.findByHcpAndPatient(hcp, patient);
+    }
+
+    public Map<String, String> getSurveyAggByHCP(final User hcp) {
+        return repository.getSurveyAggByHCP(hcp.getId());
+    }
+
+    public Map<String, String> getSurveyAggWithComments(final User hcp) {
+        final var data = repository.getSurveyAggByHCP(hcp.getId());
+        final var comments = repository.getHCPNotes(hcp.getId());
+
+        final var tree = gson.toJsonTree(data);
+        tree.getAsJsonObject().add("comments", gson.toJsonTree(comments));
+
+        return gson.fromJson(tree, Map.class);
     }
 
 }

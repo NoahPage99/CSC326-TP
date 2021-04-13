@@ -48,6 +48,9 @@ public class SatisfactionSurvey extends DomainObject {
     @GeneratedValue ( strategy = GenerationType.AUTO )
     private Long   id;
 
+
+    private boolean            completed;
+
     /**
      * time waited in waiting room
      */
@@ -74,18 +77,13 @@ public class SatisfactionSurvey extends DomainObject {
      */
     @Min ( 0 )
     @Max ( 10 )
-    private int    satisfiedTreatment;
+     private int    satisfiedTreatment;
 
     /**
      * notes on survey
      */
     private String notes;
 
-    // /**
-    // * service to get averages
-    // */
-    // @Autowired
-    // private SatisfactionSurveyService service;
 
     /**
      * create a new default satisfaction survey
@@ -224,20 +222,7 @@ public class SatisfactionSurvey extends DomainObject {
         this.notes = notes;
     }
 
-    // /**
-    // * hashcode
-    // */
-    // @Override
-    // public int hashCode () {
-    // final int prime = 31;
-    // int result = 1;
-    // result = prime * result + ( ( notes == null ) ? 0 : notes.hashCode() );
-    // result = prime * result + satisfiedOfficeVisit;
-    // result = prime * result + satisfiedTreatment;
-    // result = prime * result + timeWaitedExaminationRoom;
-    // result = prime * result + timeWaitedWaitingRoom;
-    // return result;
-    // }
+
 
     /**
      * equals
@@ -349,39 +334,18 @@ public class SatisfactionSurvey extends DomainObject {
         this.patient = patient;
     }
 
-    // public double getAverageTimeWaitedWaitingRoom(User hcp){
-    // List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
-    // double avg = 0;
-    // for(SatisfactionSurvey s:surveys){
-    // avg += s.getTimeWaitedWaitingRoom();
-    // }
-    // return avg/surveys.size();
-    // }
 
-    // public double getAverageTimeWaitedExaminationRoom(User hcp){
-    // List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
-    // double avg = 0;
-    // for(SatisfactionSurvey s:surveys){
-    // avg += s.getTimeWaitedExaminationRoom();
-    // }
-    // return avg/surveys.size();
-    // }
+    public boolean isCompleted() {
+        return this.completed;
+    }
 
-    // public double getAverageSatisfiedOfficeVisit(User hcp){
-    // List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
-    // double avg = 0;
-    // for(SatisfactionSurvey s:surveys){
-    // avg += s.getSatisfiedOfficeVisit();
-    // }
-    // return avg/surveys.size();
-    // }
+    public boolean getCompleted() {
+        return this.completed;
+    }
 
-    // public double getAverageSatisfiedTreatment(User hcp){
-    // List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
-    // double avg = 0;
-    // for(SatisfactionSurvey s:surveys){
-    // avg += s.getSatisfiedTreatment();
-    // }
-    // return avg/surveys.size();
-    // }
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    
 }
