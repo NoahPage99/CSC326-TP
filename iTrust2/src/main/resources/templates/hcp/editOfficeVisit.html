@@ -26,6 +26,162 @@
 
 			app.controller('editOfficeVisitHCPCtrl', function ($scope, $http) {
 				console.log("x");
+				$scope.officevisits = [];
+				$scope.hcpofficevisits = [];
+				$scope.ophofficevisits = [];
+				//general office visit
+				$scope.getOfficeVisits = function () {
+					$http.get("/iTrust2/api/v1/officevisits/general").then(
+						function (response) {
+							$scope.officevisits = response.data;
+							$scope.message = "";
+							console.log($scope.officevisits);
+						}, function (rejection) {
+							$scope.officevisits = [];
+							$scope.message = "Could not display visits";
+						});
+				}
+				
+				//oph office visit
+				$scope.getOphOfficeVisits = function () {
+					$http.get("/iTrust2/api/v1/officevisits/oph").then(
+						function (response) {
+							$scope.ophofficevisits = response.data;
+							$scope.message = "";
+							console.log($scope.ophofficevisits);
+						}, function (rejection) {
+							$scope.ophofficevisits = [];
+							$scope.message = "Could not display visits";
+						});
+				}
+				
+				//hcp Office Visit
+				$scope.getHCPOfficeVisits = function () {
+					$http.get("/iTrust2/api/v1/officevisits/HCP").then(
+						function (response) {
+							$scope.hcpofficevisits = response.data;
+							$scope.message = "";
+							console.log($scope.hcpofficevisits);
+						}, function (rejection) {
+							$scope.hcpofficevisits = [];
+							$scope.message = "Could not display visits";
+						});
+				}
+				
+				//create general office visit
+				$scope.addGeneralOfficeVisit = function () {
+					$http.post("/iTrust2/api/v1/officevisits/general", $scope.officevisit).then(
+						function () {
+							$scope.success = true;
+							$scope.failure = false;
+						}
+					);
+				}
+				
+				$scope.addOphOfficeVisit = function () {
+					$http.post("/iTrust2/api/v1/officevisits/oph", $scope.ophofficevisit).then(
+						function () {
+							$scope.success = true;
+							$scope.failure = false;
+						}
+					);
+				}
+				
+                /*Submit function*/
+                $scope.submit = function () {
+                    $scope.errorMsg = "";
+                    $scope.message = "";
+                    $scope.visit.hcp = /*[[${#httpServletRequest.remoteUser}]]*/null; /* Ugly hack; use this to retrieve the name of the HCP who is currently logged in.  This grabs it from Thymeleaf */
+                    $scope.visit.status = "PENDING";
+
+                    // Error checking
+                    if (!$scope.visit.type) {
+                        $scope.errorMsg += "Please select a visit type\n";
+                    }
+
+                    if (!$scope.visit.hospital) {
+                        $scope.errorMsg += "Please select a hospital\n";
+                    }
+
+                    // Validate date and time
+                    var date = new Date($scope.visitInputDate);
+                    if (!dateTimeService.isValidDate($scope.visitInputDate)) {
+                        $scope.errorMsg += "Please input a valid date\n";
+                    }
+
+                    const time = new Date($scope.visitInputTime);
+                    if (!dateTimeService.isValidDate(time)) {
+                        $scope.errorMsg += "Please input a valid time\n";
+                    }
+
+                    date.setHours(time.getHours());
+                    date.setMinutes(time.getMinutes());
+                    
+                    // Check valid date and time combination
+                    if (!dateTimeService.isValidDate(date)) {
+                        $scope.errorMsg += "Please input a valid date and time\n";
+                    } else {
+                        $scope.visit.date = date.toISOString();
+                    }
+                    
+                    /*Submitting Office Visits by type*/
+                    if ($scope.visit.type === 'GENERAL_CHECKUP') {
+                        checkBasicHealthMetrics();
+                        if ($scope.errorMsg == "") {
+                            $scope.visit.diagnoses = $scope.diagnoses;
+                            $scope.visit.prescriptions = $scope.prescriptions;
+                            $scope.visit.prescriptions.forEach(function (p) {
+                                p.patient = $scope.visit.patient;
+                            });
+
+                            $scope.visit.labProcedures = $scope.procedures;
+                            
+                            $http({
+                                method: 'POST',
+                                url: '/iTrust2/api/v1/officevisits/general',
+                                data: $scope.visit
+                            }).then(function (response) {
+                                $scope.errorMsg = "";
+                                $scope.message = "Office visit created successfully";
+                            }, function (rejection) {
+                                $scope.message = "";
+                                $scope.errorMsg = "Error occurred creating office visit";
+                            })
+                        }
+                    }
+                    
+                    else if ($scope.visit.type === 'GENERAL_OPHTHALMOLOGY') {
+                        checkBasicHealthMetrics();
+                        if ($scope.errorMsg == "") {
+                            $scope.visit.diagnoses = $scope.diagnoses;
+                            $scope.visit.lEyeAcuity = $scope.lEyeAcuity;
+                            //etc.
+                            $scope.visit.prescriptions = $scope.prescriptions;
+                            $scope.visit.prescriptions.forEach(function (p) {
+                                p.patient = $scope.visit.patient;
+                            });
+
+                            $scope.visit.labProcedures = $scope.procedures;
+                            
+                            $http({
+                                method: 'POST',
+                                url: '/iTrust2/api/v1/officevisits/oph',
+                                data: $scope.visit
+                            }).then(function (response) {
+                                $scope.errorMsg = "";
+                                $scope.message = "Office visit created successfully";
+                            }, function (rejection) {
+                                $scope.message = "";
+                                $scope.errorMsg = "Error occurred creating office visit";
+                            })
+                        }
+                    }
+                     else {
+                        $scope.message = "";
+                        $scope.errorMsg = "Invalid office visit type";
+                    }
+
+                } 
 			});
 
 
