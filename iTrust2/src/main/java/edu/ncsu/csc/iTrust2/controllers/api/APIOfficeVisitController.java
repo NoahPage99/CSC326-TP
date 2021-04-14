@@ -91,7 +91,10 @@ public class APIOfficeVisitController extends APIController {
     public List<OfficeVisit> getMyOfficeVisits () {
         final User self = userService.findByName( LoggerUtil.currentUser() );
         loggerUtil.log( TransactionType.VIEW_ALL_OFFICE_VISITS, self );
-        return officeVisitService.findByPatient( self );
+
+        final List<OfficeVisit> list = officeVisitService.findByPatient( self );
+        list.addAll( ophOfficeVisitService.findByPatient( self ) );
+        return list;
     }
 
     /**
