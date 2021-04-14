@@ -82,7 +82,7 @@ public class APIOfficeVisitController extends APIController {
 
     /**
      * Retrieves a list of all OfficeVisits in the database for the current
-     * patient
+     * patientx
      *
      * @return list of office visits
      */
