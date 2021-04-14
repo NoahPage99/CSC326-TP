@@ -26,6 +26,25 @@
 
 			app.controller('viewOfficeVisitsPatientCtrl', function ($scope, $http) {
 				console.log("x");
+				$scope.officevisits = [];
+				//general office visits
+				$scope.getMyOfficeVisits = function () {
+					$http.get("/iTrust2/api/v1/officevisits/myofficevisits").then(
+						function (response) {
+							$scope.officevisits = response.data;
+							$scope.message = "";
+							console.log($scope.officevisits);
+						}, function (rejection) {
+							$scope.officevisits = [];
+							$scope.message = "Could not display visits";
+						});
+				}
+				
+				$scope.getTemplate = function (officevisit) {
+					return 'view';
+				};
+				
+				$scope.getMyOfficeVisits();
 			});
 
 
