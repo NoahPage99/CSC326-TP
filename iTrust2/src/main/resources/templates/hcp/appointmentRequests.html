@@ -59,6 +59,21 @@
 							}
 						});
 				}
+				var count = 0;
+				$scope.incomingOPHAppointments = [];
+				$scope.loadIncomingOPHAppointments = function () {
+					$http.get("/iTrust2/api/v1/officevisits/oph")
+						.then(function (response) {
+							$scope.incomingOPHAppointments = response.data;
+							console.log($scope.incomingOPHAppointments.length);
+							
+							if ($scope.incomingOPHAppointments.length == 0) {
+								$scope.errorMsg1 = "No appointment found.";
+							} else {
+								$scope.errorMsg1 = "";
+							}
+						});
+				}
 
 				$scope.appointmentByID = {};
 				$scope.updateAppointment = function () {
@@ -96,6 +111,7 @@
 
 				$scope.loadAppointments();
 				$scope.loadIncomingAppointments();
+				$scope.loadIncomingOPHAppointments();
 			});
 			/*]]>*/
 		</script>
@@ -108,6 +124,18 @@
 						<h3>Upcoming Medical Appointment</h3>
 						<ul style="list-style: none;">
 							<li ng-repeat="appt in incomingAppointments"><label>
+									Type: {{appt.type | humanize}} <br /> Date: {{appt.date | date
+									: 'MM/dd/yyyy'}} <br /> Time: {{appt.date | date :
+									'shortTime'}} <br /> Patient: {{appt.patient.username}}
+							</label></li>
+						</ul>
+						<div name="errorMsg1" class="text-danger">{{errorMsg1}}</div>
+					</td>
+					
+					<td style="vertical-align: top">
+						<h3>Upcoming Medical OPH Appointment</h3>
+						<ul style="list-style: none;">
+							<li ng-repeat="appt in incomingOPHAppointments"><label>
 									Type: {{appt.type | humanize}} <br /> Date: {{appt.date | date
 									: 'MM/dd/yyyy'}} <br /> Time: {{appt.date | date :
 									'shortTime'}} <br /> Patient: {{appt.patient.username}}
