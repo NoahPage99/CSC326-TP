@@ -17,3 +17,14 @@ server:
   port: 7719
   servlet:
     contextPath: /iTrust2
+management:
+    server:
+        port: 9000
+    endpoint:
+        shutdown:
+            enabled: true
+    endpoints:
+        web:
+            expose: '*'
+            exposure:
+                include: '*'
