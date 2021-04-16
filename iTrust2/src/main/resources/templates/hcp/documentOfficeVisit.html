@@ -377,6 +377,39 @@
                                 })
                             }
                         }
+                        
+                        if ($scope.visit.type === 'GENERAL_OPHTHALMOLOGY') {
+                            checkBasicHealthMetrics();
+                            if ($scope.errorMsg == "") {
+								$scope.visit.lEyeAcuity = $scope.leftEyeAcuity;
+								$scope.visit.rEyeAcuity = $scope.rightEyeAcuity;
+								$scope.visit.lEyeSphere = $scope.leftEyeSphere;
+								$scope.visit.rEyeSphere = $scope.rightEyeSphere;
+								$scope.visit.lEyeCylinder = $scope.leftEyeCylinder;
+								$scope.visit.rEyeCylinder = $scope.rightEyeCylinder;
+								$scope.visit.lEyeAxis = $scope.leftEyeAxis;
+								$scope.visit.rEyeAxis = $scope.rightEyeAxis;
+								
+                                $scope.visit.Diagnosis = $scope.addedDiagnosis;
+                                $scope.visit.Diagnosis.forEach(function (p) {
+                                    p.patient = $scope.visit.patient;
+                                });
+                               
+                               console.log($scope.visit);
+
+                                $http({
+                                    method: 'POST',
+                                    url: '/iTrust2/api/v1/officevisits/oph',
+                                    data: $scope.visit
+                                }).then(function (response) {
+                                    $scope.errorMsg = "";
+                                    $scope.message = "Office visit created successfully";
+                                }, function (rejection) {
+                                    $scope.message = "";
+                                    $scope.errorMsg = "Error occurred creating office visit";
+                                })
+                            }
+                        }
                          else {
                             $scope.message = "";
                             $scope.errorMsg = "Invalid office visit type";
@@ -474,6 +507,18 @@
                             resetPrescriptionForm();
                         }
                     }
+                    
+                    $scope.addedDiagnosis = [];
+                    $scope.addDiagnosis = function () {
+                        $scope.errorMsg = "";
+                        var p = {
+                            diagnosis: $scope.disease,
+                            notes: $scope.diseaseNoteEntry,
+                        }
+                        $scope.addedDiagnosis.push(p);
+                        console.log($scope.addedDiagnosis);
+                      
+                    }
 
                     /*Adding a procedure to Office visit*/
                     $scope.addProcedure = function () {
@@ -496,6 +541,10 @@
                     //remove local diagnosis from list
                     $scope.removeDiagnosis = function ($index) {
                         $scope.diagnoses.splice($index, 1);
+                    }
+                    
+                    $scope.removeAddedDiagnosis = function ($index) {
+                        $scope.addedDiagnosis.splice($index, 1);
                     }
 
                     //remove local prescription from list
@@ -934,7 +983,7 @@
 														<label>Left Eye Cylinder:</label>
 													</div>
 													<div class="col-xs-4">
-														<input class="form-control" type="number" min="10" max="200" value="1" ng-model="leftEyeCylinder" name="leftEyeCylinder">
+														<input class="form-control" type="number" min="1" max="180" value="1" ng-model="leftEyeCylinder" name="leftEyeCylinder">
 													</div>
 												</div>
 												<div class="form-group row">
@@ -942,7 +991,7 @@
 														<label>Right Eye Cylinder:</label>
 													</div>
 													<div class="col-xs-4">
-														<input class="form-control" type="number" min="10" max="200" value="1" ng-model="rightEyeCylinder" name="rightEyeCylinder">
+														<input class="form-control" type="number" min="1" max="180" value="1" ng-model="rightEyeCylinder" name="rightEyeCylinder">
 													</div>
 												</div>
 												<div class="form-group row">
@@ -950,7 +999,7 @@
 														<label>Left Eye Axis:</label>
 													</div>
 													<div class="col-xs-4">				
-														<input class="form-control" type="number" min="10" max="200" value="1" ng-model="leftEyeAxis" name="leftEyeAxis">
+														<input class="form-control" type="number" min="1" max="180" value="1" ng-model="leftEyeAxis" name="leftEyeAxis">
 													</div>
 												</div>
 												<div class="form-group row">
@@ -958,7 +1007,7 @@
 														<label>Right Eye Axis:</label>
 													</div>
 													<div class="col-xs-4">
-														<input class="form-control" type="number" min="10" max="200" value="1" ng-model="rightEyeAxis" name="rightEyeAxis">
+														<input class="form-control" type="number" min="1" max="180" value="1" ng-model="rightEyeAxis" name="rightEyeAxis">
 													</div>
 												</div>
 											</div>
@@ -1004,10 +1053,44 @@
 														</textarea>
 													</div>
 												</div>
+												
+												<!--  <div class="form-group row text-center">
+													<button class="btn btn-success"
+														ng-click="fillPrescription()" name="fillPrescription">Add
+														Prescription</button>
+												</div>
+												<div class="form-group row">
+													<div class="col-md-12">
+														<div class="panel panel-default">
+															<div class="panel-heading">Added Prescriptions</div>
+															<div class="panel-body">
+																<div class="row" ng-repeat="p in prescriptions">
+																	<div class="col-md-3">{{p.drug}}</div>
+																	<div class="col-md-2">{{p.dosage}}mg</div>
+																	<br>
+																	<div class="col-md-1"></div>
+																	<!-- "tab" over columns 
+																	<div class="col-md-3">{{p.startDate | date :
+																		'MM/dd/yyyy'}}</div>
+																	<div class="col-md-3">{{p.endDate | date :
+																		'MM/dd/yyyy'}}</div>
+																	<div class="col-md-3">{{p.renewals}}</div>
+																	<div class="col-md-1">
+																		<button class="btn btn-danger btn-xs"
+																			ng-click="removePrescription($index)"
+																			name="removePrescription">
+																			<b>x</b>
+																		</button>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>-->
 
 												<div class="form-group row text-center">
 													<div class="col-md-12">
-														<button class="btn btn-success" ng-click=""
+														<button class="btn btn-success" ng-click="addDiagnosis()"
 															name="fillDiagnosis">Add Diagnosis</button>
 													</div>
 												</div>
@@ -1017,11 +1100,11 @@
 														<div class="panel panel-default">
 															<div class="panel-heading">Added Diagnoses</div>
 															<div class="panel-body">
-																<div class="row" ng-repeat="d in diagnoses">
-																	<div class="col-md-4">{{d.code}}</div>
+																<div class="row" ng-repeat="d in addedDiagnosis">
+																	<div class="col-md-4">{{d.diagnosis}}</div>
 																	<div class="col-md-4">
 																		<button class="btn btn-danger btn-xs"
-																			ng-click="removeDiagnosis($index)"
+																			ng-click="removeAddedDiagnosis($index)"
 																			name="removeDiagnosis">
 																			<b>x</b>
 																		</button>
