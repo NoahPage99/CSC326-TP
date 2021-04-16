@@ -474,8 +474,8 @@ public class APIOfficeVisitTest {
         visit.setHcp( "hcp" );
         visit.setPatient( "patient" );
         visit.setNotes( "Test office visit" );
-        visit.setType( AppointmentType.GENERAL_OPHTHALMOLOGY );
-        visit.setHospital( hospitalService.findByName( "iTrust Test Hospital 2" ) );
+        visit.setType( AppointmentType.GENERAL_OPHTHALMOLOGY.toString() );
+        visit.setHospital( "iTrust Test Hospital 2" );
         visit.setlEyeAcuity( 11 );
         visit.setrEyeAcuity( 11 );
         visit.setlEyeAxis( 11 );
@@ -537,8 +537,8 @@ public class APIOfficeVisitTest {
         visit.setHcp( "hcp" );
         visit.setPatient( "patient" );
         visit.setNotes( "Test office visit" );
-        visit.setType( AppointmentType.GENERAL_OPHTHALMOLOGY );
-        visit.setHospital( hospitalService.findByName( "iTrust Test Hospital 2" ) );
+        visit.setType( AppointmentType.GENERAL_OPHTHALMOLOGY.toString() );
+        visit.setHospital( "iTrust Test Hospital 2" );
         visit.setlEyeAcuity( 11 );
         visit.setrEyeAcuity( 11 );
         visit.setlEyeAxis( 11 );
@@ -566,9 +566,9 @@ public class APIOfficeVisitTest {
         visit.setDiastolic( 83 );
         visit.setHdl( 70 );
         visit.setHeight( 69.1f );
-        visit.setHouseSmokingStatus( HouseholdSmokingStatus.INDOOR );
+        visit.setHouseSmokingStatus( HouseholdSmokingStatus.INDOOR.toString() );
         visit.setLdl( 30 );
-        visit.setPatientSmokingStatus( PatientSmokingStatus.FORMER );
+        visit.setPatientSmokingStatus( PatientSmokingStatus.FORMER.toString() );
         visit.setSystolic( 102 );
         visit.setTri( 150 );
         visit.setWeight( 175.2f );
@@ -588,9 +588,9 @@ public class APIOfficeVisitTest {
         assertEquals( Integer.valueOf( 83 ), visit.getDiastolic() );
         assertEquals( Integer.valueOf( 70 ), visit.getHdl() );
         assertEquals( Float.valueOf( 69.1f ), visit.getHeight() );
-        assertEquals( HouseholdSmokingStatus.INDOOR, visit.getHouseSmokingStatus() );
+        assertEquals( HouseholdSmokingStatus.INDOOR.toString(), visit.getHouseSmokingStatus() );
         assertEquals( Integer.valueOf( 30 ), visit.getLdl() );
-        assertEquals( PatientSmokingStatus.FORMER, visit.getPatientSmokingStatus() );
+        assertEquals( PatientSmokingStatus.FORMER.toString(), visit.getPatientSmokingStatus() );
         assertEquals( Integer.valueOf( 102 ), visit.getSystolic() );
         assertEquals( Integer.valueOf( 150 ), visit.getTri() );
         assertEquals( Float.valueOf( 175.2f ), visit.getWeight() );
@@ -741,8 +741,8 @@ public class APIOfficeVisitTest {
         visit1.setHcp( "hcp" );
         visit1.setPatient( "patient" );
         visit1.setNotes( "Test office visit" );
-        visit1.setType( AppointmentType.GENERAL_OPHTHALMOLOGY );
-        visit1.setHospital( hospitalService.findByName( "iTrust Test Hospital 2" ) );
+        visit1.setType( AppointmentType.GENERAL_OPHTHALMOLOGY.toString() );
+        visit1.setHospital( "iTrust Test Hospital 2" );
         visit1.setlEyeAcuity( 11 );
         visit1.setrEyeAcuity( 11 );
         visit1.setlEyeAxis( 11 );

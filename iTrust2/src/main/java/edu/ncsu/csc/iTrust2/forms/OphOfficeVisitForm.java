@@ -14,11 +14,7 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 
-import edu.ncsu.csc.iTrust2.models.Hospital;
-import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
 import edu.ncsu.csc.iTrust2.models.enums.Disease;
-import edu.ncsu.csc.iTrust2.models.enums.HouseholdSmokingStatus;
-import edu.ncsu.csc.iTrust2.models.enums.PatientSmokingStatus;
 import edu.ncsu.csc.iTrust2.persistant.OphOfficeVisit;
 
 /**
@@ -67,13 +63,13 @@ public class OphOfficeVisitForm implements Serializable {
      * Type of the OfficeVisit.
      */
     @NotEmpty
-    public AppointmentType         type;
+    public String                  type;
 
     /**
      * Hospital where the OfficeVisit occurred
      */
     @NotEmpty
-    public Hospital                hospital;
+    public String                  hospital;
 
     /**
      * Doctor's Notes on the OfficeVisit
@@ -132,12 +128,12 @@ public class OphOfficeVisitForm implements Serializable {
     /**
      * Smoking status of the patient's household.
      */
-    private HouseholdSmokingStatus houseSmokingStatus;
+    private String                 houseSmokingStatus;
 
     /**
      * Smoking status of the patient.
      */
-    private PatientSmokingStatus   patientSmokingStatus;
+    private String                 patientSmokingStatus;
 
     /**
      * Diagnoses associated with this visit
@@ -501,7 +497,7 @@ public class OphOfficeVisitForm implements Serializable {
      *
      * @return the type of this office visit
      */
-    public AppointmentType getType () {
+    public String getType () {
         return type;
     }
 
@@ -511,7 +507,7 @@ public class OphOfficeVisitForm implements Serializable {
      * @param type
      *            the type to set this office visit to
      */
-    public void setType ( final AppointmentType type ) {
+    public void setType ( final String type ) {
         this.type = type;
     }
 
@@ -520,7 +516,7 @@ public class OphOfficeVisitForm implements Serializable {
      *
      * @return the hospital of this office visit
      */
-    public Hospital getHospital () {
+    public String getHospital () {
         return hospital;
     }
 
@@ -530,7 +526,7 @@ public class OphOfficeVisitForm implements Serializable {
      * @param hospital
      *            the hospital to set this office visit to
      */
-    public void setHospital ( final Hospital hospital ) {
+    public void setHospital ( final String hospital ) {
         this.hospital = hospital;
     }
 
@@ -710,7 +706,7 @@ public class OphOfficeVisitForm implements Serializable {
      *
      * @return the houseSmokingStatus
      */
-    public HouseholdSmokingStatus getHouseSmokingStatus () {
+    public String getHouseSmokingStatus () {
         return houseSmokingStatus;
     }
 
@@ -720,7 +716,7 @@ public class OphOfficeVisitForm implements Serializable {
      * @param houseSmokingStatus
      *            the houseSmokingStatus to set
      */
-    public void setHouseSmokingStatus ( final HouseholdSmokingStatus houseSmokingStatus ) {
+    public void setHouseSmokingStatus ( final String houseSmokingStatus ) {
         this.houseSmokingStatus = houseSmokingStatus;
     }
 
@@ -729,7 +725,7 @@ public class OphOfficeVisitForm implements Serializable {
      *
      * @return the patientSmokingStatus
      */
-    public PatientSmokingStatus getPatientSmokingStatus () {
+    public String getPatientSmokingStatus () {
         return patientSmokingStatus;
     }
 
@@ -739,7 +735,7 @@ public class OphOfficeVisitForm implements Serializable {
      * @param patientSmokingStatus
      *            the patientSmokingStatus to set
      */
-    public void setPatientSmokingStatus ( final PatientSmokingStatus patientSmokingStatus ) {
+    public void setPatientSmokingStatus ( final String patientSmokingStatus ) {
         this.patientSmokingStatus = patientSmokingStatus;
     }
 

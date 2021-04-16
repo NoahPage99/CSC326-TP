@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import edu.ncsu.csc.iTrust2.forms.OphOfficeVisitForm;
 import edu.ncsu.csc.iTrust2.models.AppointmentRequest;
 import edu.ncsu.csc.iTrust2.models.User;
+import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
 import edu.ncsu.csc.iTrust2.persistant.OphOfficeVisit;
 import edu.ncsu.csc.iTrust2.repositories.OphOfficeVisitRepository;
 
@@ -38,6 +39,9 @@ public class OphOfficeVisitService extends Service {
     @Autowired
     private AppointmentRequestService appointmentRequestService;
 
+    @Autowired
+    private HospitalService           hospitalService;
+
     @Override
     protected JpaRepository getRepository () {
         return repository;
@@ -51,8 +55,8 @@ public class OphOfficeVisitService extends Service {
         if ( oovf.getTime() != null ) {
             oov.setTime( oovf.getTime() );
         }
-        oov.setType( oovf.getType() );
-        oov.setHospital( oovf.getHospital() );
+        oov.setType( AppointmentType.valueOf( oovf.getType() ) );
+        oov.setHospital( hospitalService.findByName( oovf.getHospital() ) );
         oov.setId( oovf.getId() );
         oov.setHcp( userService.findByName( oovf.getHcp() ) );
         oov.setPatient( userService.findByName( oovf.getPatient() ) );

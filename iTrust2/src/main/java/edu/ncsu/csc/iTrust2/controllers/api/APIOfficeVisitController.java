@@ -186,8 +186,6 @@ public class APIOfficeVisitController extends APIController {
                         HttpStatus.CONFLICT );
             }
             if ( null != visit.getAppointment() ) {
-                System.out.println( "!!!: " + visit.getAppointment().getDate().toString() );
-                System.out.println( "!!!: " + visit.getDate().toString() );
 
                 if ( !visit.getAppointment().getDate().toString().equals( visit.getDate().toString() ) ) {
                     return new ResponseEntity(
