@@ -37,7 +37,7 @@ public class HCPController {
      * @return The page to display
      */
     @GetMapping ( "/hcp/editPatientDemographics" )
-    @PreAuthorize ( "hasRole('ROLE_HCP')" )
+    @PreAuthorize ( "hasRole('ROLE_HCP') or hasRole('ROLE_OPH')" )
     public String editPatientDemographics () {
         return "/hcp/editPatientDemographics";
     }
@@ -48,7 +48,7 @@ public class HCPController {
      * @return The page to display
      */
     @GetMapping ( "/hcp/editPrescriptions" )
-    @PreAuthorize ( "hasRole('ROLE_HCP')" )
+    @PreAuthorize ( "hasRole('ROLE_HCP') or hasRole('ROLE_OPH')" )
     public String editPrescriptions () {
         return "/hcp/editPrescriptions";
     }
@@ -61,7 +61,7 @@ public class HCPController {
      * @return role
      */
     @RequestMapping ( value = "hcp/records" )
-    @PreAuthorize ( "hasRole('ROLE_HCP')" )
+    @PreAuthorize ( "hasRole('ROLE_HCP') or hasRole('ROLE_OPH')" )
     public String emergencyRecords ( final Model model ) {
         return "personnel/records";
     }
@@ -75,7 +75,7 @@ public class HCPController {
      * @return The page to display to the user
      */
     @GetMapping ( "/hcp/appointmentRequests" )
-    @PreAuthorize ( "hasRole('ROLE_HCP')" )
+    @PreAuthorize ( "hasRole('ROLE_HCP') or hasRole('ROLE_OPH')" )
     public String requestAppointmentForm ( final Model model ) {
         return "hcp/appointmentRequests";
     }
@@ -88,7 +88,7 @@ public class HCPController {
      * @return The page to display to the user
      */
     @GetMapping ( "/hcp/satisfactionSurveys" )
-    @PreAuthorize ( "hasRole('ROLE_HCP')" )
+    @PreAuthorize ( "hasRole('ROLE_HCP') or hasRole('ROLE_OPH')" )
     public String viewSatisfactionSurveys ( final Model model ) {
         return "hcp/satisfactionSurveys";
     }
@@ -101,7 +101,7 @@ public class HCPController {
      * @return Page to display to the user
      */
     @GetMapping ( "/hcp/documentOfficeVisit" )
-    @PreAuthorize ( "hasRole('ROLE_HCP')" )
+    @PreAuthorize ( "hasRole('ROLE_HCP') or hasRole('ROLE_OPH')" )
     public String documentOfficeVisit ( final Model model ) {
         return "/hcp/documentOfficeVisit";
     }
@@ -114,7 +114,7 @@ public class HCPController {
      * @return Page to display to the user
      */
     @GetMapping ( "/hcp/editOfficeVisit" )
-    @PreAuthorize ( "hasRole('ROLE_HCP')" )
+    @PreAuthorize ( "hasRole('ROLE_HCP') or hasRole('ROLE_OPH')" )
     public String editOfficeVisit ( final Model model ) {
         return "/hcp/editOfficeVisit";
     }
