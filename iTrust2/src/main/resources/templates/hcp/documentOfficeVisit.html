@@ -136,6 +136,7 @@
                     $http.get("/iTrust2/api/v1/appointmenttype")
                         .then(function (response) {
                             $scope.types = response.data;
+                            console.log( $scope.types);
                         });
                     /*Getting a list of house smoking options*/
                     $http.get("/iTrust2/api/v1/housesmoking")
@@ -151,6 +152,7 @@
                     $http.get("/iTrust2/api/v1/hospitals").then(
                         function (response) {
                             $scope.hospitals = response.data;
+                            
                         });
                     /*Getting a list of drugs*/
                     $http.get("/iTrust2/api/v1/drugs").then(
@@ -166,6 +168,7 @@
                     $http.get("/iTrust2/api/v1/disease").then(
                         function (response) {
                             $scope.diseases = response.data;
+                            console.log( $scope.diseases);
                         });
 
                     /*Getting a list of laboratory procedures*/
@@ -508,6 +511,7 @@
                     //call initally
                     resetDiagnosisForm();
                     resetPrescriptionForm();
+                    
                 });
 			/*]]>*/
             </script>
@@ -896,8 +900,7 @@
 														<label>Left Eye Acuity:</label>
 													</div>
 													<div class="col-xs-4">
-														<input class="form-control" name="leftEyeAcuity"
-															ng-model="leftEyeAcuity" required></input>
+														<input class="form-control" type="number" min="10" max="200" value="1" ng-model="leftEyeAcuity" name="leftEyeAcuity">
 													</div>
 												</div>
 												<div class="form-group row">
@@ -905,8 +908,7 @@
 														<label>Right Eye Acuity:</label>
 													</div>
 													<div class="col-xs-4">
-														<input class="form-control" name="rightEyeAcuity"
-															ng-model="rightEyeAcuity" required></input>
+														<input class="form-control" type="number" min="10" max="200" value="1" ng-model="rightEyeAcuity" name="rightEyeAcuity">
 													</div>
 												</div>
 												<div class="form-group row">
@@ -932,8 +934,7 @@
 														<label>Left Eye Cylinder:</label>
 													</div>
 													<div class="col-xs-4">
-														<input class="form-control" name="leftEyeCylinder"
-															ng-model="leftEyeCylinder" required></input>
+														<input class="form-control" type="number" min="10" max="200" value="1" ng-model="leftEyeCylinder" name="leftEyeCylinder">
 													</div>
 												</div>
 												<div class="form-group row">
@@ -941,17 +942,15 @@
 														<label>Right Eye Cylinder:</label>
 													</div>
 													<div class="col-xs-4">
-														<input class="form-control" name="rightEyeCylinder"
-															ng-model="rightEyeCylinder" required></input>
+														<input class="form-control" type="number" min="10" max="200" value="1" ng-model="rightEyeCylinder" name="rightEyeCylinder">
 													</div>
 												</div>
 												<div class="form-group row">
 													<div class="col-xs-6">
 														<label>Left Eye Axis:</label>
 													</div>
-													<div class="col-xs-4">
-														<input class="form-control" name="leftEyeAxis"
-															ng-model="leftEyeAxis" required></input>
+													<div class="col-xs-4">				
+														<input class="form-control" type="number" min="10" max="200" value="1" ng-model="leftEyeAxis" name="leftEyeAxis">
 													</div>
 												</div>
 												<div class="form-group row">
@@ -959,8 +958,7 @@
 														<label>Right Eye Axis:</label>
 													</div>
 													<div class="col-xs-4">
-														<input class="form-control" name="rightEyeAxis"
-															ng-model="rightEyeAxis" required></input>
+														<input class="form-control" type="number" min="10" max="200" value="1" ng-model="rightEyeAxis" name="rightEyeAxis">
 													</div>
 												</div>
 											</div>
@@ -982,11 +980,17 @@
 													<div class="col-xs-6 radio-box">
 														<div class="form-check">
 															<ul style="list-style: none;">
-																<li ng-repeat="i in diseases"><label> <input
+															
+															<li ng-repeat="type in diseases"><label> <input
+																type="radio" ng-model="$parent.disease"
+																name="{{type}}" value="{{type}}" required="true" />{{type
+																| humanize}}
+														</label></li>
+																<!--  <li ng-repeat="i in diseases"><label> <input
 																		type="radio" ng-model="$parent.codeEntry"
-																	     name="{{i.value}}"
+																	     name="{{i.values}}"
 																		 /> 
-																</label></li>
+																</label></li>-->
 															</ul>
 														</div>
 													</div>
@@ -996,8 +1000,8 @@
 														<label>Notes:</label>
 													</div>
 													<div class="col-xs-6">
-														<input class="form-control" name="notesEntry"
-															ng-model="diseaseNoteEntry" required="true" type="text">
+														<textarea name="notesEntry" maxlength="1000" id="notes" class="form-control" ng-model="diseaseNoteEntry">
+														</textarea>
 													</div>
 												</div>
 

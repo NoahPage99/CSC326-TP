@@ -121,7 +121,10 @@ public class APIEnumController extends APIController {
      */
     @GetMapping ( BASE_PATH + "/disease" )
     public List<Disease> getDiseases () {
-        return Arrays.asList( Disease.values() );
+
+        return List.of( Disease.CATARACTS, Disease.AGE_RELATED_MACULAR_DEGENERATION, Disease.AMBLYOPIA,
+                Disease.GLAUCOMA );
+
     }
 
     /**
