@@ -162,6 +162,11 @@
                         function (response) {
                             $scope.icdcodes = response.data;
                         });
+					/*Getting a list of ICD codes*/
+                    $http.get("/iTrust2/api/v1/disease").then(
+                        function (response) {
+                            $scope.diseases = response.data;
+                        });
 
                     /*Getting a list of laboratory procedures*/
                     $http.get("/iTrust2/api/v1/personnel/getbyroles/ROLE_LABTECH").then(
@@ -378,7 +383,7 @@
 
                     $scope.noteEntry = "";
                     $scope.codeEntry = "";
-
+					$scope.diseaseNoteEntry = "";
                     $scope.drugEntry = "";
                     $scope.dosageEntry = "";
                     $scope.startEntry = "";
@@ -391,6 +396,16 @@
 
                     $scope.procedure = {};
                     $scope.procedures = [];
+					
+					$scope.leftEyeAcuity = "";
+					$scope.rightEyeAcuity = "";
+					$scope.rightEyeSphere = "";
+					$scope.leftEyeSphere = "";
+					$scope.leftEyeCylinder = "";
+					$scope.rightEyeCylinder = "";
+					$scope.rightEyeAxis = "";
+					$scope.leftEyeAxis = "";
+					
 
                     // Clears local variables for diagnosis form
                     function resetDiagnosisForm() {
@@ -868,6 +883,154 @@
 										</div>
 									</div>
 								</div>
+								
+								<!-- Ophthalmology Metrics -->
+									<div ng-show="visit.type == 'GENERAL_OPHTHALMOLOGY'" class="row">
+										<div class="panel panel-info">
+											<div class="panel-heading">
+												<h4> Ophthalmology Metrics</h4>
+											</div>
+											<div class="panel-body">
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Left Eye Acuity:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" name="leftEyeAcuity"
+															ng-model="leftEyeAcuity" required></input>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Right Eye Acuity:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" name="rightEyeAcuity"
+															ng-model="rightEyeAcuity" required></input>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Left Eye Sphere:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" name="leftEyeSphere"
+															ng-model="leftEyeSphere" required></input>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Right Eye Sphere:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" name="rightEyeSphere"
+															ng-model="rightEyeSphere" required></input>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Left Eye Cylinder:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" name="leftEyeCylinder"
+															ng-model="leftEyeCylinder" required></input>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Right Eye Cylinder:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" name="rightEyeCylinder"
+															ng-model="rightEyeCylinder" required></input>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Left Eye Axis:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" name="leftEyeAxis"
+															ng-model="leftEyeAxis" required></input>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Right Eye Axis:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" name="rightEyeAxis"
+															ng-model="rightEyeAxis" required></input>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<!-- Diagnosis Panel  -->
+									<div ng-show="visit.type == 'GENERAL_OPHTHALMOLOGY'" class="col-md-4">
+										<div class="panel panel-info">
+											<div class="panel-heading">
+												<h4>Diagnosis</h4>
+											</div>
+											<div class="panel-body">
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Diagnosis:</label>
+													</div>
+													<div class="col-xs-6 radio-box">
+														<div class="form-check">
+															<ul style="list-style: none;">
+																<li ng-repeat="i in diseases"><label> <input
+																		type="radio" ng-model="$parent.codeEntry"
+																	     name="{{i.value}}"
+																		 /> 
+																</label></li>
+															</ul>
+														</div>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Notes:</label>
+													</div>
+													<div class="col-xs-6">
+														<input class="form-control" name="notesEntry"
+															ng-model="diseaseNoteEntry" required="true" type="text">
+													</div>
+												</div>
+
+												<div class="form-group row text-center">
+													<div class="col-md-12">
+														<button class="btn btn-success" ng-click=""
+															name="fillDiagnosis">Add Diagnosis</button>
+													</div>
+												</div>
+
+												<div class="form-group row">
+													<div class="col-md-12">
+														<div class="panel panel-default">
+															<div class="panel-heading">Added Diagnoses</div>
+															<div class="panel-body">
+																<div class="row" ng-repeat="d in diagnoses">
+																	<div class="col-md-4">{{d.code}}</div>
+																	<div class="col-md-4">
+																		<button class="btn btn-danger btn-xs"
+																			ng-click="removeDiagnosis($index)"
+																			name="removeDiagnosis">
+																			<b>x</b>
+																		</button>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+
+											</div>
+										</div>
+									</div>
 
 								<!-- Lab Procedures Panel -->
 								<div ng-show="visit.type == 'GENERAL_CHECKUP'" class="row">

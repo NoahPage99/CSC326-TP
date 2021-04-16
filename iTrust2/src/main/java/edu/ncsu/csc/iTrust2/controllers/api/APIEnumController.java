@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
 import edu.ncsu.csc.iTrust2.models.enums.BloodType;
+import edu.ncsu.csc.iTrust2.models.enums.Disease;
 import edu.ncsu.csc.iTrust2.models.enums.Ethnicity;
 import edu.ncsu.csc.iTrust2.models.enums.Gender;
 import edu.ncsu.csc.iTrust2.models.enums.HouseholdSmokingStatus;
@@ -111,6 +112,16 @@ public class APIEnumController extends APIController {
     @GetMapping ( BASE_PATH + "/appointmentstatus" )
     public List<Status> getAppointmentStatuses () {
         return Arrays.asList( Status.values() );
+    }
+
+    /**
+     * Gets appointment statuses
+     *
+     * @return appointment statuses
+     */
+    @GetMapping ( BASE_PATH + "/disease" )
+    public List<Disease> getDiseases () {
+        return Arrays.asList( Disease.values() );
     }
 
     /**
