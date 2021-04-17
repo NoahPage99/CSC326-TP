@@ -37,6 +37,14 @@
 								$scope.errorMsg = "No appointment requests found."
 							}
 						});
+					
+					$http.get("/iTrust2/api/v1/appointmentrequestForOPH")
+					.then(function (response) {
+						$scope.appointments = response.data;
+						if ($scope.appointments.length == 0) {
+							$scope.errorMsg = "No appointment requests found."
+						}
+					});
 				}
 
 				$http.get("/iTrust2/api/v1/appointmentstatus")

@@ -106,6 +106,22 @@ public class APIAppointmentRequestController extends APIController {
     }
 
     /**
+     * Retrieves the AppointmentRequest specified by the username provided
+     *
+     * @return list of appointment requests for the logged in OPH
+     */
+    @GetMapping ( BASE_PATH + "/appointmentrequestForOPH" )
+    @PreAuthorize ( "hasAnyRole('ROLE_OPH')" )
+    public List<AppointmentRequest> getAppointmentRequestsForOPH () {
+
+        final User oph = userService.findByName( LoggerUtil.currentUser() );
+
+        return service.findByHcp( oph ).stream().filter( e -> e.getStatus().equals( Status.PENDING ) )
+                .collect( Collectors.toList() );
+
+    }
+
+    /**
      * Retrieves the AppointmentRequest specified by the ID provided
      *
      * @param id
