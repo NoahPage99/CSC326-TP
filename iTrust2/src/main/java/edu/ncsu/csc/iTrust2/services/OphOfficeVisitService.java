@@ -60,7 +60,7 @@ public class OphOfficeVisitService extends Service {
         }
         // if ( oovf.getTime() != null ) {
         // oov.setTime( oovf.getTime() );
-        // }
+        // } 
         oov.setType(AppointmentType.valueOf(oovf.getType()));
         oov.setHospital(hospitalService.findByName(oovf.getHospital()));
         oov.setHcp(userService.findByName(oovf.getHcp()));
