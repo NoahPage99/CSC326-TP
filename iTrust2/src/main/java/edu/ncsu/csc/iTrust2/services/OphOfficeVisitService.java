@@ -11,9 +11,12 @@ import org.springframework.stereotype.Component;
 
 import edu.ncsu.csc.iTrust2.forms.OphOfficeVisitForm;
 import edu.ncsu.csc.iTrust2.models.AppointmentRequest;
+import edu.ncsu.csc.iTrust2.models.DomainObject;
+import edu.ncsu.csc.iTrust2.models.Patient;
 import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
 import edu.ncsu.csc.iTrust2.persistant.OphOfficeVisit;
+import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
 import edu.ncsu.csc.iTrust2.repositories.OphOfficeVisitRepository;
 
 /**
@@ -88,5 +91,20 @@ public class OphOfficeVisitService extends Service {
 
     public List<OphOfficeVisit> findByHcpAndPatient ( final User hcp, final User patient ) {
         return repository.findByHcpAndPatient( hcp, patient );
+    }
+
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void save(final DomainObject obj) {
+        final var officeVisit = (OphOfficeVisit) obj;
+        if (officeVisit.getSurvey() == null) {
+            final var survey = new SatisfactionSurvey();
+            survey.setPatient((Patient) officeVisit.getPatient());
+            survey.setHcp(officeVisit.getHcp());
+            survey.setOfficeVisit(officeVisit);
+            officeVisit.setSurvey(survey);
+        }
+        getRepository().saveAndFlush(obj);
     }
 }

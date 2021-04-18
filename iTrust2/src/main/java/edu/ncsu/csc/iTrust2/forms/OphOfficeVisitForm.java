@@ -251,6 +251,7 @@ public class OphOfficeVisitForm implements Serializable {
         setrEyeCyl( oov.getrEyeCyl() );
         setlEyeAxis( oov.getlEyeAxis() );
         setrEyeAxis( oov.getrEyeAxis() );
+        super.setType(oov.getType());
         this.diseases = new HashSet<Disease>();
     }
 
