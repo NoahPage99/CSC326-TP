@@ -58,7 +58,7 @@ public class APIOfficeVisitController extends APIController {
      * @return list of office visits
      */
     @GetMapping ( BASE_PATH + "/officevisits/oph" )
-    @PreAuthorize ( "hasRole('ROLE_OPH')" )
+    @PreAuthorize ( "hasRole('ROLE_OPH') or hasRole('ROLE_OPH')" )
     public List<OphOfficeVisit> getOphOfficeVisits () {
         loggerUtil.log( TransactionType.GENERAL_OPHTHALMOLOGY_HCP_VIEW, LoggerUtil.currentUser() );
         return ophOfficeVisitService.findAll();
@@ -186,8 +186,6 @@ public class APIOfficeVisitController extends APIController {
                         HttpStatus.CONFLICT );
             }
             if ( null != visit.getAppointment() ) {
-                System.out.println( "!!!: " + visit.getAppointment().getDate().toString() );
-                System.out.println( "!!!: " + visit.getDate().toString() );
 
                 if ( !visit.getAppointment().getDate().toString().equals( visit.getDate().toString() ) ) {
                     return new ResponseEntity(

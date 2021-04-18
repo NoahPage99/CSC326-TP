@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import edu.ncsu.csc.iTrust2.forms.OfficeVisitForm;
 import edu.ncsu.csc.iTrust2.forms.OphOfficeVisitForm;
 import edu.ncsu.csc.iTrust2.models.BasicHealthMetrics;
+import edu.ncsu.csc.iTrust2.models.enums.HouseholdSmokingStatus;
+import edu.ncsu.csc.iTrust2.models.enums.PatientSmokingStatus;
 import edu.ncsu.csc.iTrust2.repositories.BasicHealthMetricsRepository;
 
 @Component
@@ -52,10 +54,10 @@ public class BasicHealthMetricsService extends Service {
         bhm.setDiastolic( ophOPVF.getDiastolic() );
         bhm.setHdl( ophOPVF.getHdl() );
         bhm.setHeight( ophOPVF.getHeight() );
-        bhm.setHouseSmokingStatus( ophOPVF.getHouseSmokingStatus() );
+        bhm.setHouseSmokingStatus( HouseholdSmokingStatus.valueOf( ophOPVF.getHouseSmokingStatus() ) );
         bhm.setHeadCircumference( ophOPVF.getHeadCircumference() );
         bhm.setLdl( ophOPVF.getLdl() );
-        bhm.setPatientSmokingStatus( ophOPVF.getPatientSmokingStatus() );
+        bhm.setPatientSmokingStatus( PatientSmokingStatus.valueOf( ophOPVF.getPatientSmokingStatus() ) );
         bhm.setSystolic( ophOPVF.getSystolic() );
         bhm.setTri( ophOPVF.getTri() );
         bhm.setWeight( ophOPVF.getWeight() );
