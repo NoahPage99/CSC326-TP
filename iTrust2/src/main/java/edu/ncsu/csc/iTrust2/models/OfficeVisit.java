@@ -9,6 +9,7 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +19,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.JsonAdapter;
 
 import edu.ncsu.csc.iTrust2.adapters.ZonedDateTimeAdapter;
@@ -104,9 +107,6 @@ public class OfficeVisit extends DomainObject {
      */
     private String             notes;
 
-    // @OneToOne ( cascade = CascadeType.ALL )
-    private boolean            completed;
-
     /**
      * The appointment of this office visit
      */
@@ -118,14 +118,17 @@ public class OfficeVisit extends DomainObject {
     @JsonManagedReference
     private List<Prescription> prescriptions;
 
-    @OneToOne ( cascade = CascadeType.ALL )
-    @JoinColumn ( name = "survey_id" )
-    private SatisfactionSurvey survey;
+
+    @Expose ( serialize = false, deserialize = false )
+    @JsonIgnore
+    @OneToOne ( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
+    @JoinColumn ( name = "survey_id", referencedColumnName = "id" )
+    @NotNull
+    private SatisfactionSurvey             survey;
+
 
     /** For Hibernate/Thymeleaf _must_ be an empty constructor */
     public OfficeVisit () {
-        // need to have completed started as false - added by noah
-        completed = false;
     }
 
     public void validateDiagnoses () {
@@ -410,26 +413,6 @@ public class OfficeVisit extends DomainObject {
      */
     public List<Prescription> getPrescriptions () {
         return prescriptions;
-    }
-
-    /**
-     * Returns if the satisfaction survey for the office visit is completed or
-     * not
-     *
-     * @return true is completed
-     */
-    public boolean isCompleted () {
-        return completed;
-    }
-
-    /**
-     * Sets if the satisfaction survey is completed or not
-     *
-     * @param completed
-     *            survey completed or not
-     */
-    public void setCompleted ( final boolean completed ) {
-        this.completed = completed;
     }
 
 }

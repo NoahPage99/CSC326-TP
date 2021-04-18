@@ -130,7 +130,6 @@ public class AppointmentRequest extends DomainObject {
     @Enumerated ( EnumType.STRING )
     private Status  status;
 
-    private boolean completed;
 
     /**
      * Retrieves the User object for the Patient for the AppointmentRequest
@@ -226,22 +225,4 @@ public class AppointmentRequest extends DomainObject {
     public void setType ( final AppointmentType type ) {
         this.type = type;
     }
-
-    public boolean isCompleted () {
-        return completed;
-    }
-
-    public void setCompleted ( final ZonedDateTime date ) {
-        // boolean completed;
-        if ( ZonedDateTime.now().isAfter( date ) ) {
-            this.completed = true;
-
-        }
-        else {
-            this.completed = false;
-
-        }
-        // this.completed = completed;
-    }
-
 }
