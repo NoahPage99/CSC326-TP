@@ -1,0 +1,83 @@
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:include="layout :: head(title=~{::title},links=~{})">
+        <title>View Satisfaction Surveys</title>
+    </head>
+
+    <body th:include="layout :: body" th:with="content=~{::content}">
+        <div th:fragment="content">
+            <script th:inline="javascript">
+                /*<![CDATA[*/
+                var app = angular.module("viewSatisfactionSurveysApp", []);
+
+                app.controller("controller", function ($scope, $http) {
+                    $http.get("/iTrust2/api/v1/surveys/averages").then(
+                        function (response) {
+                            $scope.surveys = response.data;
+
+                            console.log(response.data);
+                        },
+                        function (rejection) {
+                            console.log("Could not retrieve averages");
+                        }
+                    );
+                    $scope.hasData = (survey) => {
+                        return survey.data?.averageTimeWaitedExaminationRoom != null;
+                    };
+
+                    $scope.Math = Math;
+                });
+            </script>
+
+            <div ng-app="viewSatisfactionSurveysApp" ng-controller="controller as ctrl">
+                <h3>View Survey Averages</h3>
+                <table class="table table-bordered">
+                    <caption>
+                        Survey Averages:
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th>HCP</th>
+                            <th>Response Rate</th>
+                            <th>Average Satisfied Office Visit</th>
+                            <th>Average Satisfied Treatment</th>
+                            <th>Average Time Waited Examination Room</th>
+                            <th>Average Time Waited Waiting Room</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+
+                    <tbody
+                        name="Survey Averages"
+                        ng-repeat="s in surveys | filter:hasData"
+                    >
+                        <tr>
+                            <td name="username">{{s.username}}</td>
+                            <td name="averageCompleted">
+                                {{Math.round(s.data.averageCompleted * 100)}}%
+                            </td>
+                            <td name="averageSatisfiedOfficeVisit">
+                                {{s.data.averageSatisfiedOfficeVisit}}
+                            </td>
+                            <td name="averageSatisfiedTreatment">
+                                {{s.data.averageSatisfiedTreatment}}
+                            </td>
+                            <td name="averageTimeWaitedExaminationRoom">
+                                {{s.data.averageTimeWaitedExaminationRoom}}
+                            </td>
+                            <td name="averageTimeWaitedWaitingRoom">
+                                {{s.data.averageTimeWaitedWaitingRoom}}
+                            </td>
+                            <td
+                                style="overflow-x: scroll"
+                                name="notes"
+                                ng-if="s.data.notes != null && s.data.notes.length > 0"
+                            >
+                                {{s.data.notes}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

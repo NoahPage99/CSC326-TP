@@ -81,19 +81,6 @@ public class HCPController {
     }
 
     /**
-     * Method responsible for an HCP to view satisfaction surveys
-     *
-     * @param model
-     *            Data for the front end
-     * @return The page to display to the user
-     */
-    @GetMapping ( "/hcp/satisfactionSurveys" )
-    @PreAuthorize ( "hasRole('ROLE_HCP') or hasRole('ROLE_OPH')" )
-    public String viewSatisfactionSurveys ( final Model model ) {
-        return "hcp/satisfactionSurveys";
-    }
-
-    /**
      * Returns the form page for a HCP to document an OfficeVisit
      *
      * @param model
