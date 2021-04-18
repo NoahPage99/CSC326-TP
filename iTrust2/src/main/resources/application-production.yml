@@ -19,7 +19,7 @@ server:
     contextPath: /iTrust2
 management:
     server:
-        port: 9000
+        port: 7719
     endpoint:
         shutdown:
             enabled: true
