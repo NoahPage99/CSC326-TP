@@ -160,7 +160,11 @@ public class OfficeVisitForm implements Serializable {
         setId( ov.getId().toString() );
         setPreScheduled( ( (Boolean) ( ov.getAppointment() != null ) ).toString() );
         setDiagnoses( new ArrayList<DiagnosisForm>() );
-        setPrescriptions( ov.getPrescriptions().stream().map( PrescriptionForm::new ).collect( Collectors.toList() ) );
+        setType(ov.getType().toString());
+        
+        if (ov.getPrescriptions() != null) {
+            setPrescriptions( ov.getPrescriptions().stream().map( PrescriptionForm::new ).collect( Collectors.toList() ) );
+        }
     }
 
     /**

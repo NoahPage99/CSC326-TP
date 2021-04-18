@@ -34,65 +34,66 @@ import edu.ncsu.csc.iTrust2.repositories.OphOfficeVisitRepository;
 @Transactional
 public class OphOfficeVisitService extends Service {
     @Autowired
-    private OphOfficeVisitRepository  repository;
+    private OphOfficeVisitRepository repository;
 
     @Autowired
-    private UserService               userService;
+    private UserService userService;
 
     @Autowired
     private AppointmentRequestService appointmentRequestService;
 
     @Autowired
-    private HospitalService           hospitalService;
+    private HospitalService hospitalService;
 
     @Override
-    protected JpaRepository getRepository () {
+    protected JpaRepository getRepository() {
         return repository;
     }
 
-    public OphOfficeVisit build ( final OphOfficeVisitForm oovf ) {
+    public OphOfficeVisit build(final OphOfficeVisitForm oovf) {
         final OphOfficeVisit oov = new OphOfficeVisit();
-        if ( oovf.getDate() != null ) {
-            oov.setDate( ZonedDateTime.parse( oovf.getDate() ) );
+        if (oovf.getDate() != null) {
+            oov.setDate(ZonedDateTime.parse(oovf.getDate()));
         }
-        if ( oovf.getTime() != null ) {
-            oov.setTime( oovf.getTime() );
+        if (oovf.getId() != null) {
+            oov.setId(Long.parseLong(oovf.getId()));
         }
-        oov.setType( AppointmentType.valueOf( oovf.getType() ) );
-        oov.setHospital( hospitalService.findByName( oovf.getHospital() ) );
-        oov.setId( oovf.getId() );
-        oov.setHcp( userService.findByName( oovf.getHcp() ) );
-        oov.setPatient( userService.findByName( oovf.getPatient() ) );
-        oov.setlEyeAcuity( oovf.getlEyeAcuity() );
-        oov.setrEyeAcuity( oovf.getrEyeAcuity() );
-        oov.setlEyeAxis( oovf.getlEyeAxis() );
-        oov.setrEyeAxis( oovf.getrEyeAxis() );
-        oov.setlEyeCyl( oovf.getlEyeCyl() );
-        oov.setrEyeCyl( oovf.getrEyeCyl() );
-        oov.setlEyeSphere( oovf.getlEyeSphere() );
-        oov.setrEyeSphere( oovf.getrEyeSphere() );
-        oov.setAppointment( (AppointmentRequest) appointmentRequestService.findById( oovf.getAppointmentId() ) );
+        // if ( oovf.getTime() != null ) {
+        // oov.setTime( oovf.getTime() );
+        // }
+        oov.setType(AppointmentType.valueOf(oovf.getType()));
+        oov.setHospital(hospitalService.findByName(oovf.getHospital()));
+        oov.setHcp(userService.findByName(oovf.getHcp()));
+        oov.setPatient(userService.findByName(oovf.getPatient()));
+        oov.setlEyeAcuity(oovf.getlEyeAcuity());
+        oov.setrEyeAcuity(oovf.getrEyeAcuity());
+        oov.setlEyeAxis(oovf.getlEyeAxis());
+        oov.setrEyeAxis(oovf.getrEyeAxis());
+        oov.setlEyeCyl(oovf.getlEyeCyl());
+        oov.setrEyeCyl(oovf.getrEyeCyl());
+        oov.setlEyeSphere(oovf.getlEyeSphere());
+        oov.setrEyeSphere(oovf.getrEyeSphere());
+        oov.setAppointment((AppointmentRequest) appointmentRequestService.findById(oovf.getAppointmentId()));
         return oov;
     }
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings("unchecked")
     @Override
-    public List<OphOfficeVisit> findAll () {
+    public List<OphOfficeVisit> findAll() {
         return (List<OphOfficeVisit>) super.findAll();
     }
 
-    public List<OphOfficeVisit> findByHcp ( final User hcp ) {
-        return repository.findByHcp( hcp );
+    public List<OphOfficeVisit> findByHcp(final User hcp) {
+        return repository.findByHcp(hcp);
     }
 
-    public List<OphOfficeVisit> findByPatient ( final User patient ) {
-        return repository.findByPatient( patient );
+    public List<OphOfficeVisit> findByPatient(final User patient) {
+        return repository.findByPatient(patient);
     }
 
-    public List<OphOfficeVisit> findByHcpAndPatient ( final User hcp, final User patient ) {
-        return repository.findByHcpAndPatient( hcp, patient );
+    public List<OphOfficeVisit> findByHcpAndPatient(final User hcp, final User patient) {
+        return repository.findByHcpAndPatient(hcp, patient);
     }
-
 
     @SuppressWarnings("unchecked")
     @Override
