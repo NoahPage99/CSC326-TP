@@ -59,8 +59,10 @@ public class DocumentOfficeVisitStepDefs extends CucumberTest {
         waitForAngular();
     }
 
-    @When ( "^I fill in information on the office visit$" )
-    public void documentOV () {
+    /**
+     *
+     */
+    public void documentFillHelper () {
         waitForAngular();
 
         final WebElement notes = driver.findElement( By.name( "notes" ) );
@@ -78,6 +80,19 @@ public class DocumentOfficeVisitStepDefs extends CucumberTest {
         fillInDateTime( "date", "12/19/2027", "time", "9:30 AM" );
 
         waitForAngular();
+
+        final WebElement houseSmokeElement = driver.findElement(
+                By.cssSelector( "input[value=\"" + HouseholdSmokingStatus.NONSMOKING.toString() + "\"]" ) );
+        houseSmokeElement.click();
+
+        final WebElement patientSmokeElement = driver
+                .findElement( By.cssSelector( "input[value=\"" + PatientSmokingStatus.NEVER.toString() + "\"]" ) );
+        patientSmokeElement.click();
+    }
+
+    @When ( "^I fill in information on the office visit$" )
+    public void documentOV () {
+        documentFillHelper();
 
         final WebElement heightElement = driver.findElement( By.name( "height" ) );
         heightElement.clear();
@@ -107,36 +122,12 @@ public class DocumentOfficeVisitStepDefs extends CucumberTest {
         triElement.clear();
         triElement.sendKeys( "100" );
 
-        final WebElement houseSmokeElement = driver.findElement(
-                By.cssSelector( "input[value=\"" + HouseholdSmokingStatus.NONSMOKING.toString() + "\"]" ) );
-        houseSmokeElement.click();
-
-        final WebElement patientSmokeElement = driver
-                .findElement( By.cssSelector( "input[value=\"" + PatientSmokingStatus.NEVER.toString() + "\"]" ) );
-        patientSmokeElement.click();
-
         driver.findElement( By.name( "submit" ) ).click();
     }
 
     @When ( "^I fill in information on the office visit with leading zeroes$" )
     public void documentOVZeroes () {
-        waitForAngular();
-
-        final WebElement notes = driver.findElement( By.name( "notes" ) );
-        notes.clear();
-        notes.sendKeys( "Patient appears pretty much alive" );
-
-        final WebElement patient = driver.findElement( By.name( "name" ) );
-        patient.click();
-        final WebElement type = driver.findElement( By.name( "GENERAL_CHECKUP" ) );
-        type.click();
-
-        final WebElement hospital = driver.findElement( By.name( "hospital" ) );
-        hospital.click();
-
-        fillInDateTime( "date", "12/19/2027", "time", "9:30 AM" );
-
-        waitForAngular();
+        documentFillHelper();
 
         final WebElement heightElement = driver.findElement( By.name( "height" ) );
         heightElement.clear();
@@ -165,14 +156,6 @@ public class DocumentOfficeVisitStepDefs extends CucumberTest {
         final WebElement triElement = driver.findElement( By.name( "tri" ) );
         triElement.clear();
         triElement.sendKeys( "0100" );
-
-        final WebElement houseSmokeElement = driver.findElement(
-                By.cssSelector( "input[value=\"" + HouseholdSmokingStatus.NONSMOKING.toString() + "\"]" ) );
-        houseSmokeElement.click();
-
-        final WebElement patientSmokeElement = driver
-                .findElement( By.cssSelector( "input[value=\"" + PatientSmokingStatus.NEVER.toString() + "\"]" ) );
-        patientSmokeElement.click();
 
         driver.findElement( By.name( "submit" ) ).click();
     }
@@ -219,7 +202,19 @@ public class DocumentOfficeVisitStepDefs extends CucumberTest {
     @Then ( "The basic health metrics for the child are correct" )
     public void healthMetricsCorrectChild () throws InterruptedException {
         final BasicHealthMetrics actualBhm = getMetrics();
+        healthMetricTestHelper( actualBhm );
+        assertEquals( expectedBhm.getWeight(), actualBhm.getWeight() );
+        assertEquals( expectedBhm.getHeight(), actualBhm.getHeight() );
+        assertEquals( expectedBhm.getSystolic(), actualBhm.getSystolic() );
+        assertEquals( expectedBhm.getDiastolic(), actualBhm.getDiastolic() );
+        assertEquals( expectedBhm.getHouseSmokingStatus(), actualBhm.getHouseSmokingStatus() );
+    }
 
+    /**
+     *
+     *
+     */
+    public void healthMetricTestHelper ( final BasicHealthMetrics actualBhm ) {
         assertEquals( expectedBhm.getWeight(), actualBhm.getWeight() );
         assertEquals( expectedBhm.getHeight(), actualBhm.getHeight() );
         assertEquals( expectedBhm.getSystolic(), actualBhm.getSystolic() );
@@ -255,11 +250,7 @@ public class DocumentOfficeVisitStepDefs extends CucumberTest {
     @Then ( "The basic health metrics for the adult are correct" )
     public void healthMetricsCorrectAdult () throws InterruptedException {
         final BasicHealthMetrics actualBhm = getMetrics();
-        assertEquals( expectedBhm.getWeight(), actualBhm.getWeight() );
-        assertEquals( expectedBhm.getHeight(), actualBhm.getHeight() );
-        assertEquals( expectedBhm.getSystolic(), actualBhm.getSystolic() );
-        assertEquals( expectedBhm.getDiastolic(), actualBhm.getDiastolic() );
-        assertEquals( expectedBhm.getHouseSmokingStatus(), actualBhm.getHouseSmokingStatus() );
+        healthMetricTestHelper( actualBhm );
         assertEquals( expectedBhm.getPatientSmokingStatus(), actualBhm.getPatientSmokingStatus() );
         assertEquals( expectedBhm.getHdl(), actualBhm.getHdl() );
         assertEquals( expectedBhm.getLdl(), actualBhm.getLdl() );
@@ -407,30 +398,10 @@ public class DocumentOfficeVisitStepDefs extends CucumberTest {
     }
 
     /**
-     * Documents an office visit with specific information for patients between
-     * 3 and 12
-     *
-     * @param dateString
-     *            The current date.
-     * @param weightString
-     *            The weight of the patient.
-     * @param heightString
-     *            The height of the patient.
-     * @param sys
-     *            The systolic blood pressure of the patient.
-     * @param dia
-     *            The diastolic blood pressure of the patient.
-     * @param smokingStatus
-     *            The smoking status of the patient's household.
-     * @param note
-     *            The note that the doctor includes.
-     * @throws InterruptedException
+     * Helper method for documenting office visit with specific information
      */
-    @When ( "^I fill in information on the office visit for patients of age 3 to 12 with date: (.+), weight: (.+), height: (.+), systolic blood pressure: (.+), diastolic blood pressure: (.+), household smoking status: (.+), and note: (.+)$" )
-    public void documentOVWithSpecificInformation3To12 ( final String dateString, final String weightString,
-            final String heightString, final String sys, final String dia, final String smokingStatus,
-            final String note ) throws InterruptedException {
-
+    public void documentVisitHelper ( final String note, final String dateString, final String sys,
+            final String heightString, final String dia, final String weightString, final String smokingStatus ) {
         waitForAngular();
         final WebElement notes = driver.findElement( By.name( "notes" ) );
         notes.clear();
@@ -518,6 +489,34 @@ public class DocumentOfficeVisitStepDefs extends CucumberTest {
              * Intentionally ignoring.
              */
         }
+    }
+
+    /**
+     * Documents an office visit with specific information for patients between
+     * 3 and 12
+     *
+     * @param dateString
+     *            The current date.
+     * @param weightString
+     *            The weight of the patient.
+     * @param heightString
+     *            The height of the patient.
+     * @param sys
+     *            The systolic blood pressure of the patient.
+     * @param dia
+     *            The diastolic blood pressure of the patient.
+     * @param smokingStatus
+     *            The smoking status of the patient's household.
+     * @param note
+     *            The note that the doctor includes.
+     * @throws InterruptedException
+     */
+    @When ( "^I fill in information on the office visit for patients of age 3 to 12 with date: (.+), weight: (.+), height: (.+), systolic blood pressure: (.+), diastolic blood pressure: (.+), household smoking status: (.+), and note: (.+)$" )
+    public void documentOVWithSpecificInformation3To12 ( final String dateString, final String weightString,
+            final String heightString, final String sys, final String dia, final String smokingStatus,
+            final String note ) throws InterruptedException {
+
+        documentVisitHelper( note, dateString, sys, heightString, dia, weightString, smokingStatus );
         waitForAngular();
         final WebElement submit = driver.findElement( By.name( "submit" ) );
         submit.click();
@@ -556,93 +555,7 @@ public class DocumentOfficeVisitStepDefs extends CucumberTest {
             final String heightString, final String sys, final String dia, final String houseSmoke,
             final String patientSmoke, final String hdl, final String ldl, final String tri, final String note )
             throws InterruptedException {
-        waitForAngular();
-        final WebElement notes = driver.findElement( By.name( "notes" ) );
-        notes.clear();
-        notes.sendKeys( note );
-
-        waitForAngular();
-        final WebElement patient = driver.findElement( By.cssSelector( "input[value=\"patient\"]" ) );
-        patient.click();
-
-        waitForAngular();
-        final WebElement type = driver.findElement( By.name( "GENERAL_CHECKUP" ) );
-        type.click();
-
-        waitForAngular();
-        final WebElement hospital = driver.findElement( By.name( "hospital" ) );
-        hospital.click();
-
-        fillInDateTime( "date", dateString, "time", "9:30 AM" );
-
-        expectedBhm = new BasicHealthMetrics();
-
-        waitForAngular();
-        final WebElement sysElem = driver.findElement( By.name( "systolic" ) );
-        sysElem.clear();
-        sysElem.sendKeys( sys );
-        try {
-            expectedBhm.setSystolic( Integer.parseInt( sys ) );
-        }
-        catch ( final IllegalArgumentException e ) {
-            /*
-             * This means that the test data provided was intentionally invalid,
-             * which is okay
-             */
-        }
-
-        waitForAngular();
-        final WebElement diaElem = driver.findElement( By.name( "diastolic" ) );
-        diaElem.clear();
-        diaElem.sendKeys( dia );
-        try {
-            expectedBhm.setDiastolic( Integer.parseInt( dia ) );
-        }
-        catch ( final IllegalArgumentException e ) {
-            /*
-             * This means that the test data provided was intentionally invalid,
-             * which is okay
-             */
-        }
-
-        final WebElement heightLength = driver.findElement( By.name( "height" ) );
-        heightLength.clear();
-        heightLength.sendKeys( heightString );
-        try {
-            expectedBhm.setHeight( Float.parseFloat( heightString ) );
-        }
-        catch ( final IllegalArgumentException e ) {
-            /*
-             * This means that the test data provided was intentionally invalid,
-             * which is okay
-             */
-        }
-
-        final WebElement weight = driver.findElement( By.name( "weight" ) );
-        weight.clear();
-        weight.sendKeys( weightString );
-        try {
-            expectedBhm.setWeight( Float.parseFloat( weightString ) );
-        }
-        catch ( final IllegalArgumentException e ) {
-            /*
-             * This means that the test data provided was intentionally invalid,
-             * which is okay
-             */
-        }
-        try {
-            final WebElement smoking = driver.findElement( By.cssSelector(
-                    "input[value=\"" + HouseholdSmokingStatus.getName( Integer.parseInt( houseSmoke ) ) + "\"]" ) );
-            smoking.click();
-            expectedBhm.setHouseSmokingStatus( HouseholdSmokingStatus.parseValue( Integer.parseInt( houseSmoke ) ) );
-        }
-        catch ( final Exception e ) {
-            /*
-             * This means that the element wasn't found, which is expected if we
-             * enter an invalid value (as one of the test cases does).
-             * Intentionally ignoring.
-             */
-        }
+        documentVisitHelper( note, dateString, sys, heightString, dia, weightString, houseSmoke );
         try {
             final WebElement smoking = driver.findElement( By.cssSelector(
                     "input[value=\"" + PatientSmokingStatus.getName( Integer.parseInt( patientSmoke ) ) + "\"]" ) );

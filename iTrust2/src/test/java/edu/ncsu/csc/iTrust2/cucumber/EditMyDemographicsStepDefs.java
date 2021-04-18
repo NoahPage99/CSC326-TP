@@ -244,9 +244,7 @@ public class EditMyDemographicsStepDefs extends CucumberTest {
     @Then ( "The new demographics can be viewed" )
     public void viewDemographics () {
 
-        driver.get( BASE_URL );
-        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('editdemographics-patient').click()" );
-        waitForAngular();
+        documentHelper();
         final WebElement firstName = driver.findElement( By.id( "firstName" ) );
         assertEquals( firstName.getAttribute( "value" ), "Karl" );
         final WebElement address = driver.findElement( By.id( "address1" ) );
@@ -263,13 +261,20 @@ public class EditMyDemographicsStepDefs extends CucumberTest {
     @Then ( "The edited demographics can be viewed" )
     public void viewEditedDemographics () {
 
-        driver.get( BASE_URL );
-        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('editdemographics-patient').click()" );
-        waitForAngular();
+        documentHelper();
         final WebElement firstName = driver.findElement( By.id( "firstName" ) );
         assertEquals( "Jill", firstName.getAttribute( "value" ) );
         final WebElement address = driver.findElement( By.id( "address1" ) );
         assertEquals( "1000 Cates Avenue", address.getAttribute( "value" ) );
+    }
+
+    /**
+     *
+     */
+    public void documentHelper () {
+        driver.get( BASE_URL );
+        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('editdemographics-patient').click()" );
+        waitForAngular();
     }
 
 }

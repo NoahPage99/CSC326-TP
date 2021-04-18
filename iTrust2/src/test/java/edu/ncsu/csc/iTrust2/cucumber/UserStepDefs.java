@@ -25,11 +25,7 @@ public class UserStepDefs extends CucumberTest {
         ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('users').click();" );
     }
 
-    /**
-     * Fill in add user values
-     */
-    @When ( "I fill in the values in the Add User form" )
-    public void fillFields () {
+    public void fillUserHelper () {
         final WebElement username = driver.findElement( By.id( "username" ) );
         username.clear();
         username.sendKeys( jenkinsUsername );
@@ -42,11 +38,20 @@ public class UserStepDefs extends CucumberTest {
         password2.clear();
         password2.sendKeys( "123456" );
 
-        final WebElement role = driver.findElement( By.id( "ROLE_HCP" ) );
-        role.click();
-
         final WebElement enabled = driver.findElement( By.name( "enabled" ) );
         enabled.click();
+
+    }
+
+    /**
+     * Fill in add user values
+     */
+    @When ( "I fill in the values in the Add User form" )
+    public void fillFields () {
+        fillUserHelper();
+
+        final WebElement role = driver.findElement( By.id( "ROLE_HCP" ) );
+        role.click();
 
         driver.findElement( By.id( "submit" ) ).click();
 
@@ -54,17 +59,7 @@ public class UserStepDefs extends CucumberTest {
 
     @When ( "I fill in invalid roles in the Add User form" )
     public void fillInInvalid () {
-        final WebElement username = driver.findElement( By.id( "username" ) );
-        username.clear();
-        username.sendKeys( jenkinsUsername );
-
-        final WebElement password = driver.findElement( By.id( "password" ) );
-        password.clear();
-        password.sendKeys( "123456" );
-
-        final WebElement password2 = driver.findElement( By.id( "password2" ) );
-        password2.clear();
-        password2.sendKeys( "123456" );
+        fillUserHelper();
 
         final WebElement role = driver.findElement( By.id( "ROLE_HCP" ) );
         role.click();
@@ -72,54 +67,25 @@ public class UserStepDefs extends CucumberTest {
         final WebElement role2 = driver.findElement( By.id( "ROLE_PATIENT" ) );
         role2.click();
 
-        final WebElement enabled = driver.findElement( By.name( "enabled" ) );
-        enabled.click();
-
         driver.findElement( By.id( "submit" ) ).click();
     }
 
     @When ( "I fill in incomplete values in the Add User form" )
     public void fillInIncomplete () {
-        final WebElement username = driver.findElement( By.id( "username" ) );
-        username.clear();
-        username.sendKeys( jenkinsUsername );
-
-        final WebElement password = driver.findElement( By.id( "password" ) );
-        password.clear();
-        password.sendKeys( "123456" );
-
-        final WebElement password2 = driver.findElement( By.id( "password2" ) );
-        password2.clear();
-        password2.sendKeys( "123456" );
-
-        final WebElement enabled = driver.findElement( By.name( "enabled" ) );
-        enabled.click();
+        fillUserHelper();
 
         driver.findElement( By.id( "submit" ) ).click();
     }
 
     @When ( "I fill in the values in the Add User form with two valid roles" )
     public void twoValidRoles () {
-        final WebElement username = driver.findElement( By.id( "username" ) );
-        username.clear();
-        username.sendKeys( jenkinsUsername );
-
-        final WebElement password = driver.findElement( By.id( "password" ) );
-        password.clear();
-        password.sendKeys( "123456" );
-
-        final WebElement password2 = driver.findElement( By.id( "password2" ) );
-        password2.clear();
-        password2.sendKeys( "123456" );
+        fillUserHelper();
 
         final WebElement role = driver.findElement( By.id( "ROLE_HCP" ) );
         role.click();
 
         final WebElement role2 = driver.findElement( By.id( "ROLE_ER" ) );
         role2.click();
-
-        final WebElement enabled = driver.findElement( By.name( "enabled" ) );
-        enabled.click();
 
         driver.findElement( By.id( "submit" ) ).click();
     }

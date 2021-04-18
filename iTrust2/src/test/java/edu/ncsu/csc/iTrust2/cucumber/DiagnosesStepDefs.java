@@ -69,6 +69,7 @@ public class DiagnosesStepDefs extends CucumberTest {
     List<String> after;
     String       expectedCode;
     String       expectedDescription;
+    WebElement   newRow;
 
     @When ( "^I enter the info for a diagnosis with code: (.+), and description: (.+)$" )
     public void enterDiagnosisInfo ( final String code, final String description ) {
@@ -104,8 +105,7 @@ public class DiagnosesStepDefs extends CucumberTest {
     @Then ( "The diagnosis is added sucessfully" )
     public void checkDiagnosisAdd () {
         waitForAngular();
-        after = driver.findElements( By.name( "codeRow" ) ).stream().map( x -> x.getAttribute( "codeid" ) )
-                .collect( Collectors.toList() );
+        afterHelper();
         after.removeAll( before );
 
         waitForAngular();
@@ -113,12 +113,24 @@ public class DiagnosesStepDefs extends CucumberTest {
         assertEquals( 1, after.size() );
     }
 
+    /**
+     * Method to get after value
+     */
+    public void afterHelper () {
+        after = driver.findElements( By.name( "codeRow" ) ).stream().map( x -> x.getAttribute( "codeid" ) )
+                .collect( Collectors.toList() );
+    }
+
+    public void rowHelper () {
+        newRow = driver.findElements( By.name( "codeRow" ) ).stream()
+                .filter( x -> x.getAttribute( "codeid" ).equals( after.get( 0 ) ) ).findFirst().get();
+    }
+
     @Then ( "The diagnosis info is correct" )
     public void verifyAddedDiagnosis () {
         waitForAngular();
         // the one left in after is what we expect.
-        final WebElement newRow = driver.findElements( By.name( "codeRow" ) ).stream()
-                .filter( x -> x.getAttribute( "codeid" ).equals( after.get( 0 ) ) ).findFirst().get();
+        rowHelper();
         assertEquals( expectedCode, newRow.findElement( By.name( "codeCell" ) ).getText() );
         assertEquals( expectedDescription, newRow.findElement( By.name( "descriptionCell" ) ).getText() );
     }
@@ -130,8 +142,7 @@ public class DiagnosesStepDefs extends CucumberTest {
             final WebElement err = driver.findElement( By.id( "errP" ) );
             assertTrue( err.getText().contains( "Code doesn't meet specifications" )
                     || err.getText().contains( "Description exceeds character limit of 250" ) );
-            after = driver.findElements( By.name( "codeRow" ) ).stream().map( x -> x.getAttribute( "codeid" ) )
-                    .collect( Collectors.toList() );
+            afterHelper();
             after.removeAll( before );
             assertEquals( 0, after.size() );
         }
@@ -144,8 +155,7 @@ public class DiagnosesStepDefs extends CucumberTest {
     public void deleteCode () {
         waitForAngular();
         // the one left in after is what we expect.
-        final WebElement newRow = driver.findElements( By.name( "codeRow" ) ).stream()
-                .filter( x -> x.getAttribute( "codeid" ).equals( after.get( 0 ) ) ).findFirst().get();
+        rowHelper();
         newRow.findElement( By.tagName( "input" ) ).click();
         waitForAngular();
     }
