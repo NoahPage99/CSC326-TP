@@ -3,8 +3,6 @@ package edu.ncsu.csc.iTrust2.forms;
 import java.io.Serializable;
 
 import javax.persistence.CascadeType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
@@ -28,7 +26,7 @@ public class SatisfactionSurveyForm implements Serializable {
     /** id for survey form */
     @Id
     // @GeneratedValue ( strategy = GenerationType.AUTO )
-    private Long            id;
+    private Long              id;
     /** waiting room time */
     private int               timeWaitedWaitingRoom;
     /** exam room time */
@@ -54,7 +52,7 @@ public class SatisfactionSurveyForm implements Serializable {
     // @NotEmpty
     private String            hcp;
 
-    private boolean            completed;
+    private boolean           completed;
 
     public String getPatient () {
         return patient;
@@ -91,7 +89,7 @@ public class SatisfactionSurveyForm implements Serializable {
         setSatisfiedTreatment( ss.getSatisfiedTreatment() );
         setTimeWaitedExaminationRoom( ss.getTimeWaitedExaminationRoom() );
         setTimeWaitedWaitingRoom( ss.getTimeWaitedWaitingRoom() );
-        setCompleted(ss.getCompleted());
+        setCompleted( ss.getCompleted() );
     }
 
     /**
@@ -208,16 +206,15 @@ public class SatisfactionSurveyForm implements Serializable {
         this.notes = notes;
     }
 
-
-    public boolean isCompleted() {
+    public boolean isCompleted () {
         return this.completed;
     }
 
-    public boolean getCompleted() {
+    public boolean getCompleted () {
         return this.completed;
     }
 
-    public void setCompleted(boolean completed) {
+    public void setCompleted ( final boolean completed ) {
         this.completed = completed;
     }
 
