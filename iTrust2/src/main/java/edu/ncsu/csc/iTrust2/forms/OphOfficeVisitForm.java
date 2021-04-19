@@ -3,16 +3,12 @@ package edu.ncsu.csc.iTrust2.forms;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.validation.constraints.NotEmpty;
-
-import org.hibernate.validator.constraints.Length;
 
 import edu.ncsu.csc.iTrust2.models.enums.Disease;
 import edu.ncsu.csc.iTrust2.persistant.OphOfficeVisit;
@@ -30,195 +26,240 @@ public class OphOfficeVisitForm extends OfficeVisitForm implements Serializable 
     /**
      * left eye acuity
      */
-    private int lEyeAcuity;
+    private int               lEyeAcuity;
     /**
      * right eye acuity
      */
-    private int rEyeAcuity;
+    private int               rEyeAcuity;
     /**
      * left eye sphere
      */
-    private double lEyeSphere;
+    private double            lEyeSphere;
     /**
      * right eye sphere
      */
-    private double rEyeSphere;
+    private double            rEyeSphere;
     /**
      * left eye cylinder
      */
-    private double lEyeCyl;
+    private double            lEyeCyl;
     /**
      * right eye cylinder
      */
-    private double rEyeCyl;
+    private double            rEyeCyl;
     /**
      * left eye axis
      */
-    private int lEyeAxis;
+    private int               lEyeAxis;
     /**
      * right eye axis
      */
-    private int rEyeAxis;
+    private int               rEyeAxis;
 
-    private Long appointmentId;
+    private Long              appointmentId;
 
     /**
+     * Gets the appointment id
+     *
      * @return the appointmentId
      */
-    public Long getAppointmentId() {
+    public Long getAppointmentId () {
         return appointmentId;
     }
 
     /**
-     * @param appointmentId the appointmentId to set
+     * Sets the appointmentID
+     *
+     * @param appointmentId
+     *            the appointmentId to set
      */
-    public void setAppointmentId(Long appointmentId) {
+    public void setAppointmentId ( final Long appointmentId ) {
         this.appointmentId = appointmentId;
     }
 
     /**
      * The diseases that were diagnosed from the visit
      */
-    @ElementCollection(targetClass = Disease.class, fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
+    @ElementCollection ( targetClass = Disease.class, fetch = FetchType.EAGER )
+    @Enumerated ( EnumType.STRING )
     private Set<Disease> diseases;
 
-    public OphOfficeVisitForm() {
+    public OphOfficeVisitForm () {
         super();
     }
 
-    public OphOfficeVisitForm(final OphOfficeVisit oov) {
-        super(oov);
+    public OphOfficeVisitForm ( final OphOfficeVisit oov ) {
+        super( oov );
 
-        setlEyeAcuity(oov.getlEyeAcuity());
-        setrEyeAcuity(oov.getrEyeAcuity());
-        setlEyeSphere(oov.getlEyeSphere());
-        setrEyeSphere(oov.getrEyeSphere());
-        setlEyeCyl(oov.getlEyeCyl());
-        setrEyeCyl(oov.getrEyeCyl());
-        setlEyeAxis(oov.getlEyeAxis());
-        setrEyeAxis(oov.getrEyeAxis());
-        
+        setlEyeAcuity( oov.getlEyeAcuity() );
+        setrEyeAcuity( oov.getrEyeAcuity() );
+        setlEyeSphere( oov.getlEyeSphere() );
+        setrEyeSphere( oov.getrEyeSphere() );
+        setlEyeCyl( oov.getlEyeCyl() );
+        setrEyeCyl( oov.getrEyeCyl() );
+        setlEyeAxis( oov.getlEyeAxis() );
+        setrEyeAxis( oov.getrEyeAxis() );
+
         this.diseases = new HashSet<Disease>();
     }
 
     /**
+     * Gets the lEyeAcuity
+     *
      * @return the lEyeAcuity
      */
-    public int getlEyeAcuity() {
+    public int getlEyeAcuity () {
         return lEyeAcuity;
     }
 
     /**
-     * @param lEyeAcuity the lEyeAcuity to set
+     * Sets the lEyeAcuity
+     *
+     * @param lEyeAcuity
+     *            the lEyeAcuity to set
      */
-    public void setlEyeAcuity(final int lEyeAcuity) {
+    public void setlEyeAcuity ( final int lEyeAcuity ) {
         this.lEyeAcuity = lEyeAcuity;
     }
 
     /**
+     * Gets the rEyeAcuity
+     *
      * @return the rEyeAcuity
      */
-    public int getrEyeAcuity() {
+    public int getrEyeAcuity () {
         return rEyeAcuity;
     }
 
     /**
-     * @param rEyeAcuity the rEyeAcuity to set
+     * Sets the rEyeAcuity
+     *
+     * @param rEyeAcuity
+     *            the rEyeAcuity to set
      */
-    public void setrEyeAcuity(final int rEyeAcuity) {
+    public void setrEyeAcuity ( final int rEyeAcuity ) {
         this.rEyeAcuity = rEyeAcuity;
     }
 
     /**
+     * Gets the lEyeSphere
+     *
      * @return the lEyeSphere
      */
-    public double getlEyeSphere() {
+    public double getlEyeSphere () {
         return lEyeSphere;
     }
 
     /**
-     * @param lEyeSphere the lEyeSphere to set
+     * Sets the lEyeSphere
+     *
+     * @param lEyeSphere
+     *            the lEyeSphere to set
      */
-    public void setlEyeSphere(double lEyeSphere) {
-        final DecimalFormat numberFormat = new DecimalFormat("0.0");
-        lEyeSphere = Double.parseDouble(numberFormat.format(lEyeSphere));
+    public void setlEyeSphere ( double lEyeSphere ) {
+        final DecimalFormat numberFormat = new DecimalFormat( "0.0" );
+        lEyeSphere = Double.parseDouble( numberFormat.format( lEyeSphere ) );
         this.lEyeSphere = lEyeSphere;
     }
 
     /**
+     * Gets the rEyeSphere
+     *
      * @return the rEyeSphere
      */
-    public double getrEyeSphere() {
+    public double getrEyeSphere () {
         return rEyeSphere;
     }
 
     /**
-     * @param rEyeSphere the rEyeSphere to set
+     * Sets the rEyeSphere
+     *
+     * @param rEyeSphere
+     *            the rEyeSphere to set
      */
-    public void setrEyeSphere(double rEyeSphere) {
-        final DecimalFormat numberFormat = new DecimalFormat("0.0");
-        rEyeSphere = Double.parseDouble(numberFormat.format(rEyeSphere));
+    public void setrEyeSphere ( double rEyeSphere ) {
+        final DecimalFormat numberFormat = new DecimalFormat( "0.0" );
+        rEyeSphere = Double.parseDouble( numberFormat.format( rEyeSphere ) );
         this.rEyeSphere = rEyeSphere;
     }
 
     /**
+     * Gets the lEyeCyl
+     *
      * @return the lEyeCyl
      */
-    public double getlEyeCyl() {
+    public double getlEyeCyl () {
         return lEyeCyl;
     }
 
     /**
-     * @param lEyeCyl the lEyeCyl to set
+     * Sets the lEyeCyl
+     *
+     * @param lEyeCyl
+     *            the lEyeCyl to set
      */
-    public void setlEyeCyl(double lEyeCyl) {
-        final DecimalFormat numberFormat = new DecimalFormat("0.0");
-        lEyeCyl = Double.parseDouble(numberFormat.format(lEyeCyl));
+    public void setlEyeCyl ( double lEyeCyl ) {
+        final DecimalFormat numberFormat = new DecimalFormat( "0.0" );
+        lEyeCyl = Double.parseDouble( numberFormat.format( lEyeCyl ) );
         this.lEyeCyl = lEyeCyl;
     }
 
     /**
+     * Gets the rEyeCyl
+     *
      * @return the rEyeCyl
      */
-    public double getrEyeCyl() {
+    public double getrEyeCyl () {
         return rEyeCyl;
     }
 
     /**
-     * @param rEyeCyl the rEyeCyl to set
+     * Sets the rEyeCyl
+     *
+     * @param rEyeCyl
+     *            the rEyeCyl to set
      */
-    public void setrEyeCyl(double rEyeCyl) {
-        final DecimalFormat numberFormat = new DecimalFormat("0.0");
-        rEyeCyl = Double.parseDouble(numberFormat.format(rEyeCyl));
+    public void setrEyeCyl ( double rEyeCyl ) {
+        final DecimalFormat numberFormat = new DecimalFormat( "0.0" );
+        rEyeCyl = Double.parseDouble( numberFormat.format( rEyeCyl ) );
         this.rEyeCyl = rEyeCyl;
     }
 
     /**
+     * Gets the lEyeAxis
+     *
      * @return the lEyeAxis
      */
-    public int getlEyeAxis() {
+    public int getlEyeAxis () {
         return lEyeAxis;
     }
 
     /**
-     * @param lEyeAxis the lEyeAxis to set
+     * sets the lEyeAxis
+     *
+     * @param lEyeAxis
+     *            the lEyeAxis to set
      */
-    public void setlEyeAxis(final int lEyeAxis) {
+    public void setlEyeAxis ( final int lEyeAxis ) {
         this.lEyeAxis = lEyeAxis;
     }
 
     /**
+     * Gets the rEyeAxis
+     *
      * @return the rEyeAxis
      */
-    public int getrEyeAxis() {
+    public int getrEyeAxis () {
         return rEyeAxis;
     }
 
     /**
-     * @param rEyeAxis the rEyeAxis to set
+     * Sets the rEyeAxis
+     *
+     * @param rEyeAxis
+     *            the rEyeAxis to set
      */
-    public void setrEyeAxis(final int rEyeAxis) {
+    public void setrEyeAxis ( final int rEyeAxis ) {
         this.rEyeAxis = rEyeAxis;
     }
 
