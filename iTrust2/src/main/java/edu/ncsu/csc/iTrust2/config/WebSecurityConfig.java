@@ -72,10 +72,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          * springframework/security/config/annotation/web/builders/HttpSecurity.
          * html#addFilter-javax.servlet.Filter- ChannelProcessingFIlter is the
          * first filter processed, so this means the IP block will be the
-         * absolute first Filter.
+         * absolute first Filter. //
          */
         http.addFilterBefore( ipBlockFilter(), ChannelProcessingFilter.class );
 
+        http.authorizeRequests().antMatchers( "/actuator/" ).anonymous();
         http.authorizeRequests().antMatchers( patterns ).anonymous().anyRequest().authenticated().and().formLogin()
                 .loginPage( "/login" ).failureHandler( failureHandler() ).defaultSuccessUrl( "/" ).and().csrf()
 
@@ -89,6 +90,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                  */
 
                 .csrfTokenRepository( CookieCsrfTokenRepository.withHttpOnlyFalse() );
+        // http.requestMatcher( EndpointRequest.toAnyEndpoint() )
+        // .authorizeRequests( ( requests ) -> requests.anyRequest().permitAll()
+        // );
 
     }
 
@@ -99,6 +103,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers( "/api/v1/requestPasswordReset", "/api/v1/resetPassword/*", "/requestPasswordReset",
                 "/resetPassword", "/api/v1/generateUsers", "/viewEmails", "/api/v1/emails" );
     }
+
+    /**
+     * // * bean to allow any endpoint // * // * @param http // * @return //
+     * * @throws Exception //
+     */
+    // @Bean
+    // public SecurityFilterChain securityFilterChain ( final HttpSecurity http
+    // ) throws Exception {
+    // http.requestMatcher( EndpointRequest.toAnyEndpoint() )
+    // .authorizeRequests( ( requests ) -> requests.anyRequest().permitAll() );
+    // return http.build();
+    // }
 
     /**
      * Bean used to generate a PasswordEncoder to hash the user-provided

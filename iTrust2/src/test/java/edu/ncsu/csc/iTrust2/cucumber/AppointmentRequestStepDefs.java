@@ -50,10 +50,7 @@ public class AppointmentRequestStepDefs extends CucumberTest {
      */
     @When ( "^I navigate to the Manage Appointment Requests page$" )
     public void navigateToView () {
-        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('requestappointment').click();" );
-        final WebDriverWait wait = new WebDriverWait( driver, 20 );
-        wait.until( ExpectedConditions.titleContains( "Request Appointment" ) );
-        assertEquals( "iTrust2: Request Appointment", driver.getTitle() );
+        navigateHelper();
     }
 
     /**
@@ -61,6 +58,13 @@ public class AppointmentRequestStepDefs extends CucumberTest {
      */
     @When ( "^The patient navigates to the Manage Appointment Requests page$" )
     public void patientNavigateToView () {
+        navigateHelper();
+    }
+
+    /**
+     * Navigate to view helper method
+     */
+    public void navigateHelper () {
         ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('requestappointment').click();" );
         final WebDriverWait wait = new WebDriverWait( driver, 20 );
         wait.until( ExpectedConditions.titleContains( "Request Appointment" ) );
@@ -140,8 +144,7 @@ public class AppointmentRequestStepDefs extends CucumberTest {
         waitForAngular();
 
         assertTextPresent( "Your appointment request has been requested successfully." );
-        assertTextPresent( "Type: " + type );
-        assertTextPresent( "Date: " + date );
+        dateTimeHelper( type, date );
 
         deleteRequest( date ); // Delete the request and reset
     }
@@ -242,8 +245,7 @@ public class AppointmentRequestStepDefs extends CucumberTest {
             final String status ) {
         waitForAngular();
 
-        assertTextPresent( "Type: " + type );
-        assertTextPresent( "Date: " + date );
+        dateTimeHelper( type, date );
         assertTextPresent( "Status: " + status );
 
         deleteRequest( date ); // Delete the request and reset
@@ -296,10 +298,21 @@ public class AppointmentRequestStepDefs extends CucumberTest {
     @Then ( "^The HCP can view the appointment request with type (.+), date (.+), and time (.+)$" )
     public void hcpViewApptRequest ( final String type, final String date, final String time ) {
         waitForAngular();
+        dateTimeHelper( type, date );
 
+    }
+
+    /**
+     * Helper method for date and time
+     *
+     * @param type
+     *            the type of office visit
+     * @param date
+     *            date of office visit
+     */
+    public void dateTimeHelper ( final String type, final String date ) {
         assertTextPresent( "Type: " + type );
         assertTextPresent( "Date: " + date );
-
     }
 
     /**
@@ -346,9 +359,7 @@ public class AppointmentRequestStepDefs extends CucumberTest {
     public void appointmentMovedToUpcoming ( final String type, final String hcp, final String date, final String time,
             final String comments ) {
         waitForAngular();
-
-        assertTextPresent( "Type: " + type );
-        assertTextPresent( "Date: " + date );
+        dateTimeHelper( type, date );
 
     }
 

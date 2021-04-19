@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/iTrust2_production?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
     username: root
-    password: Lyx0316..
+    password: 
     hikari:
       idleTimeout: 500
       connectionTimeout: 15000 
@@ -17,3 +17,14 @@ server:
   port: 7719
   servlet:
     contextPath: /iTrust2
+management:
+    server:
+        port: 7719
+    endpoint:
+        shutdown:
+            enabled: true
+    endpoints:
+        web:
+            expose: '*'
+            exposure:
+                include: '*'

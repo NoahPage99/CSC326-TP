@@ -136,6 +136,7 @@
                     $http.get("/iTrust2/api/v1/appointmenttype")
                         .then(function (response) {
                             $scope.types = response.data;
+                            console.log( $scope.types);
                         });
                     /*Getting a list of house smoking options*/
                     $http.get("/iTrust2/api/v1/housesmoking")
@@ -151,6 +152,7 @@
                     $http.get("/iTrust2/api/v1/hospitals").then(
                         function (response) {
                             $scope.hospitals = response.data;
+                            
                         });
                     /*Getting a list of drugs*/
                     $http.get("/iTrust2/api/v1/drugs").then(
@@ -161,6 +163,12 @@
                     $http.get("/iTrust2/api/v1/icdcodes").then(
                         function (response) {
                             $scope.icdcodes = response.data;
+                        });
+					/*Getting a list of ICD codes*/
+                    $http.get("/iTrust2/api/v1/disease").then(
+                        function (response) {
+                            $scope.diseases = response.data;
+                            console.log( $scope.diseases);
                         });
 
                     /*Getting a list of laboratory procedures*/
@@ -358,7 +366,40 @@
                                 
                                 $http({
                                     method: 'POST',
-                                    url: '/iTrust2/api/v1/officevisits',
+                                    url: '/iTrust2/api/v1/officevisits/general',
+                                    data: $scope.visit
+                                }).then(function (response) {
+                                    $scope.errorMsg = "";
+                                    $scope.message = "Office visit created successfully";
+                                }, function (rejection) {
+                                    $scope.message = "";
+                                    $scope.errorMsg = "Error occurred creating office visit";
+                                })
+                            }
+                        }
+                        
+                        if ($scope.visit.type === 'GENERAL_OPHTHALMOLOGY') {
+                            checkBasicHealthMetrics();
+                            if ($scope.errorMsg == "") {
+								$scope.visit.lEyeAcuity = $scope.leftEyeAcuity;
+								$scope.visit.rEyeAcuity = $scope.rightEyeAcuity;
+								$scope.visit.lEyeSphere = $scope.leftEyeSphere;
+								$scope.visit.rEyeSphere = $scope.rightEyeSphere;
+								$scope.visit.lEyeCylinder = $scope.leftEyeCylinder;
+								$scope.visit.rEyeCylinder = $scope.rightEyeCylinder;
+								$scope.visit.lEyeAxis = $scope.leftEyeAxis;
+								$scope.visit.rEyeAxis = $scope.rightEyeAxis;
+								
+                                $scope.visit.Diagnosis = $scope.addedDiagnosis;
+                                $scope.visit.Diagnosis.forEach(function (p) {
+                                    p.patient = $scope.visit.patient;
+                                });
+                               
+                               console.log($scope.visit);
+
+                                $http({
+                                    method: 'POST',
+                                    url: '/iTrust2/api/v1/officevisits/oph',
                                     data: $scope.visit
                                 }).then(function (response) {
                                     $scope.errorMsg = "";
@@ -378,7 +419,7 @@
 
                     $scope.noteEntry = "";
                     $scope.codeEntry = "";
-
+					$scope.diseaseNoteEntry = "";
                     $scope.drugEntry = "";
                     $scope.dosageEntry = "";
                     $scope.startEntry = "";
@@ -391,6 +432,16 @@
 
                     $scope.procedure = {};
                     $scope.procedures = [];
+					
+					$scope.leftEyeAcuity = "";
+					$scope.rightEyeAcuity = "";
+					$scope.rightEyeSphere = "";
+					$scope.leftEyeSphere = "";
+					$scope.leftEyeCylinder = "";
+					$scope.rightEyeCylinder = "";
+					$scope.rightEyeAxis = "";
+					$scope.leftEyeAxis = "";
+					
 
                     // Clears local variables for diagnosis form
                     function resetDiagnosisForm() {
@@ -456,6 +507,18 @@
                             resetPrescriptionForm();
                         }
                     }
+                    
+                    $scope.addedDiagnosis = [];
+                    $scope.addDiagnosis = function () {
+                        $scope.errorMsg = "";
+                        var p = {
+                            diagnosis: $scope.disease,
+                            notes: $scope.diseaseNoteEntry,
+                        }
+                        $scope.addedDiagnosis.push(p);
+                        console.log($scope.addedDiagnosis);
+                      
+                    }
 
                     /*Adding a procedure to Office visit*/
                     $scope.addProcedure = function () {
@@ -479,6 +542,10 @@
                     $scope.removeDiagnosis = function ($index) {
                         $scope.diagnoses.splice($index, 1);
                     }
+                    
+                    $scope.removeAddedDiagnosis = function ($index) {
+                        $scope.addedDiagnosis.splice($index, 1);
+                    }
 
                     //remove local prescription from list
                     $scope.removePrescription = function ($index) {
@@ -493,6 +560,7 @@
                     //call initally
                     resetDiagnosisForm();
                     resetPrescriptionForm();
+                    
                 });
 			/*]]>*/
             </script>
@@ -868,6 +936,188 @@
 										</div>
 									</div>
 								</div>
+								
+								<!-- Ophthalmology Metrics -->
+									<div ng-show="visit.type == 'GENERAL_OPHTHALMOLOGY'" class="row">
+										<div class="panel panel-info">
+											<div class="panel-heading">
+												<h4> Ophthalmology Metrics</h4>
+											</div>
+											<div class="panel-body">
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Left Eye Acuity:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" type="number" min="10" max="200" value="1" ng-model="leftEyeAcuity" name="leftEyeAcuity">
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Right Eye Acuity:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" type="number" min="10" max="200" value="1" ng-model="rightEyeAcuity" name="rightEyeAcuity">
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Left Eye Sphere:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" name="leftEyeSphere"
+															ng-model="leftEyeSphere" required></input>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Right Eye Sphere:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" name="rightEyeSphere"
+															ng-model="rightEyeSphere" required></input>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Left Eye Cylinder:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" type="number" min="1" max="180" value="1" ng-model="leftEyeCylinder" name="leftEyeCylinder">
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Right Eye Cylinder:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" type="number" min="1" max="180" value="1" ng-model="rightEyeCylinder" name="rightEyeCylinder">
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Left Eye Axis:</label>
+													</div>
+													<div class="col-xs-4">				
+														<input class="form-control" type="number" min="1" max="180" value="1" ng-model="leftEyeAxis" name="leftEyeAxis">
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Right Eye Axis:</label>
+													</div>
+													<div class="col-xs-4">
+														<input class="form-control" type="number" min="1" max="180" value="1" ng-model="rightEyeAxis" name="rightEyeAxis">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<!-- Diagnosis Panel  -->
+									<div ng-show="visit.type == 'GENERAL_OPHTHALMOLOGY'" class="col-md-4">
+										<div class="panel panel-info">
+											<div class="panel-heading">
+												<h4>Diagnosis</h4>
+											</div>
+											<div class="panel-body">
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Diagnosis:</label>
+													</div>
+													<div class="col-xs-6 radio-box">
+														<div class="form-check">
+															<ul style="list-style: none;">
+															
+															<li ng-repeat="type in diseases"><label> <input
+																type="radio" ng-model="$parent.disease"
+																name="{{type}}" value="{{type}}" required="true" />{{type
+																| humanize}}
+														</label></li>
+																<!--  <li ng-repeat="i in diseases"><label> <input
+																		type="radio" ng-model="$parent.codeEntry"
+																	     name="{{i.values}}"
+																		 /> 
+																</label></li>-->
+															</ul>
+														</div>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-xs-6">
+														<label>Notes:</label>
+													</div>
+													<div class="col-xs-6">
+														<textarea name="notesEntry" maxlength="1000" id="notes" class="form-control" ng-model="diseaseNoteEntry">
+														</textarea>
+													</div>
+												</div>
+												
+												<!--  <div class="form-group row text-center">
+													<button class="btn btn-success"
+														ng-click="fillPrescription()" name="fillPrescription">Add
+														Prescription</button>
+												</div>
+												<div class="form-group row">
+													<div class="col-md-12">
+														<div class="panel panel-default">
+															<div class="panel-heading">Added Prescriptions</div>
+															<div class="panel-body">
+																<div class="row" ng-repeat="p in prescriptions">
+																	<div class="col-md-3">{{p.drug}}</div>
+																	<div class="col-md-2">{{p.dosage}}mg</div>
+																	<br>
+																	<div class="col-md-1"></div>
+																	<!-- "tab" over columns 
+																	<div class="col-md-3">{{p.startDate | date :
+																		'MM/dd/yyyy'}}</div>
+																	<div class="col-md-3">{{p.endDate | date :
+																		'MM/dd/yyyy'}}</div>
+																	<div class="col-md-3">{{p.renewals}}</div>
+																	<div class="col-md-1">
+																		<button class="btn btn-danger btn-xs"
+																			ng-click="removePrescription($index)"
+																			name="removePrescription">
+																			<b>x</b>
+																		</button>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>-->
+
+												<div class="form-group row text-center">
+													<div class="col-md-12">
+														<button class="btn btn-success" ng-click="addDiagnosis()"
+															name="fillDiagnosis">Add Diagnosis</button>
+													</div>
+												</div>
+
+												<div class="form-group row">
+													<div class="col-md-12">
+														<div class="panel panel-default">
+															<div class="panel-heading">Added Diagnoses</div>
+															<div class="panel-body">
+																<div class="row" ng-repeat="d in addedDiagnosis">
+																	<div class="col-md-4">{{d.diagnosis}}</div>
+																	<div class="col-md-4">
+																		<button class="btn btn-danger btn-xs"
+																			ng-click="removeAddedDiagnosis($index)"
+																			name="removeDiagnosis">
+																			<b>x</b>
+																		</button>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+
+											</div>
+										</div>
+									</div>
 
 								<!-- Lab Procedures Panel -->
 								<div ng-show="visit.type == 'GENERAL_CHECKUP'" class="row">

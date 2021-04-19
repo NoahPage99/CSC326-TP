@@ -1,340 +1,337 @@
 <html xmlns:th="http://www.thymeleaf.org">
+    <head th:include="layout :: head(title=~{::title},links=~{})">
+        <title>Manage Satisfaction Surveys</title>
+    </head>
 
-<head th:include="layout :: head(title=~{::title},links=~{})">
-	<title>Manage Satisfaction Surveys</title>
-</head>
+    <body th:include="layout :: body" th:with="content=~{::content}">
+        <div th:fragment="content">
+            <script th:inline="javascript">
+                /* Otherwise Thymeleaf tries to parse Javascript as XML and breaks itself sometimes.  Sigh */
+                /*<![CDATA[*/
+                var app = angular.module("manageSatisfactionSurveysPatientApp", []);
 
-<body th:include="layout :: body" th:with="content=~{::content}">
+                app.controller(
+                    "manageSatisfactionSurveysPatientCtrl",
+                    function ($scope, $http) {
+                        $scope.surveys = [];
+                        $scope.patient = {};
 
-	<div th:fragment="content">
+                        $scope.getPatient = function () {
+                            $http.get("/iTrust2/api/v1/patient").then(
+                                function (response) {
+                                    $scope.patient = response.data;
+                                    $scope.message = "";
+                                },
+                                function (rejection) {
+                                    $scope.patient = [];
+                                    $scope.message = "Could not display hcps";
+                                }
+                            );
+                        };
 
-		<script th:inline="javascript">
-			/* Otherwise Thymeleaf tries to parse Javascript as XML and breaks itself sometimes.  Sigh */
-			/*<![CDATA[*/
-			var app = angular.module("manageSatisfactionSurveysPatientApp", []);
+                        $scope.survey = {
+                            patient: "",
+                            notes: "",
+                            hcp: "",
+                            timeWaitedExaminationRoom: "",
+                            timeWaitedWaitingRoom: "",
+                            satisfiedOfficeVisit: "",
+                            satisfiedTreatment: "",
+                            id: "",
+                            completed: false,
+                        };
 
-			/**
-			 * A filter to humanize the text to be more user friendly.
-			 */
-			app.filter('humanize', function () {
-				return function (input) {
-					return !input ? input : input.toLowerCase().split('_')
-						.map((word) => word.charAt(0).toUpperCase() + word.substring(1))
-						.join(' ');
-				}
-			});
+                        $scope.submit = function () {
+                            if ($scope.currentSurvey == null) {
+                                $scope.failure = true;
+                                $scope.success = false;
+                                console.error("Please select a survey");
+                                return;
+                            }
 
-			app.controller('manageSatisfactionSurveysPatientCtrl', function ($scope, $http) {
-				$scope.surveys = [];
-				$scope.hcps = [];
-				$scope.patient = [];
-				$scope.completedSurveys = [];
-				
-				$scope.completedVisits = [];
+                            $scope.survey.id = $scope.currentSurvey.id;
+                            $scope.survey.hcp = $scope.currentSurvey.hcp.username;
+                            $scope.survey.notes = $scope.notes;
+                            $scope.survey.patient = $scope.patient.username;
+                            $scope.survey.satisfiedOfficeVisit = $scope.satisfiedVisit;
+                            $scope.survey.timeWaitedExaminationRoom =
+                                $scope.timeWaitedExam;
+                            $scope.survey.timeWaitedWaitingRoom = $scope.timeWaitedRoom;
+                            $scope.survey.satisfiedTreatment = $scope.satisfiedTreat;
 
-				$scope.getPatient = function () {
-					$http.get("/iTrust2/api/v1/patient").then(
-						function (response) {
+                            if (
+                                $scope.survey.satisfiedOfficeVisit == undefined ||
+                                $scope.survey.satisfiedOfficeVisit < 1 ||
+                                $scope.survey.satisfiedOfficeVisit > 10
+                            ) {
+                                $scope.failure = true;
+                                $scope.success = false;
+                                console.error("Error while adding Survey");
+                                return;
+                            } else if (
+                                $scope.survey.satisfiedTreatment == undefined ||
+                                $scope.survey.satisfiedTreatment < 1 ||
+                                $scope.survey.satisfiedTreatment > 10
+                            ) {
+                                $scope.failure = true;
+                                $scope.success = false;
+                                console.error("Error while adding Survey");
+                                return;
+                            } else if (
+                                $scope.survey.timeWaitedExaminationRoom == undefined ||
+                                $scope.survey.timeWaitedExaminationRoom < 1 ||
+                                $scope.survey.timeWaitedExaminationRoom > 120
+                            ) {
+                                $scope.failure = true;
+                                $scope.success = false;
+                                console.error("Error while adding Survey");
+                                return;
+                            } else if (
+                                $scope.survey.timeWaitedWaitingRoom == undefined ||
+                                $scope.survey.timeWaitedWaitingRoom < 1 ||
+                                $scope.survey.timeWaitedWaitingRoom > 120
+                            ) {
+                                $scope.failure = true;
+                                $scope.success = false;
+                                console.error("Error while adding Survey");
+                                return;
+                            } else {
+                                $scope.addSurvey();
+                            }
+                        };
 
-							$scope.patient = response.data;
-							console.log($scope.patient);
+                        $scope.addSurvey = function () {
+                            $scope.survey.completed = true;
 
-							$scope.message = "";
-						}, function (rejection) {
-							console.log("test");
-							$scope.patient = [];
-							$scope.message = "Could not display hcps";
-						});
+                            $http.post("/iTrust2/api/v1/surveys", $scope.survey).then(
+                                function (response) {
+                                    console.log("success");
+                                    $scope.success = true;
+                                    $scope.failure = false;
 
-				}
+                                    $scope.currentSurvey = null;
+                                    $scope.loadSurveysForPatient();
+                                },
+                                function (rejection) {
+                                    console.log("fail");
+                                    $scope.success = false;
+                                    $scope.failure = true;
+                                }
+                            );
+                        };
 
-				$scope.survey = {
-					patient: "",
-					notes: "",
-					hcp: "",
-					timeWaitedExaminationRoom: "",
-					timeWaitedWaitingRoom: "",
-					satisfiedOfficeVisit: "",
-					satisfiedTreatment: ""
-				};
+                        $scope.loadSurveysForPatient = function () {
+                            $http.get("/iTrust2/api/v1/surveys/mysurveys").then(
+                                function (response) {
+                                    $scope.surveys = response.data;
+                                    $scope.message = "";
+                                },
+                                function (rejection) {
+                                    $scope.surveys = [];
+                                    $scope.message = "Could not display surveys";
+                                }
+                            );
+                        };
 
-				$scope.submit = function () {
+                        $scope.assignAppt = function (item) {
+                            $scope.currentSurvey = item;
+                        };
 
-					$scope.success = false;
-					$scope.failure = true;
+                        $scope.getTemplate = function (survey) {
+                            return "view";
+                        };
 
-					$scope.survey.hcp = $scope.currentAppt.hcp.username;
-					$scope.survey.notes = $scope.notes;
-					$scope.survey.patient = $scope.patient.username;
-					$scope.survey.satisfiedOfficeVisit = $scope.satisfiedVisit;
-					$scope.survey.timeWaitedExaminationRoom = $scope.timeWaitedExam;
-					$scope.survey.timeWaitedWaitingRoom = $scope.timeWaitedRoom;
-					$scope.survey.satisfiedTreatment = $scope.satisfiedTreat;
-					console.log($scope.survey);
+                        $scope.isCompleted = function (survey) {
+                            return survey.completed;
+                        };
 
-					$scope.check = true;
-					if ($scope.survey.satisfiedOfficeVisit == undefined || $scope.survey.satisfiedOfficeVisit < 1 || $scope.survey.satisfiedOfficeVisit > 10) {
-						$scope.failure = true;
-						$scope.success = false;
-						console.error("Error while adding Survey");
-						return;
-					}
+                        $scope.isNotCompleted = function (survey) {
+                            return !survey.completed;
+                        };
 
-					else if ($scope.survey.satisfiedTreatment == undefined || $scope.survey.satisfiedTreatment < 1 || $scope.survey.satisfiedTreatment > 10) {
-						$scope.failure = true;
-						$scope.success = false;
-						console.error("Error while adding Survey");
-						return;
-					}
+                        $scope.getPatient();
+                        $scope.loadSurveysForPatient();
+                    }
+                );
+                /*]]>*/
+            </script>
 
-					else if ($scope.survey.timeWaitedExaminationRoom == undefined || $scope.survey.timeWaitedExaminationRoom < 1 || $scope.survey.timeWaitedExaminationRoom > 120) {
-						$scope.failure = true;
-						$scope.success = false;
-						console.error("Error while adding Survey");
-						return;
-					}
+            <div
+                ng-app="manageSatisfactionSurveysPatientApp"
+                ng-controller="manageSatisfactionSurveysPatientCtrl"
+            >
+                <h2>Patient Survey Form</h2>
 
-					else if ($scope.survey.timeWaitedWaitingRoom == undefined || $scope.survey.timeWaitedWaitingRoom < 1 || $scope.survey.timeWaitedWaitingRoom > 120) {
-						$scope.failure = true;
-						$scope.success = false;
-						console.error("Error while adding Survey");
-						return;
-					}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Select an Appointment to Survey</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div
+                            class="appt"
+                            name="appt"
+                            ng-repeat="survey in surveys | orderBy: 'hcp' | filter:isNotCompleted"
+                        >
+                            <input
+                                type="radio"
+                                ng-model="appointmentrequest"
+                                required="true"
+                                name="appointmentrequest"
+                                id="{{survey.id}}"
+                                value="{{survey.officeVisitDate}}"
+                                ng-click="assignAppt(survey)"
+                            />
 
-					else {
-						$scope.addSurvey()
-					}
-					$scope.test();
-				}
+                            <label for="{{appointmentrequest}}"
+                                >{{survey.officeVisitDate}} -
+                                {{survey.hcp.username}}</label
+                            >
+                            <br />
+                        </div>
+                    </div>
+                </div>
 
-				$scope.addSurvey = function () {
-					$http.post("/iTrust2/api/v1/surveys", $scope.survey).then(
-						function () {
-							$scope.success = true;
-							$scope.failure = false;
-						}
-					);
-				}
+                <div class="col-md-5">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Create Satisfaction Survey</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="type">Patient Name:</label>
+                                    {{patient.username}}
+                                </div>
 
+                                <div class="form-group">
+                                    <label for="hcp">HCP Name:</label>
+                                    {{currentSurvey.hcp.username}}
+                                </div>
 
-				$scope.loadSurveysForPatient = function () {
-					$http.get("/iTrust2/api/v1/surveys/mysurveys").then(
-						function (response) {
-							$scope.surveys = response.data;
-							$scope.message = "";
-						}, function (rejection) {
-							$scope.surveys = [];
-							$scope.message = "Could not display surveys";
-						});
-				}
+                                <div class="form-group">
+                                    <label for="type">Date:</label>
+                                    {{currentSurvey.officeVisitDate}}
+                                </div>
 
-				$scope.loadHcp = function () {
-					$http.get("/iTrust2/api/v1/personnel/getbyroles/ROLE_HCP").then(
-						function (response) {
-							//console.log(response.data);
-							for (var user of response.data) {
-								$scope.hcps.push(user);
-								console.log(user);
+                                <div class="form-group">
+                                    <label for="time"
+                                        >Time Waited In Waiting Room:</label
+                                    >
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max="120"
+                                        value="1"
+                                        ng-model="timeWaitedRoom"
+                                        name="timeWaitedRoom"
+                                    />
+                                </div>
 
-							}
-							console.log($scope.hcps);
+                                <div class="form-group">
+                                    <label for="time"
+                                        >Time Waited In Examination Room:</label
+                                    >
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max="120"
+                                        value="1"
+                                        ng-model="timeWaitedExam"
+                                        name="timeWaitedExam"
+                                    />
+                                </div>
 
-							//console.log("test");
-							$scope.message = "";
-						}, function (rejection) {
-							$scope.hcps = [];
-							$scope.message = "Could not display surveys";
-						});
-				}
+                                <div class="form-group">
+                                    <label for="time">Satisfied Office Visit:</label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max="10"
+                                        value="1"
+                                        ng-model="satisfiedVisit"
+                                        name="satisfiedVisit"
+                                    />
+                                </div>
 
-				$scope.loadCompletedVisits = function () {
-					$http.get("/iTrust2/api/v1/appointmentrequest/approvedRequests").then(
-						function (response) {
-							$scope.completedVisits = response.data;
-							$scope.message = "";
-							//console.log($scope.completedVisits[1].completed);
-							for(var i = 0; i < $scope.completedVisits.length; i++)	{
-								console.log($scope.completedVisits);
-								if(!$scope.completedVisits[i].completed){
-									
-									$scope.completedVisits.splice($scope.completedVisits[i], 1);
-								}
-								for(var j = 0; j < $scope.surveys.length; j++)	{
-									if($scope.completedVisits[i].id == $scope.surveys[j].id){
-										
-										$scope.completedVisits.splice($scope.completedVisits[i], 1);
-									}
-										
-								}
-							}
-							
-							//console.log($scope.surveys);
-						}, function (rejection) {
-							$scope.completedVisits = [];
-							$scope.message = "Could not display visits";
-						});
-				}
-				
-				$scope.test = function(){
-					for(var i = 0; i < $scope.completedVisits.length; i++)	{
-						for(var j = 0; j < $scope.surveys.length; j++)	{
-							if($scope.completedVisits[i].id == $scope.surveys[j].id){
-								
-								$scope.completedVisits.splice($scope.completedVisits[i], 1);
-							}
-								
-						}
-					}
-				}
-				
-				
-				
-				$scope.getPatient();
-				$scope.loadHcp();
-				$scope.loadSurveysForPatient();
-				$scope.loadCompletedVisits();
-				//console.log($scope.surveys);
+                                <div class="form-group">
+                                    <label for="time">Satisfied Treatment:</label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max="10"
+                                        value="1"
+                                        ng-model="satisfiedTreat"
+                                        name="satisfiedTreat"
+                                    />
+                                </div>
 
-				$scope.assignAppt = function (item) {
-					$scope.currentAppt = item;
-					console.log($scope.currentAppt);
-				}
+                                <div class="form-group">
+                                    <label for="notes">Notes:</label>
+                                    <textarea
+                                        maxlength="500"
+                                        id="notes"
+                                        class="form-control"
+                                        ng-model="notes"
+                                        name="notes"
+                                    >
+                                    </textarea>
+                                </div>
 
-				$scope.getTemplate = function (survey) {
-					return 'view';
-				};
+                                <div class="form-group">
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                        ng-click="submit()"
+                                        name="submitRequest"
+                                    >
+                                        Submit Survey
+                                    </button>
+                                </div>
 
-			});
-			/*]]>*/
+                                <div name="failure" ng-show="failure">
+                                    Error while adding survey
+                                </div>
+                                <div name="success" ng-show="success">Added Survey</div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
+                <table class="table table-bordered">
+                    <caption>
+                        Existing Completed Surveys:
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th>HCP</th>
+                            <th>Patient</th>
+                            <th>Time Waited Waiting Room</th>
+                            <th>Time Waited Examination Room</th>
+                            <th>Satisfied Treatment</th>
+                            <th>Satisfied Office Visit</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
 
-		</script>
-		<div ng-app="manageSatisfactionSurveysPatientApp" ng-controller="manageSatisfactionSurveysPatientCtrl">
-
-			<h2>Patient Survey Form</h3>
-
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">Create Satisfaction Survey</h3>
-					</div>
-					<div class="panel-body">
-						<div class="appt" name="appt" ng-repeat="visit in completedVisits">
-							<!-- <form>
-								<div class="form-group">
-									<label for="type">Visit on {{visit.date}}</label> 
-									<button class="btn btn-primary"
-										ng-click="createnewsurvey()" name="createRequest">Create Survey</button>
-								</div>
-							</form> -->
-							<input type="radio" ng-model="appointmentrequest" required="true" name="appointmentrequest"
-								id="{{visit.date}}" value="{{visit.date}}" ng-click="assignAppt(visit)" />
-
-
-							<label  for="{{appointmentrequest}}">{{visit.date}}</label>
-							<br />
-						</div>
-
-					</div>
-				</div>
-
-				<div class="col-md-5">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Create Satisfaction Survey</h3>
-						</div>
-						<div class="panel-body">
-							<form>
-								<div class="form-group">
-									<label for="type">Patient Name:</label>
-									{{patient.username}}
-								</div>
-
-								<div class="form-group">
-									<label for="hcp">HCP Name:</label>{{currentAppt.hcp.username}}
-								</div>
-
-								<div class="form-group">
-									<label for="type">Date:</label>
-									{{currentAppt.date}}
-								</div>
-
-								<div class="form-group">
-									<label for="time">Time Waited In Waiting Room:
-										<input type="number" min="1" max="120" value="1" ng-model="timeWaitedRoom">
-
-								</div>
-
-								<div class="form-group">
-									<label for="time">Time Waited In Examination Room:</label>
-									<input type="number" min="1" max="120" value="1" ng-model="timeWaitedExam">
-								</div>
-
-								<div class="form-group">
-									<label for="time">Satisfied Office Visit:</label>
-									<input type="number" min="1" max="10" value="1" ng-model="satisfiedVisit">
-								</div>
-
-								<div class="form-group">
-									<label for="time">Satisfied Treatment:</label>
-									<input type="number" min="1" max="10" value="1" ng-model="satisfiedTreat">
-								</div>
-
-								<div class="form-group">
-									<label for="notes">Notes:</label>
-									<textarea maxlength="500" id="notes" class="form-control" ng-model="notes"
-										name="notes">
-									</textarea>
-								</div>
-
-								<div class="form-group">
-									<button type="submit" class="btn btn-primary" ng-click="submit()"
-										name="submitRequest">Submit
-										Survey</button>
-								</div>
-
-								<div ng-show="success">Added Survey</div>
-								<div ng-show="failure">Error while adding survey</div>
-
-							</form>
-
-						</div>
-
-					</div>
-				</div>
-
-				<table class="table table-bordered">
-
-					<caption>Existing Completed Surveys:</caption>
-					<thead>
-						<tr>
-							<th>HCP</th>
-							<th>Patient</th>
-							<th>Time Waited Waiting Room</th>
-							<th>Time Waited Examination Room</th>
-							<th>Satisfied Treatment</th>
-							<th>Satisfied Office Visit</th>
-							<th>Notes</th>
-						</tr>
-					</thead>
-
-					<tbody>
-						<tr name="satsfactionSurveys" ng-repeat="s in surveys | orderBy: 'hcp'"
-							ng-include="getTemplate(s)" surveyId={{s.id}}>
-						</tr>
-					</tbody>
-				</table>
-
-				<script type="text/ng-template" id="view">
-
-
-				<td name="hcpCell">{{s.hcp.username}}</td>
-				<td name="patientCell">{{s.patient.username}}</td>
-				<td name="timeWaitingRoom">{{s.timeWaitedWaitingRoom}}</td>
-				<td name="timeExamRoom">{{s.timeWaitedExaminationRoom}}</td>
-				<td name="satisfiedTreatment">{{s.satisfiedTreatment}}</td>
-				<td name="satisfiedOfficeVisit">{{s.satisfiedOfficeVisit}}</td>
-				<td name="notes">{{s.notes}}</td>
-				
-</body>
-
+                    <tbody>
+                        <tr
+                            name="satsfactionSurveys"
+                            ng-repeat="s in surveys | orderBy: 'hcp' | filter:isCompleted"
+                            surveyId="{{s.id}}"
+                        >
+                            <td name="hcpCell">{{s.hcp.username}}</td>
+                            <td name="patientCell">{{s.patient.username}}</td>
+                            <td name="timeWaitingRoom">{{s.timeWaitedWaitingRoom}}</td>
+                            <td name="timeExamRoom">{{s.timeWaitedExaminationRoom}}</td>
+                            <td name="satisfiedTreatment">{{s.satisfiedTreatment}}</td>
+                            <td name="satisfiedOfficeVisit">
+                                {{s.satisfiedOfficeVisit}}
+                            </td>
+                            <td name="notes">{{s.notes}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
 </html>
