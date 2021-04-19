@@ -9,9 +9,28 @@ import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
 
 public interface SatisfactionSurveyRepository extends JpaRepository<SatisfactionSurvey, Long> {
 
-    public List<SatisfactionSurvey> findByHcp ( final User hcp );
+    /**
+     * find by hcp
+     * 
+     * @param hcp to find
+     * @return found list
+     */
+    public List<SatisfactionSurvey> findByHcp(final User hcp);
 
-    public List<SatisfactionSurvey> findByPatient ( User patient );
+    /**
+     * find by patient
+     * 
+     * @param patient to find
+     * @return found list
+     */
+    public List<SatisfactionSurvey> findByPatient(User patient);
 
-    public List<SatisfactionSurvey> findByHcpAndPatient ( User hcp, User patient );
+    /**
+     * find by hcp + patient
+     * 
+     * @param hcp     to find
+     * @param patient to find
+     * @return found list
+     */
+    public List<SatisfactionSurvey> findByHcpAndPatient(User hcp, User patient);
 }
