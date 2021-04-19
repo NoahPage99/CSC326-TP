@@ -15,13 +15,22 @@ public interface SatisfactionSurveyRepository extends JpaRepository<Satisfaction
 
     public List<SatisfactionSurvey> findByHcp ( User hcp );
 
+    /**
+     * FINAL String output for survey select
+     */
     final static String SURVEY_SELECT = " SELECT " + " AVG(time_waited_waiting_room)" + " as"
             + " averageTimeWaitedWaitingRoom," + " AVG(time_waited_examination_room)" + " as"
             + " averageTimeWaitedExaminationRoom," + " AVG(satisfied_office_visit)" + " as"
             + " averageSatisfiedOfficeVisit," + " AVG(satisfied_treatment)" + " as" + " averageSatisfiedTreatment";
 
+    /**
+     * FINAL string for "SURVEY FROM" to show where survey is from
+     */
     final static String SURVEY_FROM   = " FROM satisfaction_survey " + " WHERE hcp_id LIKE :hcpId ";
 
+    /**
+     * FINAL string to filter survey
+     */
     final static String SURVEY_FILTER = " AND completed is TRUE ";
 
     @Query ( value = SURVEY_SELECT + SURVEY_FROM + SURVEY_FILTER, nativeQuery = true )
