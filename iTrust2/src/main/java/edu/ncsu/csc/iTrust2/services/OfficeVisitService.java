@@ -152,12 +152,12 @@ public class OfficeVisitService extends Service {
     @Override
     public void save(final DomainObject obj) {
         final var officeVisit = (OfficeVisit) obj;
-        if (officeVisit.getSurvey() == null) {
+        if (officeVisit.getSatisfactionSurvey() == null) {
             final var survey = new SatisfactionSurvey();
             survey.setPatient((Patient) officeVisit.getPatient());
             survey.setHcp(officeVisit.getHcp());
             survey.setOfficeVisit(officeVisit);
-            officeVisit.setSurvey(survey);
+            officeVisit.setSatisfactionSurvey(survey);
         }
         getRepository().saveAndFlush(obj);
     }

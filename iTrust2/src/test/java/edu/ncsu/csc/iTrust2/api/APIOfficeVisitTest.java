@@ -51,11 +51,13 @@ import edu.ncsu.csc.iTrust2.models.enums.Role;
 import edu.ncsu.csc.iTrust2.models.enums.State;
 import edu.ncsu.csc.iTrust2.models.enums.Status;
 import edu.ncsu.csc.iTrust2.persistant.OphOfficeVisit;
+import edu.ncsu.csc.iTrust2.persistant.SatisfactionSurvey;
 import edu.ncsu.csc.iTrust2.services.AppointmentRequestService;
 import edu.ncsu.csc.iTrust2.services.BasicHealthMetricsService;
 import edu.ncsu.csc.iTrust2.services.HospitalService;
 import edu.ncsu.csc.iTrust2.services.OfficeVisitService;
 import edu.ncsu.csc.iTrust2.services.OphOfficeVisitService;
+import edu.ncsu.csc.iTrust2.services.SatisfactionSurveyService;
 import edu.ncsu.csc.iTrust2.services.UserService;
 
 /**
@@ -90,6 +92,11 @@ public class APIOfficeVisitTest {
     private HospitalService           hospitalService;
 
     @Autowired
+    private SatisfactionSurveyService surveyService;
+
+    
+
+    @Autowired
     private BasicHealthMetricsService bhmService;
 
     /**
@@ -100,7 +107,6 @@ public class APIOfficeVisitTest {
         mvc = MockMvcBuilders.webAppContextSetup( context ).build();
 
         officeVisitService.deleteAll();
-
         appointmentRequestService.deleteAll();
 
         final User patient = new Patient( new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 ) );
@@ -192,8 +198,15 @@ public class APIOfficeVisitTest {
 
         Assert.assertEquals( 1, officeVisitService.count() );
 
-        officeVisitService.deleteAll();
+        surveyService.deleteAll();
 
+        final var tmp1 = officeVisitService.findAll();
+
+        officeVisitService.deleteAll();
+        
+        final var tmp2 = officeVisitService.findAll();
+
+        var temp = officeVisitService.count();
         Assert.assertEquals( 0, officeVisitService.count() );
 
         visit.setDate( "2030-12-19T04:50:00.000-05:00" );
@@ -452,7 +465,6 @@ public class APIOfficeVisitTest {
     @Transactional
     @WithMockUser ( username = "hcp", roles = { "OPH" } )
     public void testPreScheduledOphOfficeVisit () throws Exception {
-
         officeVisitService.deleteAll();
 
         final AppointmentRequestForm appointmentForm = new AppointmentRequestForm();
@@ -496,7 +508,6 @@ public class APIOfficeVisitTest {
         // work.
         mvc.perform( post( "/api/v1/officevisits/oph" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( visit ) ) ).andExpect( status().isBadRequest() );
-
     }
 
     /**
@@ -566,9 +577,9 @@ public class APIOfficeVisitTest {
         visit.setDiastolic( 83 );
         visit.setHdl( 70 );
         visit.setHeight( 69.1f );
-        visit.setHouseSmokingStatus( HouseholdSmokingStatus.INDOOR.toString() );
+        visit.setHouseSmokingStatus( HouseholdSmokingStatus.INDOOR );
         visit.setLdl( 30 );
-        visit.setPatientSmokingStatus( PatientSmokingStatus.FORMER.toString() );
+        visit.setPatientSmokingStatus( PatientSmokingStatus.FORMER );
         visit.setSystolic( 102 );
         visit.setTri( 150 );
         visit.setWeight( 175.2f );
@@ -588,9 +599,9 @@ public class APIOfficeVisitTest {
         assertEquals( Integer.valueOf( 83 ), visit.getDiastolic() );
         assertEquals( Integer.valueOf( 70 ), visit.getHdl() );
         assertEquals( Float.valueOf( 69.1f ), visit.getHeight() );
-        assertEquals( HouseholdSmokingStatus.INDOOR.toString(), visit.getHouseSmokingStatus() );
+        assertEquals( HouseholdSmokingStatus.INDOOR.toString(), visit.getHouseSmokingStatus().toString() );
         assertEquals( Integer.valueOf( 30 ), visit.getLdl() );
-        assertEquals( PatientSmokingStatus.FORMER.toString(), visit.getPatientSmokingStatus() );
+        assertEquals( PatientSmokingStatus.FORMER.toString(), visit.getPatientSmokingStatus().toString() );
         assertEquals( Integer.valueOf( 102 ), visit.getSystolic() );
         assertEquals( Integer.valueOf( 150 ), visit.getTri() );
         assertEquals( Float.valueOf( 175.2f ), visit.getWeight() );
@@ -735,7 +746,7 @@ public class APIOfficeVisitTest {
         final Long id = ophOfficeVisitService.findByPatient( userService.findByName( "patient" ) ).get( 0 ).getId();
 
         final OphOfficeVisitForm visit1 = new OphOfficeVisitForm();
-        visit1.setId( id );
+        visit1.setId(String.valueOf(id));
         visit1.setPreScheduled( "yes" );
         visit1.setDate( "2030-11-19T04:50:00.000-05:00" );
         visit1.setHcp( "hcp" );
@@ -749,7 +760,7 @@ public class APIOfficeVisitTest {
         visit1.setrEyeAxis( 11 );
 
         assertEquals( 1, ophOfficeVisitService.count() );
-        assertEquals( ophOfficeVisitService.findAll().get( 0 ).getId().intValue(), visit1.getId().intValue() );
+        assertEquals( ophOfficeVisitService.findAll().get( 0 ).getId().intValue(), Integer.valueOf(visit1.getId()).intValue() );
 
         // Second post should fail with a conflict since it already exists
         mvc.perform( post( "/api/v1/officevisits/oph" ).contentType( MediaType.APPLICATION_JSON )
@@ -766,7 +777,7 @@ public class APIOfficeVisitTest {
 
         // PUT with ID not in database should fail
         final long tempId = 101;
-        visit.setId( Long.valueOf( "101" ) );
+        visit.setAppointmentId( Long.valueOf( "101" ) );
         mvc.perform( put( "/api/v1/officevisits/oph/" + tempId ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( visit ) ) ).andExpect( status().isNotFound() );
 

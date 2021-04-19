@@ -54,10 +54,10 @@ public class BasicHealthMetricsService extends Service {
         bhm.setDiastolic( ophOPVF.getDiastolic() );
         bhm.setHdl( ophOPVF.getHdl() );
         bhm.setHeight( ophOPVF.getHeight() );
-        bhm.setHouseSmokingStatus( HouseholdSmokingStatus.valueOf( ophOPVF.getHouseSmokingStatus() ) );
+        bhm.setHouseSmokingStatus( HouseholdSmokingStatus.valueOf( ophOPVF.getHouseSmokingStatus().toString() ) );
         bhm.setHeadCircumference( ophOPVF.getHeadCircumference() );
         bhm.setLdl( ophOPVF.getLdl() );
-        bhm.setPatientSmokingStatus( PatientSmokingStatus.valueOf( ophOPVF.getPatientSmokingStatus() ) );
+        bhm.setPatientSmokingStatus( PatientSmokingStatus.valueOf( ophOPVF.getPatientSmokingStatus().toString() ) );
         bhm.setSystolic( ophOPVF.getSystolic() );
         bhm.setTri( ophOPVF.getTri() );
         bhm.setWeight( ophOPVF.getWeight() );

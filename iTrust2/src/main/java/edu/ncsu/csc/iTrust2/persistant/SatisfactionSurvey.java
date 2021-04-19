@@ -41,15 +41,13 @@ import edu.ncsu.csc.iTrust2.models.User;
 @Entity
 public class SatisfactionSurvey extends DomainObject {
 
+    @ManyToOne ( fetch = FetchType.EAGER )
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "patient_id", columnDefinition = "varchar(100)")
-    private User patient;
+    private User            patient;
 
+    @ManyToOne ( fetch = FetchType.EAGER )
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "hcp_id", columnDefinition = "varchar(100)")
-    private User hcp;
+    private User          hcp;
 
     /** id */
     @Id
@@ -91,9 +89,7 @@ public class SatisfactionSurvey extends DomainObject {
      */
     private String notes;
 
-    @Expose(serialize = false, deserialize = false)
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "survey")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "satisfactionSurvey")
     private OfficeVisit officeVisit;
 
     /**

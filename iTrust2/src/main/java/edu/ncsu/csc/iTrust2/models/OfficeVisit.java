@@ -111,8 +111,8 @@ public class OfficeVisit extends DomainObject {
      * The appointment of this office visit
      */
     @OneToOne
-    @JoinColumn ( name = "appointment_id" )
-    private AppointmentRequest appointment;
+    // @JoinColumn ( name = "appointment_id" )
+    private AppointmentRequest   appointment;
 
     @OneToMany ( cascade = CascadeType.ALL )
     @JsonManagedReference
@@ -122,9 +122,9 @@ public class OfficeVisit extends DomainObject {
     @Expose ( serialize = false, deserialize = false )
     @JsonIgnore
     @OneToOne ( cascade = CascadeType.ALL, fetch = FetchType.LAZY )
-    @JoinColumn ( name = "survey_id", referencedColumnName = "id" )
+    @JoinColumn ( name = "satisfaction_survey_id", referencedColumnName = "id" )
     @NotNull
-    private SatisfactionSurvey             survey;
+    private SatisfactionSurvey               satisfactionSurvey;
 
 
     /** For Hibernate/Thymeleaf _must_ be an empty constructor */
@@ -377,24 +377,15 @@ public class OfficeVisit extends DomainObject {
         return diagnoses;
     }
 
-    /**
-     * get the satisfaction survey
-     *
-     * @return satisfaction survey
-     */
-    public SatisfactionSurvey getSurvey () {
-        return survey;
+
+    public SatisfactionSurvey getSatisfactionSurvey() {
+        return this.satisfactionSurvey;
     }
 
-    /**
-     * set satisfaction survey
-     *
-     * @param survey
-     *            to set
-     */
-    public void setSurvey ( final SatisfactionSurvey survey ) {
-        this.survey = survey;
+    public void setSatisfactionSurvey(SatisfactionSurvey satisfactionSurvey) {
+        this.satisfactionSurvey = satisfactionSurvey;
     }
+  
 
     /**
      * Sets the list of prescriptions associated with this visit
