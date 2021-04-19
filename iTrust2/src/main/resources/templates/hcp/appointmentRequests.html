@@ -30,13 +30,15 @@
 				$scope.appointments = [];
 				$scope.hcp = /*[[${#httpServletRequest.remoteUser}]]*/null;
 				$scope.loadAppointments = function () {
-					$http.get("/iTrust2/api/v1/appointmentrequestForHCP")
-						.then(function (response) {
-							$scope.appointments = response.data;
-							if ($scope.appointments.length == 0) {
-								$scope.errorMsg = "No appointment requests found."
-							}
-						});
+					
+					
+					$http.get("/iTrust2/api/v1/appointmentrequestForOPHandHCP")
+					.then(function (response) {
+						$scope.appointments = response.data;
+						if ($scope.appointments.length == 0) {
+							$scope.errorMsg = "No appointment requests found."
+						}
+					});
 				}
 
 				$http.get("/iTrust2/api/v1/appointmentstatus")
@@ -59,6 +61,7 @@
 							}
 						});
 				}
+				
 
 				$scope.appointmentByID = {};
 				$scope.updateAppointment = function () {
@@ -89,7 +92,7 @@
 									});
 							},
 							function (rejection) {
-								scope.errorMsg = "none";
+								$scope.errorMsg = "none";
 							});
 					}
 				}
@@ -115,6 +118,8 @@
 						</ul>
 						<div name="errorMsg1" class="text-danger">{{errorMsg1}}</div>
 					</td>
+					
+					
 
 					<td style="width: 40%; vertical-align: top">
 						<h3>Update Medical Appointment Requests</h3>

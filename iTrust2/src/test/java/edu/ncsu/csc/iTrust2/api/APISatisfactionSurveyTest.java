@@ -39,85 +39,83 @@ import edu.ncsu.csc.iTrust2.services.HospitalService;
 import edu.ncsu.csc.iTrust2.services.SatisfactionSurveyService;
 import edu.ncsu.csc.iTrust2.services.UserService;
 
-@RunWith ( SpringRunner.class )
+@RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class APISatisfactionSurveyTest {
 
-    private MockMvc                   mvc;
+    private MockMvc mvc;
 
     @Autowired
-    private WebApplicationContext     context;
+    private WebApplicationContext context;
 
     @Autowired
-    private SatisfactionSurveyService        surveyService;
+    private SatisfactionSurveyService surveyService;
 
     @Autowired
-    private UserService               userService;
+    private UserService userService;
 
     @Autowired
-    private HospitalService           hospitalService;
-
+    private HospitalService hospitalService;
 
     /**
      * Sets up test
      */
     @Before
-    public void setup () {
-        mvc = MockMvcBuilders.webAppContextSetup( context ).build();
+    public void setup() {
+        mvc = MockMvcBuilders.webAppContextSetup(context).build();
 
         surveyService.deleteAll();
 
+        final User patient = new Patient(new UserForm("patient", "123456", Role.ROLE_PATIENT, 1));
 
-        final User patient = new Patient( new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 ) );
-
-        final User hcp = new Personnel( new UserForm( "hcp", "123456", Role.ROLE_HCP, 1 ) );
+        final User hcp = new Personnel(new UserForm("hcp", "123456", Role.ROLE_HCP, 1));
 
         final Patient antti = buildPatient();
 
-        userService.saveAll( List.of( patient, hcp, antti ) );
+        userService.saveAll(List.of(patient, hcp, antti));
 
         final Hospital hosp = new Hospital();
-        hosp.setAddress( "123 Raleigh Road" );
-        hosp.setState( State.NC );
-        hosp.setZip( "27514" );
-        hosp.setName( "iTrust Test Hospital 2" );
+        hosp.setAddress("123 Raleigh Road");
+        hosp.setState(State.NC);
+        hosp.setZip("27514");
+        hosp.setName("iTrust Test Hospital 2");
 
-        hospitalService.save( hosp );
+        hospitalService.save(hosp);
     }
 
-    private Patient buildPatient () {
-        final Patient antti = new Patient( new UserForm( "antti", "123456", Role.ROLE_PATIENT, 1 ) );
+    private Patient buildPatient() {
+        final Patient antti = new Patient(new UserForm("antti", "123456", Role.ROLE_PATIENT, 1));
 
-        antti.setAddress1( "1 Test Street" );
-        antti.setAddress2( "Some Location" );
-        antti.setBloodType( BloodType.APos );
-        antti.setCity( "Viipuri" );
-        final LocalDate date = LocalDate.of( 1977, 6, 15 );
-        antti.setDateOfBirth( date );
-        antti.setEmail( "antti@itrust.fi" );
-        antti.setEthnicity( Ethnicity.Caucasian );
-        antti.setFirstName( "Antti" );
-        antti.setGender( Gender.Male );
-        antti.setLastName( "Walhelm" );
-        antti.setPhone( "123-456-7890" );
-        antti.setState( State.NC );
-        antti.setZip( "27514" );
+        antti.setAddress1("1 Test Street");
+        antti.setAddress2("Some Location");
+        antti.setBloodType(BloodType.APos);
+        antti.setCity("Viipuri");
+        final LocalDate date = LocalDate.of(1977, 6, 15);
+        antti.setDateOfBirth(date);
+        antti.setEmail("antti@itrust.fi");
+        antti.setEthnicity(Ethnicity.Caucasian);
+        antti.setFirstName("Antti");
+        antti.setGender(Gender.Male);
+        antti.setLastName("Walhelm");
+        antti.setPhone("123-456-7890");
+        antti.setState(State.NC);
+        antti.setZip("27514");
 
         return antti;
     }
 
     /**
-     * Tests getting a non existent office visit and ensures that the correct
-     * status is returned.
+     * Tests getting a non existent office visit and ensures that the correct status
+     * is returned.
      *
      * @throws Exception
      */
     @Test
     @Transactional
-    @WithMockUser ( username = "hcp", roles = { "HCP" } )
-    public void testGetNonExistentSurveys () throws Exception {
-        mvc.perform( get( "/api/v1/surveys/-1" ) ).andExpect( status().isNotFound() );
+    @WithMockUser(username = "hcp", roles = { "HCP" })
+    public void testGetNonExistentSurveys() throws Exception {
+        mvc.perform(get("/api/v1/surveys/-1")).andExpect(status().isNotFound());
     }
 
     /**
@@ -128,40 +126,36 @@ public class APISatisfactionSurveyTest {
      */
     @Test
     @Transactional
-    @WithMockUser ( username = "patient", roles = { "PATIENT" } )
-    public void testCreateSurvey () throws Exception {
-    	surveyService.deleteAll();
-    	
-    	Assert.assertEquals( 0, surveyService.count() );
-    	
-    	
-    	
-    	final User patient = userService.findByName( "patient" );
-    	Assert.assertEquals("patient", patient.getUsername());
-        final User hcp = userService.findByName( "hcp" );
+    @WithMockUser(username = "patient", roles = { "PATIENT" })
+    public void testCreateSurvey() throws Exception {
+        surveyService.deleteAll();
+
+        Assert.assertEquals(0, surveyService.count());
+
+        final User patient = userService.findByName("patient");
+        Assert.assertEquals("patient", patient.getUsername());
+        final User hcp = userService.findByName("hcp");
         Assert.assertEquals("hcp", hcp.getUsername());
 
         final SatisfactionSurveyForm surveyForm = new SatisfactionSurveyForm();
-       
-        surveyForm.setSatisfiedOfficeVisit( 5 );
-        surveyForm.setSatisfiedTreatment( 5 );
-        surveyForm.setTimeWaitedExaminationRoom( 15 );
-        surveyForm.setTimeWaitedWaitingRoom( 20 );
-        surveyForm.setNotes( "Hello" );
-        surveyForm.setHcp( "hcp" );
-        surveyForm.setPatient( "patient" );
-        
 
+        surveyForm.setSatisfiedOfficeVisit(5);
+        surveyForm.setSatisfiedTreatment(5);
+        surveyForm.setTimeWaitedExaminationRoom(15);
+        surveyForm.setTimeWaitedWaitingRoom(20);
+        surveyForm.setNotes("Hello");
+        surveyForm.setHcp("hcp");
+        surveyForm.setPatient("patient");
 
-        mvc.perform( post( "/api/v1/surveys" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( surveyForm ) ) ).andExpect( status().isOk() );
+        mvc.perform(post("/api/v1/surveys").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtils.asJsonString(surveyForm))).andExpect(status().isOk());
 
-        Assert.assertEquals( 1, surveyService.count() );
+        Assert.assertEquals(1, surveyService.count());
 
         surveyService.deleteAll();
 
-        Assert.assertEquals( 0, surveyService.count() );
-     
+        Assert.assertEquals(0, surveyService.count());
+
     }
 
 }

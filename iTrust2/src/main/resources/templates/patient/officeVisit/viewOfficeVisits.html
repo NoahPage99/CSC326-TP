@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="layout :: head(title=~{::title},links=~{})">
+	<title>View Office Visits</title>
+
+
+<!-- Angular and Bootstrap files  -->
+<link rel="stylesheet"
+	href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+</head>
+
+<body th:include="layout :: body" th:with="content=~{::content}">
+
+	<div th:fragment="content">
+
+		<script th:inline="javascript">
+			/* Otherwise Thymeleaf tries to parse Javascript as XML and breaks itself sometimes.  Sigh */
+			/*<![CDATA[*/
+			var app = angular.module("viewOfficeVisitsPatientApp", []);
+
+			/**
+			 * A filter to humanize the text to be more user friendly.
+			 */
+			app.filter('humanize', function () {
+				return function (input) {
+					return !input ? input : input.toLowerCase().split('_')
+						.map((word) => word.charAt(0).toUpperCase() + word.substring(1))
+						.join(' ');
+				}
+			});
+
+			app.controller('viewOfficeVisitsPatientCtrl', function ($scope, $http) {
+				console.log("x");
+				$scope.officevisits = [];
+				//general office visits
+				$scope.getMyOfficeVisits = function () {
+					$http.get("/iTrust2/api/v1/officevisits/myofficevisits").then(
+						function (response) {
+							$scope.officevisits = response.data;
+							$scope.message = "";
+							console.log($scope.officevisits);
+						}, function (rejection) {
+							$scope.officevisits = [];
+							$scope.message = "Could not display visits";
+						});
+				}
+				
+				$scope.getTemplate = function (officevisit) {
+					return 'view';
+				};
+				
+				$scope.getMyOfficeVisits();
+			});
+
+
+			/*]]>*/
+		</script>
+		 <div ng-app="viewOfficeVisitsPatientApp" ng-controller="viewOfficeVisitsPatientCtrl">
+            <h3>View Office Visits</h3>
+
+			<div class="container">
+				<h4 style="color: red" ng-model="message"></h4>
+
+				<h2>Office Visits</h2>
+				<table style="width: 100%" class="table table-hover">
+					<thead>
+						<tr>
+							<th>Date+Time</th>
+							<th>Type</th>
+							<th>HCP</th>
+							<th>Notes</th>
+							<th>Acuity(Right,Left)</th>
+							<th>Sphere(Right,Left)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="ov in officevisits" name="Office Visits">
+							<td name="date">{{ov.date}}</td>
+							<td name="type">{{ov.type}}</td>
+							<td name="hcp">{{ov.hcp.username}}</td>
+							<td name="notes">{{ov.notes}}</td>
+							<td name="Acuity(Right,Left)">{{ov.lEyeAcuity}}</td>
+							<td name="Sphere(Right,Left)">{{d.note}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+        </div>
+
+</body>
+
+
+</html>

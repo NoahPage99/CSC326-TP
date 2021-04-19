@@ -153,10 +153,8 @@ a {
 									Drugs</a></li>
 							<li><a href="/iTrust2/admin/manageICDCodes"
 								id="manageICDCodes">Manage ICD-10 Codes</a></li>
-							<li><a href="/iTrust2/admin/viewSatisfactionSurveys"
-								id="viewSatisfactionSurveys">View Satisfaction Surveys</a></li>
-							<li><a href="/iTrust2/admin/viewAllExistingSurveys"
-								id="viewAllExistingSurveys">View All Surveys</a></li>
+							<li><a href="/iTrust2/surveys/viewSatisfactionSurveys"
+								id="viewSatisfactionSurveysAdmin">View Satisfaction Surveys</a></li>
 						</ul></li>
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">Edit<span class="caret"></span></a>
@@ -168,7 +166,7 @@ a {
 				<!-- HCP navbar -->
 				<ul id="hcp-dropdown" class="nav navbar-nav">
 					<li class="dropdown"><a class="dropdown-toggle"
-						data-toggle="dropdown" href="#" id="hcpPatientDropDown">Patient<span class="caret"></span></a>
+						data-toggle="dropdown" href="#" id="hcpPatientDropDown">HCP<span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li><a href="/iTrust2/hcp/appointmentRequests"
 								id="viewrequests">View Appointment Requests and Upcoming
@@ -177,8 +175,8 @@ a {
 								id="editPatientDemographics">Edit Patient</a></li>
 							<li><a href="/iTrust2/hcp/documentOfficeVisit"
 								id="documentOfficeVisit">Document Office Visit</a></li>
-							<li><a href="/iTrust2/hcp/satisfactionSurveys"
-								id="satisfactionSurveys">View Satisfaction Surveys</a></li>
+                                <li><a href="/iTrust2/surveys/viewSatisfactionSurveys"
+                                    id="viewSatisfactionSurveysHCP">View Satisfaction Surveys</a></li>
 						</ul></li>
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">Edit<span class="caret"></span></a>
@@ -188,7 +186,7 @@ a {
 							<li><a href="/iTrust2/hcp/editOfficeVisit"
 								id="editOfficeVisit">Edit Office Visit</a></li>
 							<li><a href="/iTrust2/hcp/editPrescriptions"
-								id="editPrescriptions-personnel">Edit Prescriptions</a></li>
+								id="editPrescriptions">Edit Prescriptions</a></li>
 						</ul></li>
 				</ul>
 				
@@ -198,9 +196,12 @@ a {
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" href="#">Patient<span class="caret"></span></a>
 						<ul class="dropdown-menu">
-						<li><a href="/iTrust2/patient/viewAverageSatisfactionSurveys"
-								id="viewAverages">View HCP Averages</a></li>
-						</ul></li>
+                            <li><a href="/iTrust2/patient/manageSatisfactionSurveys"
+								id="manageSatisfactionSurveys">Manage Satisfaction Surveys</a></li>
+                            <li><a href="/iTrust2/surveys/viewSatisfactionSurveys"
+                                    id="viewSatisfactionSurveysPatient">View Satisfaction Surveys</a></li>
+						</ul>
+                    </li>
 					<li class="dropdown"><a class="dropdown-toggle"
 						data-toggle="dropdown" id="appointments" href="#">Appointments<span
 							class="caret"></span></a>
@@ -214,8 +215,6 @@ a {
 								id="viewDiagnoses">Diagnoses</a></li>
 							<li><a href="/iTrust2/patient/officeVisit/viewPrescriptions"
 								id="viewPrescriptions">Prescriptions</a></li>
-							<li><a href="/iTrust2/patient/manageSatisfactionSurveys"
-								id="manageSatisfactionSurveys">Manage Satisfaction Surveys</a></li>
 						</ul></li>
 					<li class="dropdown"><a class="dropdown-toggle" id="edit"
 						data-toggle="dropdown" href="#">Edit<span class="caret"></span></a>

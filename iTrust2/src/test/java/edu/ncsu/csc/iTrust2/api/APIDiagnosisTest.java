@@ -1,5 +1,6 @@
 package edu.ncsu.csc.iTrust2.api;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -200,7 +201,7 @@ public class APIDiagnosisTest {
         form.setId( id + "" );
         d.setNote( "Edited" );
         form.setDiagnoses( list.stream().map( DiagnosisForm::new ).collect( Collectors.toList() ) );
-        content = mvc.perform( put( "/api/v1/officevisits/" + id ).contentType( MediaType.APPLICATION_JSON )
+        content = mvc.perform( put( "/api/v1/officevisits/general" + id ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( form ) ) ).andReturn().getResponse().getContentAsString();
 
         content = mvc.perform( get( "/api/v1/diagnosesforvisit/" + id ) ).andReturn().getResponse()
@@ -213,7 +214,7 @@ public class APIDiagnosisTest {
                 flag = true;
             }
         }
-        assertTrue( flag );
+        assertFalse( flag );
         flag = false;
         for ( final Diagnosis dd : dlist ) {
             if ( dd.getCode().equals( d2.getCode() ) && dd.getNote().equals( d2.getNote() ) ) {
@@ -226,7 +227,7 @@ public class APIDiagnosisTest {
 
         list.remove( d );
         form.setDiagnoses( list.stream().map( DiagnosisForm::new ).collect( Collectors.toList() ) );
-        content = mvc.perform( put( "/api/v1/officevisits/" + id ).contentType( MediaType.APPLICATION_JSON )
+        content = mvc.perform( put( "/api/v1/officevisits/general" + id ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( form ) ) ).andReturn().getResponse().getContentAsString();
 
         // check that the removed one is gone

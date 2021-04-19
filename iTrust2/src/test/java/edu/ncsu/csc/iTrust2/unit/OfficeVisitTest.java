@@ -1,8 +1,5 @@
 package edu.ncsu.csc.iTrust2.unit;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZonedDateTime;
@@ -44,6 +41,7 @@ import edu.ncsu.csc.iTrust2.services.HospitalService;
 import edu.ncsu.csc.iTrust2.services.ICDCodeService;
 import edu.ncsu.csc.iTrust2.services.OfficeVisitService;
 import edu.ncsu.csc.iTrust2.services.PrescriptionService;
+import edu.ncsu.csc.iTrust2.services.SatisfactionSurveyService;
 import edu.ncsu.csc.iTrust2.services.UserService;
 
 @RunWith ( SpringRunner.class )
@@ -65,6 +63,9 @@ public class OfficeVisitTest {
 
     @Autowired
     private ICDCodeService            icdCodeService;
+
+    @Autowired
+    private SatisfactionSurveyService surveyService;
 
     @Autowired
     private DrugService               drugService;
@@ -113,15 +114,16 @@ public class OfficeVisitTest {
         visit.setHcp( userService.findByName( "AliceThirteen" ) );
         visit.setDate( ZonedDateTime.now() );
 
-        final SatisfactionSurvey survey = new SatisfactionSurvey();
+        officeVisitService.save( visit );
 
-        final User patient = new Patient( new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 ) );
+        final SatisfactionSurvey survey = visit.getSatisfactionSurvey();
+
+        final User patient = userService.findByName( "AliceThirteen" );
         final User hcp = userService.findByName( "hcp" );
 
         survey.setHcp( hcp );
         survey.setPatient( patient );
 
-        visit.setSurvey( survey );
         officeVisitService.save( visit );
 
         final List<Diagnosis> diagnoses = new Vector<Diagnosis>();
@@ -209,17 +211,5 @@ public class OfficeVisitTest {
 
         Assert.assertEquals( 2, retrieved.getPrescriptions().size() );
 
-    }
-
-    @Test
-    @Transactional
-    public void testOfficeVisitCompleted () {
-        final OfficeVisit visit = new OfficeVisit();
-
-        assertFalse( visit.isCompleted() );
-
-        visit.setCompleted( true );
-
-        assertTrue( visit.isCompleted() );
     }
 }
