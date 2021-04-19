@@ -1,12 +1,15 @@
 package edu.ncsu.csc.iTrust2.persistant;
 
+import java.time.ZonedDateTime;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -14,6 +17,7 @@ import javax.validation.constraints.NotNull;
 // import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.ncsu.csc.iTrust2.models.DomainObject;
+import edu.ncsu.csc.iTrust2.models.OfficeVisit;
 import edu.ncsu.csc.iTrust2.models.User;
 
 // import edu.ncsu.csc.iTrust2.services.SatisfactionSurveyService;
@@ -33,59 +37,56 @@ import edu.ncsu.csc.iTrust2.models.User;
 @Entity
 public class SatisfactionSurvey extends DomainObject {
 
+    @ManyToOne ( fetch = FetchType.EAGER )
     @NotNull
-    @ManyToOne ( cascade = CascadeType.ALL )
-    @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
-    private User   patient;
+    private User        patient;
 
+    @ManyToOne ( fetch = FetchType.EAGER )
     @NotNull
-    @ManyToOne ( cascade = CascadeType.ALL )
-    @JoinColumn ( name = "hcp_id", columnDefinition = "varchar(100)" )
-    private User   hcp;
+    private User        hcp;
 
     /** id */
     @Id
     @GeneratedValue ( strategy = GenerationType.AUTO )
-    private Long   id;
+    private Long        id;
+
+    private boolean     completed;
 
     /**
      * time waited in waiting room
      */
     @Min ( 0 )
     @Max ( 120 )
-    private int    timeWaitedWaitingRoom;
+    private int         timeWaitedWaitingRoom;
 
     /**
      * time waited exam room
      */
     @Min ( 0 )
     @Max ( 120 )
-    private int    timeWaitedExaminationRoom;
+    private int         timeWaitedExaminationRoom;
 
     /**
      * satisfaction of office visit
      */
     @Min ( 0 )
     @Max ( 10 )
-    private int    satisfiedOfficeVisit;
+    private int         satisfiedOfficeVisit;
 
     /**
      * satisfaction of treatment
      */
     @Min ( 0 )
     @Max ( 10 )
-    private int    satisfiedTreatment;
+    private int         satisfiedTreatment;
 
     /**
      * notes on survey
      */
-    private String notes;
+    private String      notes;
 
-    // /**
-    // * service to get averages
-    // */
-    // @Autowired
-    // private SatisfactionSurveyService service;
+    @OneToOne ( fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "satisfactionSurvey" )
+    private OfficeVisit officeVisit;
 
     /**
      * create a new default satisfaction survey
@@ -112,9 +113,9 @@ public class SatisfactionSurvey extends DomainObject {
      * @param notes
      *            on visit
      */
-    public SatisfactionSurvey ( final int timeWaitedWaitingRoom, final int timeWaitedExaminationRoom,
-            final int satisfiedOfficeVisit, final int satisfiedTreatment, final String notes, final User patient,
-            final User hcp ) {
+    public SatisfactionSurvey ( @Min ( 0 ) final int timeWaitedWaitingRoom,
+            @Min ( 0 ) final int timeWaitedExaminationRoom, final int satisfiedOfficeVisit,
+            final int satisfiedTreatment, final String notes, final User patient, final User hcp ) {
         this.setNotes( notes );
         this.setSatisfiedOfficeVisit( satisfiedOfficeVisit );
         this.setSatisfiedTreatment( satisfiedTreatment );
@@ -223,21 +224,6 @@ public class SatisfactionSurvey extends DomainObject {
         }
         this.notes = notes;
     }
-
-    // /**
-    // * hashcode
-    // */
-    // @Override
-    // public int hashCode () {
-    // final int prime = 31;
-    // int result = 1;
-    // result = prime * result + ( ( notes == null ) ? 0 : notes.hashCode() );
-    // result = prime * result + satisfiedOfficeVisit;
-    // result = prime * result + satisfiedTreatment;
-    // result = prime * result + timeWaitedExaminationRoom;
-    // result = prime * result + timeWaitedWaitingRoom;
-    // return result;
-    // }
 
     /**
      * equals
@@ -349,39 +335,33 @@ public class SatisfactionSurvey extends DomainObject {
         this.patient = patient;
     }
 
-    // public double getAverageTimeWaitedWaitingRoom(User hcp){
-    // List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
-    // double avg = 0;
-    // for(SatisfactionSurvey s:surveys){
-    // avg += s.getTimeWaitedWaitingRoom();
-    // }
-    // return avg/surveys.size();
-    // }
+    public boolean isCompleted () {
+        return this.completed;
+    }
 
-    // public double getAverageTimeWaitedExaminationRoom(User hcp){
-    // List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
-    // double avg = 0;
-    // for(SatisfactionSurvey s:surveys){
-    // avg += s.getTimeWaitedExaminationRoom();
-    // }
-    // return avg/surveys.size();
-    // }
+    public boolean getCompleted () {
+        return this.completed;
+    }
 
-    // public double getAverageSatisfiedOfficeVisit(User hcp){
-    // List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
-    // double avg = 0;
-    // for(SatisfactionSurvey s:surveys){
-    // avg += s.getSatisfiedOfficeVisit();
-    // }
-    // return avg/surveys.size();
-    // }
+    public void setCompleted ( final boolean completed ) {
+        this.completed = completed;
+    }
 
-    // public double getAverageSatisfiedTreatment(User hcp){
-    // List<SatisfactionSurvey> surveys = service.findByHcp(hcp);
-    // double avg = 0;
-    // for(SatisfactionSurvey s:surveys){
-    // avg += s.getSatisfiedTreatment();
-    // }
-    // return avg/surveys.size();
-    // }
+    public OfficeVisit getOfficeVisit () {
+        return this.officeVisit;
+    }
+
+    public void setOfficeVisit ( final OfficeVisit officeVisit ) {
+        this.officeVisit = officeVisit;
+
+    }
+
+    public ZonedDateTime getOfficeVisitDate () {
+        if ( this.officeVisit != null ) {
+            return this.officeVisit.getDate();
+        }
+        else {
+            return null;
+        }
+    }
 }

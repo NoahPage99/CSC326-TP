@@ -3,8 +3,6 @@ package edu.ncsu.csc.iTrust2.forms;
 import java.io.Serializable;
 
 import javax.persistence.CascadeType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
@@ -27,8 +25,8 @@ public class SatisfactionSurveyForm implements Serializable {
     private static final long serialVersionUID = 1L;
     /** id for survey form */
     @Id
-    @GeneratedValue ( strategy = GenerationType.AUTO )
-    private String            id;
+    // @GeneratedValue ( strategy = GenerationType.AUTO )
+    private Long              id;
     /** waiting room time */
     private int               timeWaitedWaitingRoom;
     /** exam room time */
@@ -53,6 +51,8 @@ public class SatisfactionSurveyForm implements Serializable {
     // @JoinColumn ( name = "hcp_id", columnDefinition = "varchar(100)" )
     // @NotEmpty
     private String            hcp;
+
+    private boolean           completed;
 
     public String getPatient () {
         return patient;
@@ -84,11 +84,12 @@ public class SatisfactionSurveyForm implements Serializable {
         setPatient( ss.getPatient().getUsername() );
         setHcp( ss.getHcp().getUsername() );
         setNotes( ss.getNotes() );
-        setId( ss.getId().toString() );
+        setId( ss.getId() );
         setSatisfiedOfficeVisit( ss.getSatisfiedOfficeVisit() );
         setSatisfiedTreatment( ss.getSatisfiedTreatment() );
         setTimeWaitedExaminationRoom( ss.getTimeWaitedExaminationRoom() );
         setTimeWaitedWaitingRoom( ss.getTimeWaitedWaitingRoom() );
+        setCompleted( ss.getCompleted() );
     }
 
     /**
@@ -96,7 +97,7 @@ public class SatisfactionSurveyForm implements Serializable {
      *
      * @return the id
      */
-    public String getId () {
+    public Long getId () {
         return id;
     }
 
@@ -106,7 +107,7 @@ public class SatisfactionSurveyForm implements Serializable {
      * @param id
      *            the id to set
      */
-    public void setId ( final String id ) {
+    public void setId ( final Long id ) {
         this.id = id;
     }
 
@@ -204,4 +205,17 @@ public class SatisfactionSurveyForm implements Serializable {
     public void setNotes ( final String notes ) {
         this.notes = notes;
     }
+
+    public boolean isCompleted () {
+        return this.completed;
+    }
+
+    public boolean getCompleted () {
+        return this.completed;
+    }
+
+    public void setCompleted ( final boolean completed ) {
+        this.completed = completed;
+    }
+
 }

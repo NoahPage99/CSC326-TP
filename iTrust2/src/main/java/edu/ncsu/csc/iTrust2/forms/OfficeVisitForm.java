@@ -50,7 +50,13 @@ public class OfficeVisitForm implements Serializable {
      * Date at which the OfficeVisit occurred
      */
     @NotEmpty
-    private String                 date;
+    public String                  date;
+
+    /**
+     * time
+     */
+    @NotEmpty
+    public String                  time;
 
     /**
      * ID of the OfficeVisit
@@ -61,13 +67,13 @@ public class OfficeVisitForm implements Serializable {
      * Type of the OfficeVisit.
      */
     @NotEmpty
-    private String                 type;
+    public String                  type;
 
     /**
      * Hospital where the OfficeVisit occurred
      */
     @NotEmpty
-    private String                 hospital;
+    public String                  hospital;
 
     /**
      * Doctor's Notes on the OfficeVisit
@@ -154,7 +160,11 @@ public class OfficeVisitForm implements Serializable {
         setId( ov.getId().toString() );
         setPreScheduled( ( (Boolean) ( ov.getAppointment() != null ) ).toString() );
         setDiagnoses( new ArrayList<DiagnosisForm>() );
-        setPrescriptions( ov.getPrescriptions().stream().map( PrescriptionForm::new ).collect( Collectors.toList() ) );
+        setType(ov.getType().toString());
+        
+        if (ov.getPrescriptions() != null) {
+            setPrescriptions( ov.getPrescriptions().stream().map( PrescriptionForm::new ).collect( Collectors.toList() ) );
+        }
     }
 
     /**
