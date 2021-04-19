@@ -100,8 +100,6 @@ public class OphOfficeVisit extends OfficeVisit {
      *            patient for visit
      * @param hcp
      *            hcp hosting the visit
-     * @param id
-     *            id for visit
      * @param notes
      *            notes for visit
      * @param date
@@ -124,8 +122,6 @@ public class OphOfficeVisit extends OfficeVisit {
      *            axis of patient
      * @param rEyeAxis
      *            axis of patient
-     * @param diseases
-     *            diseases diagnosed of patient
      */
     public OphOfficeVisit ( @NotNull final User patient, @NotNull final User hcp, final String notes, final String date,
             final String time, final int lEyeAcuity, final int rEyeAcuity, final int lEyeSphere, final int rEyeSphere,
