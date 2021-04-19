@@ -66,8 +66,8 @@ public class APIOfficeVisitController extends APIController {
 
     /**
      *
-     * TODO: Edit this to accept oph stuff Retrieves all of the office visits
-     * for the current HCP.
+     * Edit this to accept oph stuff Retrieves all of the office visits for the
+     * current HCP.
      *
      * @return all of the office visits for the current HCP.
      */

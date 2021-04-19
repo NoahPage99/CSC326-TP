@@ -11,8 +11,28 @@ package edu.ncsu.csc.iTrust2.models.enums;
  * @author scheerl
  *
  */
+
 public enum Disease {
-    CATARACTS ( 1 ), AGE_RELATED_MACULAR_DEGENERATION ( 2 ), AMBLYOPIA ( 3 ), GLAUCOMA ( 4 );
+
+    /**
+     * Cataracts
+     */
+    CATARACTS ( 1 ),
+
+    /**
+     * Age related macular degeneration
+     */
+    AGE_RELATED_MACULAR_DEGENERATION ( 2 ),
+
+    /**
+     * Amblyopia
+     */
+    AMBLYOPIA ( 3 ),
+
+    /**
+     * Glaucoma
+     */
+    GLAUCOMA ( 4 );
 
     /**
      * Numerical code of the AppointmentType
