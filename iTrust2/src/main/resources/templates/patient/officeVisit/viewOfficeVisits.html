@@ -37,13 +37,20 @@
 			app.controller('viewOfficeVisitsPatientCtrl', function ($scope, $http) {
 				console.log("x");
 				$scope.officevisits = [];
+                $scope.generalOfficeVisits = [];
+                $scope.ophOfficeVisits = [];
+
 				//general office visits
 				$scope.getMyOfficeVisits = function () {
 					$http.get("/iTrust2/api/v1/officevisits/myofficevisits").then(
 						function (response) {
 							$scope.officevisits = response.data;
+                            $scope.generalOfficeVisits = Array.from($scope.officevisits).filter(visit => visit.lEyeAcuity == null);
+                            $scope.ophOfficeVisits = Array.from($scope.officevisits).filter(visit => visit.lEyeAcuity != null);
+                            console.log($scope.officevisits)
+                           
 							$scope.message = "";
-							console.log($scope.officevisits);
+							
 						}, function (rejection) {
 							$scope.officevisits = [];
 							$scope.message = "Could not display visits";
@@ -66,26 +73,102 @@
 			<div class="container">
 				<h4 style="color: red" ng-model="message"></h4>
 
-				<h2>Office Visits</h2>
+				<h2>General Office Visits</h2>
 				<table style="width: 100%" class="table table-hover">
 					<thead>
 						<tr>
 							<th>Date+Time</th>
 							<th>Type</th>
 							<th>HCP</th>
+							<th>Hospital</th>
+
+							<th>HDL</th>
+							<th>LDL</th>
+
+							<th>Head Circumference</th>
+							<th>Height</th>
+							<th>Weight</th>
+
+                            <th>Systolic</th>
+                            <th>Triglycerides</th>
+
+                            <th>Patient Smoking Status</th>
+                            <th>House Smoking Status</th>
+
+                            <th>Diagnoses</th>
+                       
 							<th>Notes</th>
-							<th>Acuity(Right,Left)</th>
-							<th>Sphere(Right,Left)</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="ov in officevisits" name="Office Visits">
+						<tr ng-repeat="ov in generalOfficeVisits" name="Office Visits">
 							<td name="date">{{ov.date}}</td>
 							<td name="type">{{ov.type}}</td>
 							<td name="hcp">{{ov.hcp.username}}</td>
+							<td name="hospital">{{ov.hospital.name}}</td>
+
+							<td name="hdl">{{ov.basicHealthMetrics.hdl}}</td>
+							<td name="ldl">{{ov.basicHealthMetrics.ldl}}</td>
+
+							<td name="headCircumference">{{ov.basicHealthMetrics.headCircumference}}</td>
+							<td name="height">{{ov.basicHealthMetrics.height}}</td>
+							<td name="weight">{{ov.basicHealthMetrics.weight}}</td>
+
+							<td name="systolic">{{ov.basicHealthMetrics.systolic}}</td>
+							<td name="tri">{{ov.basicHealthMetrics.tri}}</td>
+
+							<td name="patientSmokingStatus">{{ov.basicHealthMetrics.patientSmokingStatus}}</td>
+							<td name="houseSmokingStatus">{{ov.basicHealthMetrics.houseSmokingStatus}}</td>
+							<td name="diagnoses">{{ov.basicHealthMetrics.diagnoses.join(", ")}}</td>
+
+
 							<td name="notes">{{ov.notes}}</td>
-							<td name="Acuity(Right,Left)">{{ov.lEyeAcuity}}</td>
-							<td name="Sphere(Right,Left)">{{d.note}}</td>
+						</tr>
+					</tbody>
+				</table>
+
+                <hr>
+
+                <h2>Ophthalmology Office Visits</h2>
+				<table style="width: 100%" class="table table-hover">
+					<thead>
+						<tr>
+							<th>Date+Time</th>
+							<th>Type</th>
+							<th>HCP</th>
+							<th>Hospital</th>
+
+							<th>Left Eye Acuity</th>
+							<th>Left Eye Axis</th>
+							<th>Left Eye Cylinder</th>
+							<th>Left Eye Sphere</th>
+
+                            <th>Right Eye Acuity</th>
+							<th>Right Eye Axis</th>
+							<th>Right Eye Cylinder</th>
+							<th>Right Eye Sphere</th>
+                       
+							<th>Notes</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="ov in ophOfficeVisits" name="Office Visits">
+							<td name="date">{{ov.date}}</td>
+							<td name="type">{{ov.type}}</td>
+							<td name="hcp">{{ov.hcp.username}}</td>
+							<td name="hospital">{{ov.hospital.name}}</td>
+
+							<td name="lEyeAcuity">{{ov.lEyeAcuity}}</td>
+							<td name="lEyeAxis">{{ov.lEyeAxis}}</td>
+							<td name="lEyeCyl">{{ov.lEyeCyl}}</td>
+							<td name="lEyeSphere">{{ov.lEyeSphere}}</td>
+
+                            <td name="rEyeAcuity">{{ov.rEyeAcuity}}</td>
+							<td name="rEyeAxis">{{ov.rEyeAxis}}</td>
+							<td name="rEyeCyl">{{ov.rEyeCyl}}</td>
+							<td name="rEyeSphere">{{ov.rEyeSphere}}</td>
+					
+							<td name="notes">{{ov.notes}}</td>
 						</tr>
 					</tbody>
 				</table>
